@@ -1,0 +1,33 @@
+{
+    "name": "mestiaque/school-management",
+    "description": "SchoolManagement module for Laravel (by M. Estiaque Ahmed Khan)",
+    "type": "library",
+    "keywords": [
+        "Laravel",
+        "SchoolManagement",
+        "Estiaque"
+    ],
+    "authors": [
+        {
+            "name": "M. Estiaque Ahmed Khan",
+            "email": "info@mestisque.com",
+            "homepage": "https://mestisque.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "ME\\SchoolManagement\\": "src/",
+            "ME\\SchoolManagement\\Database\\Seeders\\": "src/Database/Seeders/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "ME\\SchoolManagement\\SchoolManagementServiceProvider"
+            ]
+        }
+    },
+    "license": "MIT",
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

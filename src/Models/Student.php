@@ -1,0 +1,81 @@
+<?php
+
+namespace ME\SchoolManagement\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+
+class Student extends Model
+{
+    use SoftDeletes;
+
+    protected $fillable = [
+        'student_id', 'first_name', 'last_name', 'gender', 'date_of_birth',
+        'birth_certificate_no', 'religion', 'blood_group', 'nationality', 'photo',
+        'email', 'phone', 'present_address', 'permanent_address', 'class_id',
+        'section_id', 'subject_group_id', 'optional_subject_id', 'academic_year_id',
+        'shift', 'roll_number', 'registration_number', 'previous_school', 'previous_class',
+        'admission_date', 'transport_route_id', 'vehicle_id',
+        'is_hostel', 'room_number', 'is_active', 'portal_pin',
+    ];
+
+    // The portal PIN is stored hashed and never sent to the browser.
+    protected $hidden = ['portal_pin'];
+
+    protected $casts = [
+        'portal_pin'     => 'hashed',
+        'date_of_birth'  => 'date',
+        'admission_date' => 'date',
+        'is_hostel'      => 'boolean',
+        'is_active'      => 'boolean',
+    ];
+
+    public function classe(): BelongsTo    { return $this->belongsTo(Classe::class, 'class_id'); }
+    public function section(): BelongsTo   { return $this->belongsTo(Section::class); }
+    public function academicYear(): BelongsTo { return $this->belongsTo(AcademicYear::class); }
+    public function subjectGroup(): BelongsTo { return $this->belongsTo(SubjectGroup::class, 'subject_group_id'); }
+    public function optionalSubject(): BelongsTo { return $this->belongsTo(Subject::class, 'optional_subject_id'); }
+    public function guardian(): HasOne     { return $this->hasOne(Guardian::class); }
+    public function attendances(): HasMany { return $this->hasMany(StudentAttendance::class); }
+    public function feeCollections(): HasMany { return $this->hasMany(FeeCollection::class); }
+    public function marks(): HasMany       { return $this->hasMany(StudentMark::class); }
+    public function documents(): HasMany   { return $this->hasMany(StudentDocument::class); }
+    public function promotions(): HasMany  { return $this->hasMany(StudentPromotion::class); }
+    public function discounts(): HasMany   { return $this->hasMany(StudentDiscount::class); }
+    public function libraryIssues(): HasMany { return $this->hasMany(BookIssue::class); }
+    public function results(): HasMany     { return $this->hasMany(Result::class); }
+    public function leaves(): HasMany      { return $this->hasMany(StudentLeave::class); }
+    public function earlyExits(): HasMany  { return $this->hasMany(StudentEarlyExit::class); }
+
+    public function getFullNameAttribute(): string
+    {
+        return $this->first_name . ' ' . $this->last_name;
+    }
+
+    /**
+     * Returns all subjects this student is eligible to take:
+     * compulsory subjects for their class + group subjects for their group + their optional subject.
+     */
+    public function getEligibleSubjects()
+    {
+        return Subject::where('class_id', $this->class_id)
+            ->where('is_active', true)
+            ->where(function ($q) {
+                $q->where('type', 'compulsory')
+                  ->orWhere(function ($q2) {
+                      $q2->where('type', 'group')
+                         ->where('group_id', $this->subject_group_id);
+                  })
+                  ->orWhere(function ($q3) {
+                      $q3->where('type', 'optional')
+                         ->where('id', $this->optional_subject_id);
+                  });
+            })
+            ->orderBy('type')
+            ->orderBy('name')
+            ->get();
+    }
+}
