@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class TeacherAttendance extends Model
 {
-    protected $fillable = ['teacher_id', 'date', 'status', 'note'];
+    protected $fillable = ['teacher_id', 'date', 'status', 'in_time', 'out_time', 'note'];
     protected $casts = ['date' => 'date'];
 
     public function teacher(): BelongsTo

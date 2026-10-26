@@ -21,6 +21,7 @@ use ME\SchoolManagement\Models\AssignmentSubmission;
 use ME\SchoolManagement\Models\Notice;
 use ME\SchoolManagement\Models\Student;
 use ME\SchoolManagement\Models\StudentAttendance;
+use ME\SchoolManagement\Services\LeavePolicy;
 
 class TeacherController extends Controller
 {
@@ -128,6 +129,9 @@ class TeacherController extends Controller
             'end_date'      => 'required|date|after_or_equal:start_date',
             'reason'        => 'required|string',
         ]);
+        if ($error = LeavePolicy::check('teacher', (int) $request->teacher_id, (int) $request->leave_type_id, $request->start_date, $request->end_date)) {
+            return back()->withInput()->with('error', $error);
+        }
         TeacherLeave::create([
             'teacher_id'    => $request->teacher_id,
             'leave_type_id' => $request->leave_type_id,
@@ -142,20 +146,31 @@ class TeacherController extends Controller
     public function leaveUpdate(Request $request, $id)
     {
         $request->validate(['status' => 'required|in:pending,approved,rejected']);
-        TeacherLeave::findOrFail($id)->update(['status' => $request->status, 'note' => $request->note]);
-        return back()->with('success', 'Leave status updated');
+        return $this->setTeacherLeaveStatus(TeacherLeave::findOrFail($id), $request->status, $request->note);
     }
 
     public function leaveApprove($id)
     {
-        TeacherLeave::findOrFail($id)->update(['status' => 'approved']);
-        return back()->with('success', 'Leave approved');
+        return $this->setTeacherLeaveStatus(TeacherLeave::findOrFail($id), 'approved');
     }
 
     public function leaveReject($id)
     {
-        TeacherLeave::findOrFail($id)->update(['status' => 'rejected']);
-        return back()->with('success', 'Leave rejected');
+        return $this->setTeacherLeaveStatus(TeacherLeave::findOrFail($id), 'rejected');
+    }
+
+    /** Approving re-checks the limits and marks attendance; withdrawing an approval unmarks it. */
+    private function setTeacherLeaveStatus(TeacherLeave $leave, string $status, ?string $note = null)
+    {
+        if ($status === 'approved' && $leave->status !== 'approved'
+            && $error = LeavePolicy::check('teacher', $leave->teacher_id, (int) $leave->leave_type_id, $leave->start_date, $leave->end_date, $leave->id)) {
+            return back()->with('error', 'Cannot approve: ' . $error);
+        }
+        $was = $leave->status;
+        $leave->update(['status' => $status] + ($note !== null ? ['note' => $note] : []));
+        if ($status === 'approved' && $was !== 'approved') LeavePolicy::markAttendance('teacher', $leave);
+        if ($was === 'approved' && $status !== 'approved') LeavePolicy::unmarkAttendance('teacher', $leave);
+        return back()->with('success', 'Leave ' . $status);
     }
 
     // Subject Assignment

@@ -37,4 +37,22 @@ class SchoolCalendar
         }
         return in_array($date->dayOfWeek, self::weekendDays(), true) ? 'Weekly holiday (' . $date->format('l') . ')' : null;
     }
+
+    /** Dates (Y-m-d) the school is open between two dates, inclusive. */
+    public static function schoolDaysBetween($from, $to): array
+    {
+        $from = Carbon::parse($from)->startOfDay();
+        $to   = Carbon::parse($to)->startOfDay();
+        if ($to->lt($from)) return [];
+        $exceptions = self::exceptions($from->toDateString(), $to->toDateString());
+        $weekend = self::weekendDays();
+        $days = [];
+        for ($d = $from->copy(); $d->lte($to); $d->addDay()) {
+            $key = $d->toDateString();
+            $ex = $exceptions[$key] ?? null;
+            $open = $ex ? $ex->type === 'school_day' : !in_array($d->dayOfWeek, $weekend, true);
+            if ($open) $days[] = $key;
+        }
+        return $days;
+    }
 }

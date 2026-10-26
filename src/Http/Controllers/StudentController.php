@@ -696,6 +696,9 @@ class StudentController extends Controller
             'end_date'      => 'required|date|after_or_equal:start_date',
             'reason'        => 'required|string',
         ]);
+        if ($error = \ME\SchoolManagement\Services\LeavePolicy::check('student', (int) $request->student_id, (int) $request->leave_type_id, $request->start_date, $request->end_date)) {
+            return back()->withInput()->with('error', $error);
+        }
         StudentLeave::create([
             'student_id'    => $request->student_id,
             'leave_type_id' => $request->leave_type_id,
@@ -709,8 +712,13 @@ class StudentController extends Controller
 
     public function leaveApprove($id)
     {
-        StudentLeave::where('status', 'pending')->findOrFail($id)->update(['status' => 'approved', 'approved_by' => auth()->id()]);
-        return back()->with('success', 'Leave approved');
+        $leave = StudentLeave::where('status', 'pending')->findOrFail($id);
+        if ($error = \ME\SchoolManagement\Services\LeavePolicy::check('student', $leave->student_id, (int) $leave->leave_type_id, $leave->start_date, $leave->end_date, $leave->id)) {
+            return back()->with('error', 'Cannot approve: ' . $error);
+        }
+        $leave->update(['status' => 'approved', 'approved_by' => auth()->id()]);
+        \ME\SchoolManagement\Services\LeavePolicy::markAttendance('student', $leave);
+        return back()->with('success', 'Leave approved; attendance marked as excused');
     }
 
     public function leaveReject($id)
