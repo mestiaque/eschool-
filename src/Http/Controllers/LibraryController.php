@@ -187,6 +187,10 @@ class LibraryController extends Controller
             }],
         ]);
 
+        if ($error = $this->membershipProblem($request->member_type, (int) $request->member_id)) {
+            return back()->withInput()->with('error', $error);
+        }
+
         $memberCol = $request->member_type . '_id';
         $max = (int) LibrarySetting::get()->max_books_per_member;
         $current = BookIssue::where($memberCol, $request->member_id)->where('status', 'issued')->count();
@@ -308,7 +312,9 @@ class LibraryController extends Controller
             'max_books_per_member' => 'required|integer|min:1',
         ]);
         // Hidden fields are still submitted; never write null into NOT NULL columns.
-        LibrarySetting::get()->update(array_filter($data, fn($v) => $v !== null));
+        $data = array_filter($data, fn($v) => $v !== null);
+        $data['require_membership'] = $request->boolean('require_membership');
+        LibrarySetting::get()->update($data);
         return back()->with('success', 'Library settings updated.');
     }
 
@@ -360,5 +366,25 @@ class LibraryController extends Controller
     {
         LibraryMember::findOrFail($id)->delete();
         return back()->with('success', 'Member removed.');
+    }
+
+    /**
+     * An existing membership that is inactive or expired always blocks borrowing;
+     * having no membership blocks only when the library requires membership.
+     * (Memberships exist for students and teachers.)
+     */
+    private function membershipProblem(string $type, int $memberId): ?string
+    {
+        if (!in_array($type, ['student', 'teacher'], true)) return null;
+        $membership = LibraryMember::where($type . '_id', $memberId)->orderByDesc('expire_date')->first();
+        if ($membership) {
+            if (!$membership->is_active) return 'This library membership is inactive.';
+            if ($membership->expire_date && $membership->expire_date->lt(today())) {
+                return 'This library membership expired on ' . sm_date($membership->expire_date) . '. Renew it under Library → Members.';
+            }
+            return null;
+        }
+        return LibrarySetting::get()->require_membership
+            ? 'Not a library member. Add the membership under Library → Members first.' : null;
     }
 }

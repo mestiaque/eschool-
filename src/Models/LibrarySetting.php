@@ -10,12 +10,13 @@ class LibrarySetting extends Model
 
     protected $fillable = [
         'fine_type', 'fine_per_day', 'fixed_fine',
-        'max_issue_days', 'max_books_per_member',
+        'max_issue_days', 'max_books_per_member', 'require_membership',
     ];
 
     protected $casts = [
         'fine_per_day' => 'decimal:2',
         'fixed_fine'   => 'decimal:2',
+        'require_membership' => 'boolean',
     ];
 
     public static function get(): self

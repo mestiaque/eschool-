@@ -96,6 +96,11 @@ class StudentController extends Controller
             'route_stop_id'      => ['nullable', \Illuminate\Validation\Rule::exists('route_stops', 'id')->where('route_id', $request->transport_route_id)],
         ], ['route_stop_id.exists' => 'The pick-up stop is not on the chosen route.']);
 
+        $yearForRoll = $request->academic_year_id ?: AcademicYear::where('is_current', true)->value('id');
+        if ($this->rollTaken($request->roll_number, $request->class_id, $request->section_id, $yearForRoll)) {
+            return back()->withInput()->withErrors(['roll_number' => 'Roll ' . $request->roll_number . ' is already used in this class/section.']);
+        }
+
         // Use the given Student ID (for entering an already-existing student), otherwise auto-generate one.
         if ($request->filled('student_id')) {
             $sid = $request->student_id;
@@ -242,6 +247,10 @@ class StudentController extends Controller
         ], ['route_stop_id.exists' => 'The pick-up stop is not on the chosen route.']);
 
         $student = Student::findOrFail($id);
+        if ($this->rollTaken($request->roll_number, $request->class_id, $request->section_id,
+                $request->academic_year_id ?: $student->academic_year_id, $student->id)) {
+            return back()->withInput()->withErrors(['roll_number' => 'Roll ' . $request->roll_number . ' is already used in this class/section.']);
+        }
 
         $photo = $student->photo;
         if ($request->hasFile('photo')) {
@@ -566,6 +575,27 @@ class StudentController extends Controller
             return back()->with('error', 'No students selected for promotion.');
         }
 
+        // Rolls must be unique per class/section in the new year (among those
+        // being moved now and anyone already there).
+        $planned = [];
+        foreach ($request->student_ids as $sid) {
+            $st = Student::find($sid);
+            if (!$st) continue;
+            $detained = ($request->mark_status[$sid] ?? 'promoted') === 'detained';
+            $roll = ($request->roll_numbers[$sid] ?? null) ?: $st->roll_number;
+            if ($roll === null || $roll === '') continue;
+            $key = ($detained ? $st->class_id : $request->to_class) . '|'
+                 . ($detained ? $st->section_id : ($request->to_sections[$sid] ?? $st->section_id)) . '|' . $roll;
+            if (isset($planned[$key])) {
+                return back()->withInput()->with('error', "Roll {$roll} is given to two students in the same class/section.");
+            }
+            $planned[$key] = $sid;
+            [$c, $sec] = explode('|', $key);
+            if ($this->rollTaken($roll, $c, $sec ?: null, $request->to_year, null, $request->student_ids)) {
+                return back()->withInput()->with('error', "Roll {$roll} is already used in the target class/section for that year.");
+            }
+        }
+
         $promoted = 0;
         $kept = 0;
         \Illuminate\Support\Facades\DB::beginTransaction();
@@ -798,5 +828,18 @@ class StudentController extends Controller
     public function getStudent($id)
     {
         return Student::with('classe', 'section', 'guardian')->findOrFail($id);
+    }
+
+    /** Whether a roll number is already used in a class/section for an academic year. */
+    private function rollTaken($roll, $classId, $sectionId, $yearId, $ignoreId = null, array $ignoreIds = []): bool
+    {
+        if ($roll === null || $roll === '') return false;
+        return Student::where('roll_number', $roll)->where('class_id', $classId)
+            ->where('section_id', $sectionId ?: null)
+            ->where('academic_year_id', $yearId)
+            ->where('is_active', true)
+            ->when($ignoreId, fn ($q) => $q->whereKeyNot($ignoreId))
+            ->when($ignoreIds, fn ($q) => $q->whereNotIn('id', $ignoreIds))
+            ->exists();
     }
 }

@@ -713,4 +713,5 @@ return [
     'Tour Fees' => 'সফর ফি',
     'Library Fines' => 'লাইব্রেরি জরিমানা',
     'Tour Expenses' => 'সফর খরচ',
+    'Only library members can borrow' => 'শুধু লাইব্রেরি সদস্যরা বই নিতে পারবে',
 ];

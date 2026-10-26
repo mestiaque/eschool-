@@ -219,6 +219,10 @@
                         <label class="form-label form-label-sm">{{ sm_t('Max Books per Member') }}</label>
                         <input type="number" name="max_books_per_member" class="form-control form-control-sm" min="1" value="{{ $settings->max_books_per_member }}">
                     </div>
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" name="require_membership" value="1" id="reqMember" {{ $settings->require_membership ? 'checked' : '' }}>
+                        <label class="form-check-label" for="reqMember">{{ sm_t('Only library members can borrow') }}</label>
+                    </div>
                 </div>
                 <div class="modal-footer py-1">
                     <button type="button" class="btn btn-sm btn-encodex-cancel" data-bs-dismiss="modal">{{ sm_t('Cancel') }}</button>
