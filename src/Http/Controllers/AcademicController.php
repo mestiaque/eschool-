@@ -336,13 +336,19 @@ class AcademicController extends Controller
         if (request('room_id')) {
             $query->where('room_id', request('room_id'));
         }
+        if (request('teacher_id') === 'none') {
+            $query->whereNull('teacher_id');
+        } elseif (request('teacher_id')) {
+            $query->where('teacher_id', request('teacher_id'));
+        }
         if (request('title')) {
             $query->where('title', request('title'));
         }
 
         $routines = $query->orderByWeekday()->orderBy('start_time')->paginate(30)->withQueryString();
+        $withoutTeacher = ClassRoutine::whereNull('teacher_id')->count();
 
-        return view('school-management::academic.routines.index', compact('classes', 'rooms', 'teachers', 'routines', 'titles'));
+        return view('school-management::academic.routines.index', compact('classes', 'rooms', 'teachers', 'routines', 'titles', 'withoutTeacher'));
     }
 
     public function routineIndexPrint()

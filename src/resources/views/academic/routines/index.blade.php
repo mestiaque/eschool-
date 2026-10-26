@@ -94,13 +94,21 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
+@if($withoutTeacher > 0)
+<div class="alert alert-warning py-2 d-flex justify-content-between align-items-center">
+    <span><i class="fas fa-exclamation-triangle me-1"></i>
+        {{ $withoutTeacher }} {{ sm_t('routine periods have no teacher, so they are missing from teachers\' own schedules.') }}
+        {{ sm_t('Assigning a subject to a teacher (Teachers → Subjects) fills these automatically.') }}</span>
+    <a href="{{ route('academic.routines', ['teacher_id' => 'none']) }}" class="btn btn-sm btn-encodex-list">{{ sm_t('Show them') }}</a>
+</div>
+@endif
 <div class="card shadow">
     <div class="card-body">
         <form method="GET" class="glass-search-form mb-3">
             <div class="row g-2">
                 <div class="col-md-3">
                     <select name="class_id" class="form-control form-control-sm">
-                        <option value="">@lang('All Classes')</option>
+                        <option value="">{{ sm_t('All Classes') }}</option>
                         @foreach($classes as $class)
                         <option value="{{ $class->id }}" {{ request('class_id') == $class->id ? 'selected' : '' }}>{{ $class->name }}</option>
                         @endforeach
@@ -108,7 +116,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
                 <div class="col-md-2">
                     <select name="day" class="form-control form-control-sm">
-                        <option value="">@lang('All Days')</option>
+                        <option value="">{{ sm_t('All Days') }}</option>
                         <option value="Saturday" {{ request('day') == 'Saturday' ? 'selected' : '' }}>{{ sm_t('Saturday') }}</option>
                         <option value="Sunday" {{ request('day') == 'Sunday' ? 'selected' : '' }}>{{ sm_t('Sunday') }}</option>
                         <option value="Monday" {{ request('day') == 'Monday' ? 'selected' : '' }}>{{ sm_t('Monday') }}</option>
@@ -120,15 +128,24 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
                 <div class="col-md-2">
                     <select name="room_id" class="form-control form-control-sm">
-                        <option value="">@lang('All Rooms')</option>
+                        <option value="">{{ sm_t('All Rooms') }}</option>
                         @foreach($rooms as $room)
                         <option value="{{ $room->id }}" {{ request('room_id') == $room->id ? 'selected' : '' }}>{{ $room->name }}</option>
                         @endforeach
                     </select>
                 </div>
                 <div class="col-md-2">
+                    <select name="teacher_id" class="form-control form-control-sm">
+                        <option value="">{{ sm_t('All Teachers') }}</option>
+                        <option value="none" {{ request('teacher_id') === 'none' ? 'selected' : '' }}>{{ sm_t('No teacher assigned') }}</option>
+                        @foreach($teachers as $t)
+                        <option value="{{ $t->id }}" {{ request('teacher_id') == $t->id ? 'selected' : '' }}>{{ $t->full_name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-md-2">
                     <select name="title" class="form-control form-control-sm">
-                        <option value="">@lang('All Titles')</option>
+                        <option value="">{{ sm_t('All Titles') }}</option>
                         @foreach($titles as $t)
                         <option value="{{ $t }}" {{ request('title') == $t ? 'selected' : '' }}>{{ $t }}</option>
                         @endforeach
@@ -136,10 +153,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
                 <div class="col-md">
                     <button type="submit" class="btn btn-sm btn-encodex-search">
-                        <i class="fas fa-search"></i> @lang('Search')
+                        <i class="fas fa-search"></i> {{ sm_t('Search') }}
                     </button>
                     <a href="{{ route('academic.routines') }}" class="btn btn-sm btn-encodex-clear">
-                        <i class="fas fa-eraser"></i> @lang('Reset')
+                        <i class="fas fa-eraser"></i> {{ sm_t('Reset') }}
                     </a>
                     @if(request('room_id'))
                     <a href="{{ route('academic.rooms.schedule', request('room_id')) }}" class="btn btn-sm btn-encodex-show">

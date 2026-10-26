@@ -12,21 +12,21 @@
         <form method="GET" class="glass-search-form mb-3">
             <div class="row g-2">
                 <div class="col-md-3">
-                    <input type="text" name="search" class="form-control form-control-sm" placeholder="@lang('Enter Class Name')" value="{{ request('search') }}">
+                    <input type="text" name="search" class="form-control form-control-sm" placeholder="{{ sm_t('Enter Class Name') }}" value="{{ request('search') }}">
                 </div>
                 <div class="col-md-2">
                     <select name="status" class="form-control form-control-sm">
-                        <option value="">@lang('All Status')</option>
-                        <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>@lang('Active')</option>
-                        <option value="inactive" {{ request('status') == 'inactive' ? 'selected' : '' }}>@lang('Inactive')</option>
+                        <option value="">{{ sm_t('All Status') }}</option>
+                        <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>{{ sm_t('Active') }}</option>
+                        <option value="inactive" {{ request('status') == 'inactive' ? 'selected' : '' }}>{{ sm_t('Inactive') }}</option>
                     </select>
                 </div>
                 <div class="col-md">
                     <button type="submit" class="btn btn-sm btn-encodex-search">
-                        <i class="fas fa-search"></i> @lang('Search')
+                        <i class="fas fa-search"></i> {{ sm_t('Search') }}
                     </button>
                     <a href="{{ route('academic.classes') }}" class="btn btn-sm btn-encodex-clear">
-                        <i class="fas fa-eraser"></i> @lang('Reset')
+                        <i class="fas fa-eraser"></i> {{ sm_t('Reset') }}
                     </a>
                 </div>
             </div>

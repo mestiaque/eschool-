@@ -170,6 +170,7 @@ class DashboardController extends Controller
             ['label' => 'Overdue fee invoices',   'count' => $feeSummary['overdue'],                                  'route' => 'fees.collection',      'icon' => 'fa-file-invoice-dollar'],
             ['label' => 'Overdue library books',  'count' => BookIssue::where('status', 'issued')->whereDate('due_date', '<', $today)->count(), 'route' => 'library.issues', 'icon' => 'fa-book'],
             ['label' => 'Low-stock items',        'count' => Product::where('is_active', true)->whereColumn('quantity', '<=', 'minimum_stock')->where('minimum_stock', '>', 0)->count(), 'route' => 'inventory.products', 'icon' => 'fa-boxes'],
+            ['label' => 'Routine periods without a teacher', 'count' => \ME\SchoolManagement\Models\ClassRoutine::whereNull('teacher_id')->count(), 'route' => 'academic.routines', 'icon' => 'fa-chalkboard-teacher'],
             ['label' => 'Unverified documents',   'count' => StudentDocument::where('is_verified', false)->count(),   'route' => 'students.documents',   'icon' => 'fa-file-alt'],
         ]);
 

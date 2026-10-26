@@ -98,7 +98,7 @@
     </div>
     <div class="summary-box">
         <div class="val">{{ $result?->position ? '#' . $result->position : '—' }}</div>
-        <div class="lbl">{{ sm_t('Position') }}</div>
+        <div class="lbl">{{ sm_t('Position') }}@if($result?->section_position) · {{ sm_t('Section') }} #{{ $result->section_position }}@endif</div>
     </div>
     <div class="summary-box">
         <div class="val">{{ $totalPossible > 0 ? round(($totalObtained / $totalPossible) * 100, 1) . '%' : '—' }}</div>

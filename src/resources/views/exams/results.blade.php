@@ -67,7 +67,7 @@
             <tbody>
                 @forelse($results as $r)
                 <tr>
-                    <td class="text-center fw-bold">{{ $r->position ?? '—' }}</td>
+                    <td class="text-center fw-bold">{{ $r->position ?? '—' }}@if($r->section_position)<div class="small text-muted fw-normal">{{ sm_t('Section') }}: {{ $r->section_position }}</div>@endif</td>
                     <td>{{ $r->student?->first_name }} {{ $r->student?->last_name }}</td>
                     <td class="small">{{ $r->classe?->name ?? '—' }}</td>
                     <td class="text-center">{{ $r->total_mark > 0 ? number_format($r->total_mark,0) : '—' }}</td>

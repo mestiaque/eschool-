@@ -230,7 +230,7 @@
                     @forelse($open as $item)
                         <a href="{{ $can($item['route']) ? route($item['route']) : '#' }}" class="list-row">
                             <span class="list-icon"><i class="fas {{ $item['icon'] }}"></i></span>
-                            <span class="list-title">{{ $item['label'] }}</span>
+                            <span class="list-title">{{ sm_t($item['label']) }}</span>
                             <span class="count-pill bg-warning-subtle text-warning">{{ $item['count'] }}</span>
                         </a>
                     @empty

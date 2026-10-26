@@ -191,8 +191,21 @@ class TeacherController extends Controller
         // A subject belongs to one class; derive it when the form doesn't send it.
         $data['class_id'] = $data['class_id'] ?? Subject::whereKey($data['subject_id'])->value('class_id');
         $assignment = TeacherSubject::firstOrCreate($data);
-        return back()->with($assignment->wasRecentlyCreated ? 'success' : 'error',
-            $assignment->wasRecentlyCreated ? 'Subject assigned successfully' : 'This subject is already assigned to the teacher');
+        if (!$assignment->wasRecentlyCreated) {
+            return back()->with('error', 'This subject is already assigned to the teacher');
+        }
+
+        // Give this teacher the class/subject's routine periods that have no
+        // teacher yet, skipping any that clash with periods they already teach.
+        $filled = 0;
+        $open = ClassRoutine::where('class_id', $data['class_id'])->where('subject_id', $data['subject_id'])->whereNull('teacher_id')->get();
+        foreach ($open as $period) {
+            $clash = ClassRoutine::where('teacher_id', $data['teacher_id'])->where('day', $period->day)
+                ->where('title', $period->title)->where('start_time', '<', $period->end_time)->where('end_time', '>', $period->start_time)->exists();
+            if (!$clash) { $period->update(['teacher_id' => $data['teacher_id']]); $filled++; }
+        }
+        $message = sm_t('Subject assigned successfully') . ($filled ? ' — ' . $filled . ' ' . sm_t('routine period(s) now have this teacher') : '');
+        return back()->with('success', $message);
     }
 
     public function subjectDestroy($id)

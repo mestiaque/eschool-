@@ -82,6 +82,7 @@
     <div class="summary-box">
         <div style="font-size:11px;color:#555">{{ sm_t('Position') }}</div>
         <div class="val">{{ $result->position }}</div>
+        @if($result->section_position)<div style="font-size:11px;color:#555">{{ sm_t('Section') }}: {{ $result->section_position }}</div>@endif
     </div>
     @endif
 </div>

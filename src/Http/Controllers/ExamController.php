@@ -409,12 +409,9 @@ class ExamController extends Controller
             ->orderBy('obtained_mark', 'desc')
             ->get();
 
-        $pos = 0; $prev = null;
-        foreach ($sorted as $i => $r) {
-            $key = $r->gpa . '|' . $r->obtained_mark;
-            if ($key !== $prev) { $pos = $i + 1; $prev = $key; }
-            $r->update(['position' => $pos]);
-        }
+        $this->rank($sorted, 'position');
+        // Same ranking inside each section.
+        $sorted->groupBy('section_id')->each(fn ($group) => $this->rank($group->values(), 'section_position'));
 
         return back()->with('success', 'Result generated for ' . $studentIds->count() . ' students.');
     }
@@ -506,6 +503,17 @@ class ExamController extends Controller
 
         $gpa = round(min(5, $sum / $main->count()), 2);
         return ['gpa' => $gpa, 'grade' => $this->gradeForGpa($gpa), 'note' => $notes ? implode('; ', $notes) : null];
+    }
+
+    /** Competition ranking (1, 2, 2, 4) by GPA then total marks; rows arrive sorted. */
+    private function rank($sorted, string $column): void
+    {
+        $pos = 0; $prev = null;
+        foreach ($sorted as $i => $r) {
+            $key = $r->gpa . '|' . $r->obtained_mark;
+            if ($key !== $prev) { $pos = $i + 1; $prev = $key; }
+            $r->update([$column => $pos]);
+        }
     }
 
     // Grading goes through the shared scale (Services\GradeScale).
