@@ -58,4 +58,21 @@ class FeeCollection extends Model
     {
         return $this->belongsTo(AcademicYear::class);
     }
+
+    /** Month number 1–12, whether it was saved as "3" or as "March". */
+    public function getMonthNumberAttribute(): ?int
+    {
+        $m = $this->month;
+        if ($m === null || $m === '') return null;
+        if (is_numeric($m)) return ((int) $m >= 1 && (int) $m <= 12) ? (int) $m : null;
+        $t = strtotime("1 {$m} 2000");
+        return $t ? (int) date('n', $t) : null;
+    }
+
+    /** Month for display, e.g. "March" ($format 'F') or "Mar 2026" ('M Y'). */
+    public function monthLabel(string $format = 'F'): ?string
+    {
+        $n = $this->month_number;
+        return $n ? date($format, mktime(0, 0, 0, $n, 1, (int) ($this->year ?: date('Y')))) : null;
+    }
 }

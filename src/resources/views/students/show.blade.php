@@ -215,7 +215,7 @@
                                 <tr>
                                     <td class="small text-muted">{{ $fee->invoice_no ?? '—' }}</td>
                                     <td>{{ $fee->feeType?->name ?? '—' }}</td>
-                                    <td class="small">{{ $fee->month ? date('M Y', mktime(0,0,0,(int)$fee->month,1,(int)($fee->year ?? date('Y')))) : '—' }}</td>
+                                    <td class="small">{{ $fee->monthLabel('M Y') ?? '—' }}</td>
                                     <td class="text-end">{{ sm_money($fee->amount,2) }}</td>
                                     <td class="text-end text-success">{{ sm_money($fee->paid_amount,2) }}</td>
                                     <td class="text-end text-danger">{{ sm_money($fee->due_amount,2) }}</td>

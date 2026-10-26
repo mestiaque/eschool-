@@ -114,6 +114,7 @@ class FeeController extends Controller
             'student_id'  => 'required|exists:students,id',
             'fee_type_id' => 'required|exists:fee_types,id',
             'amount'      => 'required|numeric|min:0',
+            'month'       => 'nullable|integer|min:1|max:12',
         ]);
 
         $amount     = (float) $request->amount;

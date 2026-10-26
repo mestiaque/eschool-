@@ -74,7 +74,7 @@
                     <td>{{ $col->student?->first_name }} {{ $col->student?->last_name }}</td>
                     <td class="small">{{ $col->class?->name ?? $col->student?->classe?->name ?? '—' }}</td>
                     <td class="small">{{ $col->feeType?->name ?? '—' }}</td>
-                    <td class="small">{{ $col->month ? date('M', mktime(0,0,0,(int)$col->month,1)) : '—' }}</td>
+                    <td class="small">{{ $col->monthLabel('M') ?? '—' }}</td>
                     <td class="text-end">{{ sm_money($col->amount, 2) }}</td>
                     <td class="text-end text-success fw-semibold">{{ sm_money($col->paid_amount, 2) }}</td>
                     <td class="text-end text-danger fw-semibold">{{ sm_money($col->due_amount, 2) }}</td>

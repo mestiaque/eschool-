@@ -109,7 +109,7 @@
                     <td>{{ $col->invoice_no }}</td>
                     <td>{{ $col->student?->full_name }}</td>
                     <td>{{ $col->student?->classe?->name }}</td>
-                    <td>{{ $col->month ? date('F', mktime(0,0,0,(int)$col->month,1)) : '-' }}</td>
+                    <td>{{ $col->monthLabel('F') ?? '-' }}</td>
                     <td>{{ number_format($col->amount, 2) }}</td>
                     <td>{{ number_format($col->fine, 2) }}</td>
                     <td>{{ number_format($col->paid_amount, 2) }}</td>

@@ -46,7 +46,7 @@
             <tbody>
                 @forelse($fees as $fee)
                 <tr>
-                    <td class="small">{{ $fee->month ? date('F Y', mktime(0,0,0,(int)$fee->month,1,(int)($fee->year ?? date('Y')))) : ($fee->academicYear?->year ?? '—') }}</td>
+                    <td class="small">{{ $fee->month_number ? $fee->monthLabel('F Y') : ($fee->academicYear?->year ?? '—') }}</td>
                     <td>{{ $fee->feeType?->name ?? '—' }}</td>
                     <td class="text-end">{{ sm_money($fee->amount, 0) }}</td>
                     <td class="text-end text-success fw-semibold">{{ sm_money($fee->paid_amount ?? 0, 0) }}</td>
