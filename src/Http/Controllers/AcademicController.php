@@ -16,6 +16,7 @@ use ME\SchoolManagement\Models\Subject;
 use ME\SchoolManagement\Models\SubjectGroup;
 use ME\SchoolManagement\Models\Syllabus;
 use ME\SchoolManagement\Models\Teacher;
+use ME\SchoolManagement\Services\RoutineGrid;
 
 class AcademicController extends Controller
 {
@@ -353,10 +354,10 @@ class AcademicController extends Controller
 
     public function routineIndexPrint()
     {
-        $classes = Classe::where('is_active', true)->get();
         $rooms = Room::where('is_active', true)->orderBy('name')->get();
+        $teachers = Teacher::where('is_active', true)->orderBy('first_name')->get();
 
-        $query = ClassRoutine::with(['class', 'section', 'subject', 'room']);
+        $query = ClassRoutine::with(['class', 'section', 'subject', 'room', 'teacher']);
 
         if (request('class_id')) {
             $query->where('class_id', request('class_id'));
@@ -367,13 +368,18 @@ class AcademicController extends Controller
         if (request('room_id')) {
             $query->where('room_id', request('room_id'));
         }
+        if (request('teacher_id') === 'none') {
+            $query->whereNull('teacher_id');
+        } elseif (request('teacher_id')) {
+            $query->where('teacher_id', request('teacher_id'));
+        }
         if (request('title')) {
             $query->where('title', request('title'));
         }
 
-        $routines = $query->orderByWeekday()->orderBy('start_time')->get();
+        $charts = RoutineGrid::charts($query->get());
 
-        return view('school-management::academic.routines.print', compact('classes', 'rooms', 'routines'));
+        return view('school-management::academic.routines.print', compact('rooms', 'teachers', 'charts'));
     }
 
     public function classRoutine($class_id)
@@ -404,20 +410,18 @@ class AcademicController extends Controller
 
     public function classRoutinePrint($class_id)
     {
-        $class = Classe::with(['sections'])->findOrFail($class_id);
+        $class = Classe::findOrFail($class_id);
         $titles = ClassRoutine::where('class_id', $class_id)->whereNotNull('title')->distinct()->orderBy('title')->pluck('title');
         $selectedTitle = request('title', $titles->first());
 
-        $routines = ClassRoutine::with(['subject', 'section'])
+        $routines = ClassRoutine::with(['class', 'subject', 'section', 'teacher', 'room'])
             ->where('class_id', $class_id)
             ->when($selectedTitle, fn($q) => $q->where('title', $selectedTitle), fn($q) => $q->whereNull('title'))
-            ->orderByWeekday()
-            ->orderBy('start_time')
             ->get();
 
-        $days = ['Saturday', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+        $charts = $routines->isEmpty() ? collect() : RoutineGrid::sectionCharts($routines);
 
-        return view('school-management::academic.classes.routine-print', compact('class', 'routines', 'days', 'selectedTitle'));
+        return view('school-management::academic.classes.routine-print', compact('class', 'charts', 'selectedTitle'));
     }
 
     public function routineStore(Request $request)

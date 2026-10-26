@@ -174,6 +174,7 @@ return [
     'Blood' => 'রক্ত',
     'Blood Group' => 'রক্তের গ্রুপ',
     'Book' => 'বই',
+    'Break' => 'বিরতি',
     'Book Availability Chart' => 'বইয়ের প্রাপ্যতা চার্ট',
     'Book ID' => 'বই আইডি',
     'Book Return' => 'বই ফেরত',
