@@ -97,8 +97,7 @@ class ClassTextController extends Controller
                 if ($obtainedMarks !== null && $obtainedMarks !== '') {
                     $marks    = (float) $obtainedMarks;
                     $dbStatus = $marks >= (float) $test->pass_marks ? 'pass' : 'fail';
-                    $pct      = $test->total_marks > 0 ? ($marks / (float) $test->total_marks) * 100 : 0;
-                    $grade    = $pct >= 80 ? 'A+' : ($pct >= 70 ? 'A' : ($pct >= 60 ? 'B' : ($pct >= 50 ? 'C' : ($pct >= 40 ? 'D' : 'F'))));
+                    $grade    = \ME\SchoolManagement\Services\GradeScale::letter($marks, (float) $test->total_marks, (float) $test->pass_marks);
                 } else {
                     $dbStatus = 'fail';
                 }

@@ -108,7 +108,8 @@ class StudentPortalController extends Controller
         $currentBooks  = $currentBooksQuery->get();
 
         $attTotal   = StudentAttendance::where('student_id', $portalStudent->id)->count();
-        $attPresent = StudentAttendance::where('student_id', $portalStudent->id)->where('status', 'present')->count();
+        // Late still counts as attended (same rule as the admin dashboard).
+        $attPresent = StudentAttendance::where('student_id', $portalStudent->id)->whereIn('status', ['present', 'late'])->count();
         $attendancePct = $attTotal > 0 ? round(($attPresent / $attTotal) * 100) : 0;
 
         $recentNotices = Notice::where('is_active', true)
@@ -244,7 +245,10 @@ class StudentPortalController extends Controller
             ->whereYear('date', $selectedYear)->where('status', 'present')->count();
         $absentDays  = StudentAttendance::where('student_id', $portalStudent->id)
             ->whereYear('date', $selectedYear)->where('status', 'absent')->count();
-        $attendancePct = $totalDays > 0 ? round(($presentDays / $totalDays) * 100) : 0;
+        $lateDays    = StudentAttendance::where('student_id', $portalStudent->id)
+            ->whereYear('date', $selectedYear)->where('status', 'late')->count();
+        // Late still counts as attended (same rule as the admin dashboard).
+        $attendancePct = $totalDays > 0 ? round((($presentDays + $lateDays) / $totalDays) * 100) : 0;
 
         $monthly = StudentAttendance::where('student_id', $portalStudent->id)
             ->whereYear('date', $selectedYear)

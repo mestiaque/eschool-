@@ -92,8 +92,7 @@ class AssignmentController extends Controller
             $grade = null;
 
             if ($marks !== null && $marks !== '' && $assignment->total_marks > 0) {
-                $pct   = ((float)$marks / (float)$assignment->total_marks) * 100;
-                $grade = $pct >= 80 ? 'A+' : ($pct >= 70 ? 'A' : ($pct >= 60 ? 'B' : ($pct >= 50 ? 'C' : ($pct >= 40 ? 'D' : 'F'))));
+                $grade = \ME\SchoolManagement\Services\GradeScale::letter((float) $marks, (float) $assignment->total_marks);
             }
 
             AssignmentSubmission::updateOrCreate(

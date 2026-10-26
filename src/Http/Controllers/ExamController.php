@@ -15,6 +15,7 @@ use ME\SchoolManagement\Models\Result;
 use ME\SchoolManagement\Models\Student;
 use ME\SchoolManagement\Models\StudentMark;
 use ME\SchoolManagement\Models\Subject;
+use ME\SchoolManagement\Services\GradeScale;
 
 class ExamController extends Controller
 {
@@ -162,12 +163,14 @@ class ExamController extends Controller
 
     public function gradeStore(Request $request)
     {
+        GradeScale::flush();
         Grade::create($this->validateGrade($request) + ['is_active' => true]);
         return back()->with('success', 'Grade created.');
     }
 
     public function gradeUpdate(Request $request, $id)
     {
+        GradeScale::flush();
         $grade = Grade::findOrFail($id);
         $grade->update($this->validateGrade($request, $grade->id));
         return back()->with('success', 'Grade updated.');
@@ -505,48 +508,10 @@ class ExamController extends Controller
         return ['gpa' => $gpa, 'grade' => $this->gradeForGpa($gpa), 'note' => $notes ? implode('; ', $notes) : null];
     }
 
-    /** Standard Bangladesh scale, used when no grades are configured. */
-    private const DEFAULT_SCALE = [
-        ['name' => 'A+', 'point' => 5.00, 'from' => 80],
-        ['name' => 'A',  'point' => 4.00, 'from' => 70],
-        ['name' => 'A-', 'point' => 3.50, 'from' => 60],
-        ['name' => 'B',  'point' => 3.00, 'from' => 50],
-        ['name' => 'C',  'point' => 2.00, 'from' => 40],
-        ['name' => 'D',  'point' => 1.00, 'from' => 33],
-        ['name' => 'F',  'point' => 0.00, 'from' => 0],
-    ];
-
-    private ?array $scale = null;
-
-    /** Grade scale as [id, name, point, from], highest first. Grade ranges are percentages. */
-    private function scale(): array
-    {
-        return $this->scale ??= ($grades = Grade::where('is_active', true)->orderByDesc('mark_from')->get())->isNotEmpty()
-            ? $grades->map(fn($g) => ['id' => $g->id, 'name' => $g->name, 'point' => (float) $g->grade_point, 'from' => (float) $g->mark_from])->all()
-            : array_map(fn($g) => $g + ['id' => null], self::DEFAULT_SCALE);
-    }
-
-    private function gradeForPercent(float $percent): array
-    {
-        foreach ($this->scale() as $g) {
-            if ($percent >= $g['from']) return $g;
-        }
-        return $this->failGrade();
-    }
-
-    private function failGrade(): array
-    {
-        $scale = $this->scale();
-        return end($scale) ?: ['id' => null, 'name' => 'F', 'point' => 0.0, 'from' => 0];
-    }
-
-    private function gradeForGpa(float $gpa): string
-    {
-        foreach ($this->scale() as $g) {
-            if ($gpa >= $g['point']) return $g['name'];
-        }
-        return $this->failGrade()['name'];
-    }
+    // Grading goes through the shared scale (Services\GradeScale).
+    private function gradeForPercent(float $percent): array { return GradeScale::forPercent($percent); }
+    private function failGrade(): array { return GradeScale::fail(); }
+    private function gradeForGpa(float $gpa): string { return GradeScale::forGpa($gpa); }
 
     /** [full mark, pass mark] for a subject in an exam; schedule first, then the subject's own. */
     private function subjectMarks($examId, $classId, $subjectId): array

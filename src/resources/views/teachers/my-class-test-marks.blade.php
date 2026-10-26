@@ -150,22 +150,23 @@
 </form>
 
 <script>
-const gradeLabels = ['A+','A','B','C','D','F'];
+
+// Same scale the server uses (Examinations → Grades, or the Bangladesh default).
+const GRADE_SCALE = @json(\ME\SchoolManagement\Services\GradeScale::rows());
+const FAIL_GRADE  = @json(\ME\SchoolManagement\Services\GradeScale::fail()['name']);
+const PASS_MARK   = {{ (float) $test->pass_marks }};
 
 function calcGrade(marks, total) {
     if (total <= 0) return '-';
+    if (PASS_MARK !== null && marks < PASS_MARK) return FAIL_GRADE;
     const pct = (marks / total) * 100;
-    if (pct >= 80) return 'A+';
-    if (pct >= 70) return 'A';
-    if (pct >= 60) return 'B';
-    if (pct >= 50) return 'C';
-    if (pct >= 40) return 'D';
-    return 'F';
+    for (const g of GRADE_SCALE) { if (pct >= g.from) return g.name; }
+    return FAIL_GRADE;
 }
 
 function gradeClass(g) {
     return {
-        'A+': 'bg-success-subtle text-success', 'A': 'bg-primary-subtle text-primary', 'B': 'bg-primary-subtle text-primary',
+        'A+': 'bg-success-subtle text-success', 'A': 'bg-primary-subtle text-primary', 'A-': 'bg-primary-subtle text-primary', 'B': 'bg-primary-subtle text-primary',
         'C': 'bg-info-subtle text-info', 'D': 'bg-warning-subtle text-warning', 'F': 'bg-danger-subtle text-danger'
     }[g] || 'bg-secondary-subtle text-secondary';
 }
