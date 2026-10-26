@@ -692,4 +692,7 @@ return [
     'Written' => 'লিখিত',
     'Year' => 'বছর',
     'Yes' => 'হ্যাঁ',
+    '4th subject' => '৪র্থ বিষয়',
+    '4th subject bonus' => '৪র্থ বিষয়ের বোনাস',
+    'GPA adds the 4th subject grade point above 2.00; failing the 4th subject does not fail the result.' => 'জিপিএতে ৪র্থ বিষয়ের ২.০০-এর বেশি গ্রেড পয়েন্ট যোগ হয়; ৪র্থ বিষয়ে ফেল করলে মোট ফল ফেল হয় না।',
 ];

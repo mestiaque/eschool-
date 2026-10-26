@@ -54,7 +54,7 @@
             if ($mark->is_absent) $hasAbsent = true;
         @endphp
         <tr>
-            <td>{{ $mark->subject?->name }}</td>
+            <td>{{ $mark->subject?->name }}@if($mark->subject_id && $mark->subject_id == $student->optional_subject_id) <small class="text-muted">({{ sm_t('4th subject') }})</small>@endif</td>
             <td class="num">{{ $full > 0 ? $full : '—' }}</td>
             <td class="num">{{ $pass > 0 ? $pass : '—' }}</td>
             @if($mark->is_absent)

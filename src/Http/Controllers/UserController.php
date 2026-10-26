@@ -206,6 +206,7 @@ class UserController extends Controller
             'salary_expense_category_id' => 'nullable|exists:expense_categories,id',
         ]);
         $data['salary_expense_category_id'] = $data['salary_expense_category_id'] ?? '';
+        $data['optional_subject_bonus']     = $request->boolean('optional_subject_bonus') ? '1' : '0';
         $this->saveSettings($data);
         return back()->with('success', 'General settings updated');
     }

@@ -78,4 +78,21 @@ class Student extends Model
             ->orderBy('name')
             ->get();
     }
+
+    /**
+     * Students who sit a subject: everyone for a compulsory subject, the
+     * subject's group (Science / Commerce / Humanities) for a group subject,
+     * and only those who chose it for an optional (4th) subject.
+     */
+    public function scopeTakingSubject($query, Subject $subject)
+    {
+        return match ($subject->type) {
+            'group'    => $subject->group_id ? $query->where('subject_group_id', $subject->group_id) : $query,
+            'optional' => $query->where(fn ($q) => $q->where('optional_subject_id', $subject->id)
+                // A group-specific optional with nobody assigned yet: fall back to the group.
+                ->when($subject->group_id && !static::where('optional_subject_id', $subject->id)->exists(),
+                    fn ($q2) => $q2->orWhere('subject_group_id', $subject->group_id))),
+            default    => $query,
+        };
+    }
 }

@@ -206,6 +206,7 @@ class ExamController extends Controller
                 ->first();
 
             $students = Student::where('class_id', $request->class_id)
+                ->when($subjectObj, fn ($q) => $q->takingSubject($subjectObj))
                 ->where('is_active', true)
                 ->orderBy('roll_number')
                 ->orderBy('first_name')
@@ -251,6 +252,7 @@ class ExamController extends Controller
                 ->first();
 
             $students = Student::where('class_id', $request->class_id)
+                ->when($subjectObj, fn ($q) => $q->takingSubject($subjectObj))
                 ->where('is_active', true)
                 ->orderBy('roll_number')
                 ->orderBy('first_name')
@@ -289,7 +291,8 @@ class ExamController extends Controller
         }
 
         [$fullMark, $passMark] = $this->subjectMarks($request->exam_id, $request->class_id, $request->subject_id);
-        $classStudentIds = Student::where('class_id', $request->class_id)->pluck('id')->flip();
+        $classStudentIds = Student::where('class_id', $request->class_id)
+            ->takingSubject(Subject::findOrFail($request->subject_id))->pluck('id')->flip();
 
         // Validate every row first so a bad row doesn't leave a half-saved sheet.
         foreach ($request->student_ids as $studentId) {
@@ -370,32 +373,28 @@ class ExamController extends Controller
             ->where('class_id', $request->class_id)
             ->sum('full_mark');
 
-        $subjectCount = Subject::where('class_id', $request->class_id)->where('is_active', true)->count();
+        $bonusOn = sm_setting('optional_subject_bonus', '1') === '1';
 
         foreach ($studentIds as $studentId) {
+            $student = Student::withTrashed()->find($studentId);
             $studentMarks = StudentMark::where('exam_id',    $request->exam_id)
                 ->where('class_id',   $request->class_id)
                 ->where('student_id', $studentId)
-                ->get();
+                ->get()->keyBy('subject_id');
 
-            $obtained = $studentMarks->sum('total_mark');
-            // Any absent/failed subject (grade point 0) fails the whole result.
-            $failed = $studentMarks->contains(fn($m) => $m->is_absent || (float) $m->grade_point <= 0);
-            $gpa    = $failed ? 0 : round(min(5, $studentMarks->avg('grade_point') ?? 0), 2);
-            $grade  = $failed ? $this->failGrade()['name'] : $this->gradeForGpa($gpa);
+            $summary = $this->summariseResult($student, $studentMarks, $bonusOn);
 
             Result::updateOrCreate(
                 ['student_id' => $studentId, 'exam_id' => $request->exam_id],
                 [
                     'class_id'      => $request->class_id,
-                    'section_id'    => Student::whereKey($studentId)->value('section_id'),
+                    'section_id'    => $student?->section_id,
                     'total_mark'    => $totalPossible,
-                    'obtained_mark' => $obtained,
-                    'gpa'           => $gpa,
-                    'grade'         => $grade,
+                    'obtained_mark' => $studentMarks->sum('total_mark'),
+                    'gpa'           => $summary['gpa'],
+                    'grade'         => $summary['grade'],
                     'is_published'  => false,
-                    'note'          => $subjectCount && $studentMarks->count() < $subjectCount
-                        ? 'Marks missing for ' . ($subjectCount - $studentMarks->count()) . ' subject(s)' : null,
+                    'note'          => $summary['note'],
                 ]
             );
         }
@@ -463,6 +462,48 @@ class ExamController extends Controller
     }
 
     // ── Grading helpers ────────────────────────────────────────────────────
+
+    /**
+     * GPA by the usual Bangladesh rule:
+     *   GPA = (sum of main-subject GPs + max(0, 4th-subject GP − 2)) / number of main subjects, max 5.00.
+     * Any failed, absent or missing main subject fails the result; the 4th
+     * (optional) subject can only add, never fail. The bonus can be switched
+     * off in Settings → General.
+     *
+     * @return array{gpa: float, grade: string, note: ?string}
+     */
+    private function summariseResult(?Student $student, $marks, bool $bonusOn = true): array
+    {
+        $subjects = $student ? $student->getEligibleSubjects() : collect();
+        if ($subjects->isEmpty()) {
+            // No subject setup for this student: grade what was entered.
+            $subjects = Subject::whereIn('id', $marks->keys())->get();
+        }
+        $optionalId = $student?->optional_subject_id;
+        $main = $subjects->filter(fn ($s) => $s->id != $optionalId);
+
+        $missing = $main->filter(fn ($s) => !$marks->has($s->id));
+        $failedMain = $main->contains(fn ($s) => $marks->has($s->id)
+            && ($marks[$s->id]->is_absent || (float) $marks[$s->id]->grade_point <= 0));
+
+        $notes = [];
+        if ($missing->isNotEmpty()) $notes[] = 'Marks missing: ' . $missing->pluck('name')->implode(', ');
+
+        if ($failedMain || $missing->isNotEmpty() || $main->isEmpty()) {
+            return ['gpa' => 0.0, 'grade' => $this->failGrade()['name'], 'note' => $notes ? implode('; ', $notes) : null];
+        }
+
+        $sum = $main->sum(fn ($s) => (float) $marks[$s->id]->grade_point);
+        $optionalGp = $optionalId && $marks->has($optionalId) && !$marks[$optionalId]->is_absent
+            ? (float) $marks[$optionalId]->grade_point : null;
+        if ($optionalGp !== null && $bonusOn) {
+            $sum += max(0, $optionalGp - 2);
+        }
+        if ($optionalId && $optionalGp !== null && $optionalGp <= 0) $notes[] = '4th subject failed (does not affect pass)';
+
+        $gpa = round(min(5, $sum / $main->count()), 2);
+        return ['gpa' => $gpa, 'grade' => $this->gradeForGpa($gpa), 'note' => $notes ? implode('; ', $notes) : null];
+    }
 
     /** Standard Bangladesh scale, used when no grades are configured. */
     private const DEFAULT_SCALE = [

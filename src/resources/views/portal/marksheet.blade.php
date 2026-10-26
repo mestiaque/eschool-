@@ -45,7 +45,7 @@
     <tbody>
         @foreach($marks as $mark)
         <tr>
-            <td>{{ $mark->subject?->name }}</td>
+            <td>{{ $mark->subject?->name }}@if($mark->subject_id && $mark->subject_id == $student->optional_subject_id) <small class="text-muted">({{ sm_t('4th subject') }})</small>@endif</td>
             <td class="text-center">{{ $scheduleMap[$mark->subject_id]?->full_mark ?? '—' }}</td>
             <td class="text-center">{{ $scheduleMap[$mark->subject_id]?->pass_mark ?? '—' }}</td>
             <td class="text-center fw-bold">{{ $mark->marks_obtained }}</td>

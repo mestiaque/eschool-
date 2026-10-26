@@ -37,6 +37,13 @@
                             </select>
                         </div>
                         <div class="mb-3">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" name="optional_subject_bonus" value="1" id="optBonus" {{ ($settings['optional_subject_bonus'] ?? '1') === '1' ? 'checked' : '' }}>
+                                <label class="form-check-label" for="optBonus">{{ sm_t('4th subject bonus') }}</label>
+                            </div>
+                            <div class="form-text">{{ sm_t('GPA adds the 4th subject grade point above 2.00; failing the 4th subject does not fail the result.') }}</div>
+                        </div>
+                        <div class="mb-3">
                             <label class="form-label">{{ sm_t('Salary expense category') }}</label>
                             <select name="salary_expense_category_id" class="form-select form-select-sm">
                                 <option value="">Automatic (বেতন ও ভাতা / Salaries)</option>
