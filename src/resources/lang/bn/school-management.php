@@ -702,4 +702,10 @@ return [
     'Holiday (school closed)' => 'ছুটি (স্কুল বন্ধ)',
     'Extra school day (e.g. make-up class on a weekly holiday)' => 'অতিরিক্ত স্কুল দিবস (যেমন সাপ্তাহিক ছুটির দিনে ক্ষতিপূরণ ক্লাস)',
     'Attendance cannot be taken on these days. Add a make-up class day on the Holidays page as an "Extra school day".' => 'এই দিনগুলোতে হাজিরা নেওয়া যাবে না। ক্ষতিপূরণ ক্লাসের দিন ছুটির পাতায় "অতিরিক্ত স্কুল দিবস" হিসেবে যোগ করুন।',
+    'Transport Route' => 'পরিবহন রুট',
+    'No transport' => 'পরিবহন নেই',
+    'Pick-up Stop' => 'যেখান থেকে ওঠে',
+    'Generate transport fees' => 'পরিবহন ফি তৈরি করুন',
+    'Create this month\'s transport invoices for every student on a route?' => 'রুটে থাকা সব ছাত্রের এই মাসের পরিবহন ইনভয়েস তৈরি করবেন?',
+    'Each student on a route is billed the route fee plus their stop\'s extra fee. Assign routes on the student\'s profile.' => 'রুটে থাকা প্রত্যেক ছাত্রের রুটের ফি আর তার স্টপেজের বাড়তি ফি বিল হয়। রুট ছাত্রের প্রোফাইল থেকে দিন।',
 ];

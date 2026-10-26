@@ -214,8 +214,24 @@ class TransportController extends Controller
     // Transport Fee
     public function transportFeeIndex()
     {
-        $routes = TransportRoute::with('stops')->where('is_active', true)->get();
+        $routes = TransportRoute::with('stops')->withCount(['students' => fn ($q) => $q->where('is_active', true)])
+            ->where('is_active', true)->get();
         return view('school-management::transport.fee', compact('routes'));
+    }
+
+    /** Bill one month of transport for every student on a route (route fee + stop extra fee). */
+    public function transportFeeGenerate(Request $request)
+    {
+        $request->validate([
+            'month'    => 'required|integer|min:1|max:12',
+            'due_date' => 'nullable|date',
+        ]);
+        $count = \ME\SchoolManagement\Services\FeeBilling::generateTransport((int) $request->month, null,
+            \ME\SchoolManagement\Models\AcademicYear::where('is_current', true)->value('id'), $request->due_date);
+
+        return back()->with($count ? 'success' : 'error', $count
+            ? "Transport fee invoices created for {$count} student(s)."
+            : 'Nobody to bill: no students on a route, or this month is already billed.');
     }
 
     public function transportFeeStore(Request $request)

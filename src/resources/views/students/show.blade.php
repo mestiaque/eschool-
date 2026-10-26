@@ -424,6 +424,7 @@
                         </div>
                         <div class="col-md-3 mb-1"><label class="form-label form-label-sm">{{ sm_t('Registration No.') }}</label><input type="text" name="registration_number" class="form-control form-control-sm" value="{{ $student->registration_number }}"></div>
                         <div class="col-md-3 mb-1"><label class="form-label form-label-sm">{{ sm_t('Previous School') }}</label><input type="text" name="previous_school" class="form-control form-control-sm" value="{{ $student->previous_school }}"></div>
+                        @include('school-management::partials.transport-fields', ['student' => $student])
                         <div class="col-md-2 mb-1"><label class="form-label form-label-sm">{{ sm_t('Previous Class') }}</label><input type="text" name="previous_class" class="form-control form-control-sm" value="{{ $student->previous_class }}"></div>
                         <div class="col-md-2 mb-1"><label class="form-label form-label-sm">{{ sm_t('Status') }}</label>
                             <select name="is_active" class="form-control form-control-sm">

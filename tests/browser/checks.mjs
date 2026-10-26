@@ -55,5 +55,14 @@ export default [
       cell.click(); await sleep(1500);
       const after = cell.textContent.trim() + '|' + cell.className;
       return after === before && toasted ? true : {before, after, toasted}` },
+  { name: 'Student profile: choosing a route lists only its stops', url: '/students/1', js: `
+      const route = document.querySelector('select[name="transport_route_id"]'), stop = document.querySelector('select[name="route_stop_id"]');
+      if (!route || !stop) return 'fields missing';
+      const opts = [...route.options].filter(o => o.value);
+      for (const o of opts) {
+        route.value = o.value; route.dispatchEvent(new Event('change'));
+        if (stop.options.length > 1) return true;
+      }
+      return 'no route with stops (' + opts.length + ' routes)'` },
   { name: 'Recycle Bin page lists tabs', url: '/trash', js: `return document.querySelectorAll('.nav-tabs .nav-link').length === 3 ? true : 'tabs missing'` },
 ];

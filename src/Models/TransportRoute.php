@@ -24,4 +24,9 @@ class TransportRoute extends Model
     {
         return $this->hasMany(RouteSchedule::class, 'route_id')->orderBy('departure_time');
     }
+
+    public function students(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Student::class, 'transport_route_id');
+    }
 }

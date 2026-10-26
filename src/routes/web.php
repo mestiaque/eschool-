@@ -479,6 +479,7 @@ Route::middleware(['web', 'auth', LocaleMiddleware::class, 'activityLog', School
     Route::delete('/transport/drivers/{id}', [TransportController::class, 'driverDestroy'])->name('transport.drivers.destroy');
     Route::get('/transport/fee', [TransportController::class, 'transportFeeIndex'])->name('transport.fee');
     Route::post('/transport/fee', [TransportController::class, 'transportFeeStore'])->name('transport.fee.store');
+    Route::post('/transport/fee/generate', [TransportController::class, 'transportFeeGenerate'])->name('transport.fee.generate');
 
     // Exam additional routes
     Route::get('/exams/marksheet', [ExamController::class, 'marksheetIndex'])->name('exams.marksheet.index');

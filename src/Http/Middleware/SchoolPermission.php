@@ -142,6 +142,7 @@ class SchoolPermission
         'library.issues.pay-fine'         => 'library_issue.edit',
         'library.issues.waive-fine'       => 'library_issue.waive_fine',
         'transport.fee.store'             => 'transport_fee.edit',
+        'transport.fee.generate'          => 'fee_collection.create',
         'committee.show.print'            => 'committee.print',
         'committee.members.store'         => 'committee.edit',
         'committee.members.update'        => 'committee.edit',

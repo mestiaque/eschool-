@@ -26,6 +26,7 @@ use ME\SchoolManagement\Models\StudentPromotion;
 use ME\SchoolManagement\Models\StudentTransfer;
 use ME\SchoolManagement\Models\Subject;
 use ME\SchoolManagement\Models\SubjectGroup;
+use ME\SchoolManagement\Models\TransportRoute;
 use ME\SchoolManagement\Services\SchoolNotifier;
 use ME\SchoolManagement\Services\SchoolCalendar;
 
@@ -56,9 +57,10 @@ class StudentController extends Controller
         $academicYears = AcademicYear::orderBy('id', 'desc')->get();
         $feeTypes      = FeeType::where('is_active', true)->get();
         $subjectGroups = SubjectGroup::where('is_active', true)->orderBy('name')->get();
+        $transportRoutes = TransportRoute::with('stops')->where('is_active', true)->orderBy('route_name')->get();
 
         return view('school-management::students.index',
-            compact('students', 'classes', 'sections', 'academicYears', 'feeTypes', 'subjectGroups'));
+            compact('students', 'classes', 'sections', 'academicYears', 'feeTypes', 'subjectGroups', 'transportRoutes'));
     }
 
     public function admission()
@@ -90,7 +92,9 @@ class StudentController extends Controller
             'documents.*'       => 'file|max:5120',
             'waiver_amount'     => 'nullable|numeric|min:0',
             'portal_pin'        => 'nullable|digits_between:4,10',
-        ]);
+            'transport_route_id' => 'nullable|exists:transport_routes,id',
+            'route_stop_id'      => ['nullable', \Illuminate\Validation\Rule::exists('route_stops', 'id')->where('route_id', $request->transport_route_id)],
+        ], ['route_stop_id.exists' => 'The pick-up stop is not on the chosen route.']);
 
         // Use the given Student ID (for entering an already-existing student), otherwise auto-generate one.
         if ($request->filled('student_id')) {
@@ -132,6 +136,8 @@ class StudentController extends Controller
             'optional_subject_id' => $request->optional_subject_id ?: null,
             'academic_year_id'    => $request->academic_year_id ?: AcademicYear::where('is_current', true)->value('id'),
             'shift'               => $request->shift,
+            'transport_route_id'  => $request->transport_route_id ?: null,
+            'route_stop_id'       => $request->transport_route_id ? ($request->route_stop_id ?: null) : null,
             'roll_number'         => $request->roll_number,
             'registration_number' => $request->registration_number,
             'previous_school'     => $request->previous_school,
@@ -205,6 +211,7 @@ class StudentController extends Controller
         $feeTypes      = FeeType::where('is_active', true)->get();
         $subjectGroups = SubjectGroup::where('is_active', true)->orderBy('name')->get();
         $docTypes      = StudentDocument::types();
+        $transportRoutes = TransportRoute::with('stops')->where('is_active', true)->orderBy('route_name')->get();
 
         $libraryIssues = BookIssue::with('book', 'copy')
             ->where('student_id', $id)
@@ -212,7 +219,7 @@ class StudentController extends Controller
             ->get();
 
         return view('school-management::students.show',
-            compact('student', 'classes', 'sections', 'academicYears', 'feeTypes', 'subjectGroups', 'docTypes', 'libraryIssues'));
+            compact('student', 'classes', 'sections', 'academicYears', 'feeTypes', 'subjectGroups', 'docTypes', 'libraryIssues', 'transportRoutes'));
     }
 
     // ── Update ─────────────────────────────────────────────────────────────
@@ -230,7 +237,9 @@ class StudentController extends Controller
             'email'            => 'nullable|email|max:255',
             'photo'            => 'nullable|image|max:2048',
             'admission_date'   => 'nullable|date',
-        ]);
+            'transport_route_id' => 'nullable|exists:transport_routes,id',
+            'route_stop_id'      => ['nullable', \Illuminate\Validation\Rule::exists('route_stops', 'id')->where('route_id', $request->transport_route_id)],
+        ], ['route_stop_id.exists' => 'The pick-up stop is not on the chosen route.']);
 
         $student = Student::findOrFail($id);
 
@@ -260,6 +269,8 @@ class StudentController extends Controller
             'optional_subject_id'  => $request->optional_subject_id ?: null,
             'academic_year_id'     => $request->academic_year_id ?: null,
             'shift'                => $request->shift,
+            'transport_route_id'   => $request->transport_route_id ?: null,
+            'route_stop_id'        => $request->transport_route_id ? ($request->route_stop_id ?: null) : null,
             'roll_number'          => $request->roll_number,
             'registration_number'  => $request->registration_number,
             'previous_school'      => $request->previous_school,

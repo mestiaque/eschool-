@@ -15,6 +15,7 @@ use ME\SchoolManagement\Models\AcademicYear;
 use ME\SchoolManagement\Models\Invoice;
 use ME\SchoolManagement\Models\StudentDiscount;
 use ME\SchoolManagement\Services\SchoolNotifier;
+use ME\SchoolManagement\Services\FeeBilling;
 
 class FeeController extends Controller
 {
@@ -256,6 +257,16 @@ class FeeController extends Controller
             'due_date'         => 'nullable|date',
         ]);
 
+        // Transport is billed per route (route fee + stop extra), not by class fee structure.
+        $feeType = FeeType::findOrFail($request->fee_type_id);
+        if ($feeType->type === 'transport') {
+            $count = FeeBilling::generateTransport((int) $request->month, (int) $request->class_id,
+                (int) $request->academic_year_id, $request->due_date, $feeType);
+            return back()->with($count ? 'success' : 'error', $count
+                ? "Transport fee generated for {$count} student(s)."
+                : 'No students on a transport route need billing for this month.');
+        }
+
         $students = Student::where('class_id', $request->class_id)
             ->where('academic_year_id', $request->academic_year_id)
             ->where('is_active', true)
@@ -442,27 +453,9 @@ class FeeController extends Controller
         return $data;
     }
 
-    /** Unique invoice number; invoice_no has a unique index. */
-    private function newInvoiceNo(): string
-    {
-        do {
-            $no = 'INV-' . date('ymd') . '-' . strtoupper(\Illuminate\Support\Str::random(6));
-        } while (FeeCollection::where('invoice_no', $no)->exists());
-        return $no;
-    }
+    private function newInvoiceNo(): string { return FeeBilling::newInvoiceNo(); }
 
-    /** Active discount for a student: fee-type-specific first, then a general one. */
-    private function discountFor(int $studentId, int $feeTypeId, float $amount): float
-    {
-        $d = StudentDiscount::where('student_id', $studentId)
-            ->where('is_active', true)
-            ->where(fn($q) => $q->where('fee_type_id', $feeTypeId)->orWhereNull('fee_type_id'))
-            ->orderByRaw('fee_type_id IS NULL')
-            ->first();
-        if (!$d) return 0;
-        $value = $d->discount_type === 'percent' ? $amount * $d->discount_amount / 100 : (float) $d->discount_amount;
-        return round(min($value, $amount), 2);
-    }
+    private function discountFor(int $studentId, int $feeTypeId, float $amount): float { return FeeBilling::discountFor($studentId, $feeTypeId, $amount); }
 
     private function currentAcademicYearId()
     {

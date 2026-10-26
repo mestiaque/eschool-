@@ -18,7 +18,7 @@ class Student extends Model
         'email', 'phone', 'present_address', 'permanent_address', 'class_id',
         'section_id', 'subject_group_id', 'optional_subject_id', 'academic_year_id',
         'shift', 'roll_number', 'registration_number', 'previous_school', 'previous_class',
-        'admission_date', 'transport_route_id', 'vehicle_id',
+        'admission_date', 'transport_route_id', 'route_stop_id', 'vehicle_id',
         'is_hostel', 'room_number', 'is_active', 'portal_pin',
     ];
 
@@ -49,6 +49,16 @@ class Student extends Model
     public function results(): HasMany     { return $this->hasMany(Result::class); }
     public function leaves(): HasMany      { return $this->hasMany(StudentLeave::class); }
     public function earlyExits(): HasMany  { return $this->hasMany(StudentEarlyExit::class); }
+    public function transportRoute(): BelongsTo { return $this->belongsTo(TransportRoute::class, 'transport_route_id'); }
+    public function routeStop(): BelongsTo { return $this->belongsTo(RouteStop::class, 'route_stop_id'); }
+
+    /** Monthly transport charge: route fee plus the pick-up stop's extra fee. */
+    public function getTransportFeeAttribute(): float
+    {
+        if (!$this->transportRoute) return 0.0;
+        $stop = $this->routeStop && $this->routeStop->route_id == $this->transport_route_id ? $this->routeStop : null;
+        return round((float) $this->transportRoute->fee + (float) ($stop->extra_fee ?? 0), 2);
+    }
 
     public function getFullNameAttribute(): string
     {
