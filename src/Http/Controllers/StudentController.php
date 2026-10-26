@@ -549,6 +549,7 @@ class StudentController extends Controller
         }
 
         $promoted = 0;
+        $kept = 0;
         \Illuminate\Support\Facades\DB::beginTransaction();
         foreach ($request->student_ids as $studentId) {
             // Only students who are actually in the source class/year.
@@ -556,15 +557,19 @@ class StudentController extends Controller
                 ->where('academic_year_id', $request->from_year)->find($studentId);
             if (!$student) continue;
 
-            $toSection  = $request->to_sections[$studentId]  ?? $student->section_id;
-            $newRoll    = $request->roll_numbers[$studentId]  ?? $student->roll_number;
             $markStatus = $request->mark_status[$studentId]   ?? 'promoted';
+            $detained   = $markStatus === 'detained';
+            // A detained student repeats the same class (and keeps its section,
+            // since the section picker lists the target class's sections).
+            $toClass    = $detained ? $student->class_id : $request->to_class;
+            $toSection  = $detained ? $student->section_id : ($request->to_sections[$studentId] ?? $student->section_id);
+            $newRoll    = ($request->roll_numbers[$studentId] ?? null) ?: $student->roll_number;
 
             StudentPromotion::updateOrCreate(
                 ['student_id' => $studentId, 'from_academic_year_id' => $request->from_year],
                 [
                     'from_class_id'       => $request->from_class,
-                    'to_class_id'         => $request->to_class,
+                    'to_class_id'         => $toClass,
                     'from_section_id'     => $student->section_id,
                     'to_section_id'       => $toSection,
                     'to_academic_year_id' => $request->to_year,
@@ -574,20 +579,21 @@ class StudentController extends Controller
                 ]
             );
 
-            if ($markStatus === 'promoted') {
-                $student->update([
-                    'class_id'         => $request->to_class,
-                    'section_id'       => $toSection,
-                    'academic_year_id' => $request->to_year,
-                    'roll_number'      => $newRoll,
-                ]);
-                $promoted++;
-            }
+            // Both move to the new academic year; otherwise a detained student
+            // drops out of next year's class lists and monthly fee generation.
+            $student->update([
+                'class_id'         => $toClass,
+                'section_id'       => $toSection,
+                'academic_year_id' => $request->to_year,
+                'roll_number'      => $newRoll,
+            ]);
+            $detained ? $kept++ : $promoted++;
         }
 
         \Illuminate\Support\Facades\DB::commit();
 
-        return back()->with('success', "$promoted student(s) promoted successfully.");
+        return back()->with('success', "$promoted student(s) promoted"
+            . ($kept ? ", $kept detained in the same class for the new year" : '') . '.');
     }
 
     // ── Transfer ───────────────────────────────────────────────────────────
