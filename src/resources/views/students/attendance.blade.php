@@ -74,6 +74,7 @@
 .att-cell.excused  { color: #0d6efd; background: #cfe2ff; }
 .att-cell.empty    { color: #aaa; }
 .att-cell.weekend  { background: #e9ecef; color: #6c757d; cursor: not-allowed; }
+.att-cell.locked   { cursor: not-allowed; outline: 1px dashed #adb5bd; outline-offset: -2px; }
 .att-cell.holiday  { background: #fff0f0; color: #dc3545; cursor: not-allowed; }
 .day-col { min-width: 34px; max-width: 34px; }
 .day-name-row th { font-size: 0.68rem; font-weight: 400; color: #adb5bd; padding: 1px 0; background: #2c3034; }
@@ -165,6 +166,7 @@ td.day-col { padding: 2px; }
             <small class="text-muted">Click = toggle P/A &nbsp;|&nbsp; Double-click = edit</small>
         </div>
         <div class="att-table-wrap">
+@php $showSection = !request('section_id'); @endphp
             <table class="att-table">
                 <thead>
                     {{-- Date number row --}}
@@ -172,15 +174,18 @@ td.day-col { padding: 2px; }
                         <th class="col-student">#</th>
                         <th class="col-student" style="min-width:160px">{{ sm_t('Student Name') }}</th>
                         <th style="min-width:40px">{{ sm_t('Roll') }}</th>
+                        @if($showSection)<th style="min-width:40px">{{ sm_t('Section') }}</th>@endif
                         @for($d = 1; $d <= $daysInMonth; $d++)
                             @php
                                 $dayOfWeek = (int) date('w', mktime(0,0,0,$month,$d,$year));
-                                $isWeekend = in_array($dayOfWeek, $weekendDays);
-                                $isHoliday = isset($holidays[$d]);
+                                $exception  = $holidays[$d] ?? null;   // holiday or extra school day
+                                $isExtraDay = $exception && ($exception->type ?? 'holiday') === 'school_day';
+                                $isWeekend  = in_array($dayOfWeek, $weekendDays) && !$isExtraDay;
+                                $isHoliday  = $exception && !$isExtraDay;
                                 $dateStr   = $year . '-' . str_pad($month,2,'0',STR_PAD_LEFT) . '-' . str_pad($d,2,'0',STR_PAD_LEFT);
                             @endphp
                             <th class="day-col {{ $isWeekend ? 'weekend-head' : '' }} {{ $isHoliday ? 'holiday-head' : '' }}"
-                                title="{{ $isHoliday ? $holidays[$d]->title : ($isWeekend ? 'Weekend' : $dateStr) }}">
+                                title="{{ $isHoliday ? $exception->title : ($isWeekend ? sm_t('Weekly holiday') : ($isExtraDay ? $exception->title : $dateStr)) }}">
                                 {{ $d }}
                             </th>
                         @endfor
@@ -190,12 +195,14 @@ td.day-col { padding: 2px; }
                     </tr>
                     {{-- Day name row --}}
                     <tr class="day-name-row">
-                        <th></th><th></th><th></th>
+                        <th></th><th></th><th></th>@if($showSection)<th></th>@endif
                         @for($d = 1; $d <= $daysInMonth; $d++)
                             @php
                                 $dayOfWeek = (int) date('w', mktime(0,0,0,$month,$d,$year));
-                                $isWeekend = in_array($dayOfWeek, $weekendDays);
-                                $isHoliday = isset($holidays[$d]);
+                                $exception  = $holidays[$d] ?? null;   // holiday or extra school day
+                                $isExtraDay = $exception && ($exception->type ?? 'holiday') === 'school_day';
+                                $isWeekend  = in_array($dayOfWeek, $weekendDays) && !$isExtraDay;
+                                $isHoliday  = $exception && !$isExtraDay;
                             @endphp
                             <th class="{{ $isWeekend ? 'weekend-head' : '' }} {{ $isHoliday ? 'holiday-head' : '' }}">
                                 {{ $dayNames[$dayOfWeek] }}
@@ -219,12 +226,15 @@ td.day-col { padding: 2px; }
                         <td class="col-student" style="min-width:30px;max-width:30px;text-align:center;">{{ $idx + 1 }}</td>
                         <td class="col-student">{{ $student->first_name }} {{ $student->last_name }}</td>
                         <td>{{ $student->roll_number ?? '-' }}</td>
+                        @if($showSection)<td>{{ $student->section?->name ?? '—' }}</td>@endif
 
                         @for($d = 1; $d <= $daysInMonth; $d++)
                             @php
                                 $dayOfWeek = (int) date('w', mktime(0,0,0,$month,$d,$year));
-                                $isWeekend = in_array($dayOfWeek, $weekendDays);
-                                $isHoliday = isset($holidays[$d]);
+                                $exception  = $holidays[$d] ?? null;   // holiday or extra school day
+                                $isExtraDay = $exception && ($exception->type ?? 'holiday') === 'school_day';
+                                $isWeekend  = in_array($dayOfWeek, $weekendDays) && !$isExtraDay;
+                                $isHoliday  = $exception && !$isExtraDay;
                                 $dateStr   = $year . '-' . str_pad($month,2,'0',STR_PAD_LEFT) . '-' . str_pad($d,2,'0',STR_PAD_LEFT);
                                 $att       = $studentAtts[$d] ?? null;
                                 $status    = $att['status'] ?? null;
@@ -234,9 +244,10 @@ td.day-col { padding: 2px; }
                             @endphp
                             <td class="day-col">
                                 @if($isWeekend || $isHoliday)
-                                    <div class="att-cell {{ $isHoliday ? 'holiday' : 'weekend' }}"
-                                         title="{{ $isHoliday ? $holidays[$d]->title : 'Weekend' }}">
-                                        {{ $isHoliday ? 'H' : '—' }}
+                                    {{-- Closed day: read-only; an entry recorded here anyway still shows (and is counted). --}}
+                                    <div class="att-cell {{ $status ? $status . ' locked' : ($isHoliday ? 'holiday' : 'weekend') }}"
+                                         title="{{ $isHoliday ? $exception->title : sm_t('Weekly holiday') }}{{ $status ? ' — ' . sm_t('recorded on a closed day') : '' }}">
+                                        {{ $status ? $label : ($isHoliday ? 'H' : '—') }}
                                     </div>
                                 @else
                                     <div class="att-cell {{ $status ?? 'empty' }}"
@@ -333,7 +344,14 @@ function saveAttendance(cell, status, note, callback) {
     const labels = { present:'P', absent:'A', late:'L', excused:'E' };
     const classes = { present:'present', absent:'absent', late:'late', excused:'excused' };
 
-    // Optimistic UI update
+    // Optimistic UI update (rolled back if the server refuses)
+    const before = { text: cell.textContent, cls: cell.className, status: cell.dataset.status, note: cell.dataset.note };
+    const rollback = (msg) => {
+        cell.textContent = before.text; cell.className = before.cls;
+        cell.dataset.status = before.status; cell.dataset.note = before.note;
+        updateRowSummary(cell);
+        if (window.toastr) toastr.error(msg); else alert(msg);
+    };
     cell.textContent    = labels[status];
     cell.className      = 'att-cell ' + classes[status];
     cell.dataset.status = status;
@@ -353,15 +371,16 @@ function saveAttendance(cell, status, note, callback) {
             note:       note,
         })
     })
-    .then(r => r.json())
-    .then(data => {
-        if (!data.success) {
-            console.error('Save failed', data);
+    .then(r => r.json().catch(() => ({})).then(data => ({ ok: r.ok, data })))
+    .then(({ ok, data }) => {
+        if (!ok || !data.success) {
+            rollback(data.message || (data.errors ? Object.values(data.errors)[0][0] : 'Attendance was not saved.'));
+            return;
         }
         updateRowSummary(cell);
         if (callback) callback();
     })
-    .catch(err => console.error('Attendance save error:', err));
+    .catch(() => rollback('Attendance was not saved (network error).'));
 }
 
 function updateRowSummary(cell) {

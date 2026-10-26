@@ -695,4 +695,11 @@ return [
     '4th subject' => '৪র্থ বিষয়',
     '4th subject bonus' => '৪র্থ বিষয়ের বোনাস',
     'GPA adds the 4th subject grade point above 2.00; failing the 4th subject does not fail the result.' => 'জিপিএতে ৪র্থ বিষয়ের ২.০০-এর বেশি গ্রেড পয়েন্ট যোগ হয়; ৪র্থ বিষয়ে ফেল করলে মোট ফল ফেল হয় না।',
+    'Weekly holidays' => 'সাপ্তাহিক ছুটি',
+    'Weekly holiday' => 'সাপ্তাহিক ছুটি',
+    'recorded on a closed day' => 'ছুটির দিনে রেকর্ড করা',
+    'Extra school day' => 'অতিরিক্ত স্কুল দিবস',
+    'Holiday (school closed)' => 'ছুটি (স্কুল বন্ধ)',
+    'Extra school day (e.g. make-up class on a weekly holiday)' => 'অতিরিক্ত স্কুল দিবস (যেমন সাপ্তাহিক ছুটির দিনে ক্ষতিপূরণ ক্লাস)',
+    'Attendance cannot be taken on these days. Add a make-up class day on the Holidays page as an "Extra school day".' => 'এই দিনগুলোতে হাজিরা নেওয়া যাবে না। ক্ষতিপূরণ ক্লাসের দিন ছুটির পাতায় "অতিরিক্ত স্কুল দিবস" হিসেবে যোগ করুন।',
 ];

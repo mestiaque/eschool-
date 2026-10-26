@@ -74,8 +74,10 @@ table.attendance-print-table td.col-absent {
             @for($d = 1; $d <= $daysInMonth; $d++)
                 @php
                     $dayOfWeek = (int) date('w', mktime(0, 0, 0, $month, $d, $year));
-                    $isWeekend = in_array($dayOfWeek, $weekendDays);
-                    $isHoliday = isset($holidays[$d]);
+                    $exception  = $holidays[$d] ?? null;   // holiday or extra school day
+                    $isExtraDay = $exception && ($exception->type ?? 'holiday') === 'school_day';
+                    $isWeekend  = in_array($dayOfWeek, $weekendDays) && !$isExtraDay;
+                    $isHoliday  = $exception && !$isExtraDay;
                     $status    = $studentAtts[$d]['status'] ?? null;
                     $label     = $status ? ($statusLabels[$status] ?? '') : (($isWeekend || $isHoliday) ? '—' : '');
                 @endphp

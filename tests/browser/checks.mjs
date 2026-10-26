@@ -46,5 +46,14 @@ export default [
       const drawn = ids.filter(i => Chart.getChart(i)); if (drawn.length !== ids.length) return {ids, drawn};
       const card = document.querySelector('[data-chart-card="finance"]'); card.querySelector('[data-toggle-table]').click();
       return card.classList.contains('show-table') && card.querySelectorAll('.chart-table tr').length > 5 ? true : 'table toggle failed'` },
+  { name: 'Attendance: a refused save rolls the cell back and shows an error', url: '/students/attendance?class_id=1', js: `
+      const today = new Date().toISOString().slice(0, 10);
+      const cell = [...document.querySelectorAll('.att-cell[data-date]')].find(c => c.dataset.date > today);
+      if (!cell) return 'no future day in this month';
+      const before = cell.textContent.trim() + '|' + cell.className;
+      let toasted = false; const orig = window.toastr && toastr.error; if (window.toastr) toastr.error = () => { toasted = true; };
+      cell.click(); await sleep(1500);
+      const after = cell.textContent.trim() + '|' + cell.className;
+      return after === before && toasted ? true : {before, after, toasted}` },
   { name: 'Recycle Bin page lists tabs', url: '/trash', js: `return document.querySelectorAll('.nav-tabs .nav-link').length === 3 ? true : 'tabs missing'` },
 ];

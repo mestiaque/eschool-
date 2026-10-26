@@ -93,6 +93,9 @@ class TeacherController extends Controller
             'teacher_ids.*' => 'exists:teachers,id',
             'status.*'      => 'nullable|in:present,absent,late,excused',
         ], ['teacher_ids.required' => 'Select at least one teacher.']);
+        if ($closed = \ME\SchoolManagement\Services\SchoolCalendar::closedReason($request->date)) {
+            return back()->withInput()->with('error', "Attendance can't be taken on " . sm_date($request->date) . " — {$closed}.");
+        }
 
         foreach ($request->teacher_ids as $teacherId) {
             TeacherAttendance::updateOrCreate(
@@ -438,6 +441,9 @@ class TeacherController extends Controller
             'status'   => 'required|array',
             'status.*' => 'in:present,absent,late,excused',
         ]);
+        if ($closed = \ME\SchoolManagement\Services\SchoolCalendar::closedReason($request->date)) {
+            return back()->withInput()->with('error', "Attendance can't be taken on " . sm_date($request->date) . " — {$closed}.");
+        }
 
         $before = StudentAttendance::whereIn('student_id', array_keys($request->status))->whereDate('date', $request->date)->pluck('status', 'student_id');
         foreach ($request->status as $studentId => $status) {

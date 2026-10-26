@@ -59,7 +59,7 @@ class PortalAndSettingsTest extends TestCase
 
         $student = Student::whereHas('guardian', fn ($q) => $q->whereNotNull('guardian_phone'))->first();
         $before = \DB::table('sms_logs')->count();
-        $this->postJson('/students/attendance/cell', ['student_id' => $student->id, 'date' => '2031-01-05', 'status' => 'absent'])->assertOk();
+        $this->postJson('/students/attendance/cell', ['student_id' => $student->id, 'date' => '2020-01-05', 'status' => 'absent'])->assertOk();
         $this->assertGreaterThan($before, \DB::table('sms_logs')->count(), 'an SMS attempt was logged');
     }
 }

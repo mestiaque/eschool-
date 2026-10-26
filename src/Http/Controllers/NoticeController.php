@@ -79,9 +79,10 @@ class NoticeController extends Controller
     {
         Holiday::create($request->validate([
             'title'       => 'required|string|max:255',
-            'date'        => 'required|date',
+            'date'        => 'required|date|unique:holidays,date',
+            'type'        => 'nullable|in:holiday,school_day',
             'description' => 'nullable|string',
-        ]));
+        ], ['date.unique' => 'This date is already in the holiday list.']) + ['type' => 'holiday']);
         return back()->with('success', 'Holiday added');
     }
 

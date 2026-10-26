@@ -30,7 +30,9 @@
                                 @forelse($holidays as $holiday)
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
-                                    <td>{{ $holiday->title }}</td>
+                                    <td>{{ $holiday->title }}
+                                        @if(($holiday->type ?? 'holiday') === 'school_day')<span class="badge bg-info-subtle text-info ms-1">{{ sm_t('Extra school day') }}</span>@endif
+                                    </td>
                                     <td>{{ sm_date(\Carbon\Carbon::parse($holiday->date)) }}</td>
                                     <td>{{ $holiday->description ?? '—' }}</td>
                                     <td>
@@ -76,6 +78,13 @@
                     <div class="mb-2">
                         <label class="form-label">{{ sm_t('Date') }}</label>
                         <input type="date" name="date" class="form-control form-control-sm" required>
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label">{{ sm_t('Type') }}</label>
+                        <select name="type" class="form-select form-select-sm">
+                            <option value="holiday">{{ sm_t('Holiday (school closed)') }}</option>
+                            <option value="school_day">{{ sm_t('Extra school day (e.g. make-up class on a weekly holiday)') }}</option>
+                        </select>
                     </div>
                     <div class="mb-2">
                         <label class="form-label">{{ sm_t('Description') }}</label>

@@ -207,6 +207,8 @@ class UserController extends Controller
         ]);
         $data['salary_expense_category_id'] = $data['salary_expense_category_id'] ?? '';
         $data['optional_subject_bonus']     = $request->boolean('optional_subject_bonus') ? '1' : '0';
+        $request->validate(['weekend_days' => 'nullable|array|max:6', 'weekend_days.*' => 'integer|between:0,6']);
+        $data['weekend_days'] = collect($request->input('weekend_days', []))->map(fn ($d) => (int) $d)->unique()->sort()->implode(',');
         $this->saveSettings($data);
         return back()->with('success', 'General settings updated');
     }

@@ -27,6 +27,7 @@ use ME\SchoolManagement\Models\StudentTransfer;
 use ME\SchoolManagement\Models\Subject;
 use ME\SchoolManagement\Models\SubjectGroup;
 use ME\SchoolManagement\Services\SchoolNotifier;
+use ME\SchoolManagement\Services\SchoolCalendar;
 
 class StudentController extends Controller
 {
@@ -376,12 +377,12 @@ class StudentController extends Controller
         $attendanceMap = [];
         $daysInMonth   = 0;
         $holidays      = collect();
-        $weekendDays   = [5, 6]; // Fri + Sat
+        $weekendDays   = SchoolCalendar::weekendDays();
 
         if ($request->class_id) {
             $sections = Section::where('class_id', $request->class_id)->where('is_active', true)->get();
 
-            $studentQuery = Student::where('class_id', $request->class_id)->where('is_active', true);
+            $studentQuery = Student::with('section')->where('class_id', $request->class_id)->where('is_active', true);
             if ($request->section_id) $studentQuery->where('section_id', $request->section_id);
             $students = $studentQuery->orderBy('roll_number')->orderBy('first_name')->get();
 
@@ -398,8 +399,8 @@ class StudentController extends Controller
                 ];
             }
 
-            $holidays = Holiday::whereBetween('date', [$startDate, $endDate])
-                ->where('is_active', true)->get()
+            // Holidays and extra school days, keyed by day of month.
+            $holidays = collect(SchoolCalendar::exceptions($startDate, $endDate))
                 ->keyBy(fn($h) => (int) date('j', strtotime($h->date)));
         }
 
@@ -420,12 +421,12 @@ class StudentController extends Controller
         $attendanceMap = [];
         $daysInMonth   = 0;
         $holidays      = collect();
-        $weekendDays   = [5, 6]; // Fri + Sat
+        $weekendDays   = SchoolCalendar::weekendDays();
 
         if ($request->class_id) {
             $sections = Section::where('class_id', $request->class_id)->where('is_active', true)->get();
 
-            $studentQuery = Student::where('class_id', $request->class_id)->where('is_active', true);
+            $studentQuery = Student::with('section')->where('class_id', $request->class_id)->where('is_active', true);
             if ($request->section_id) $studentQuery->where('section_id', $request->section_id);
             $students = $studentQuery->orderBy('roll_number')->orderBy('first_name')->get();
 
@@ -442,8 +443,8 @@ class StudentController extends Controller
                 ];
             }
 
-            $holidays = Holiday::whereBetween('date', [$startDate, $endDate])
-                ->where('is_active', true)->get()
+            // Holidays and extra school days, keyed by day of month.
+            $holidays = collect(SchoolCalendar::exceptions($startDate, $endDate))
                 ->keyBy(fn($h) => (int) date('j', strtotime($h->date)));
         }
 
@@ -462,6 +463,9 @@ class StudentController extends Controller
             'student_ids.*' => 'exists:students,id',
             'status.*'      => 'nullable|in:present,absent,late,excused',
         ], ['student_ids.required' => 'Select at least one student.']);
+        if ($closed = SchoolCalendar::closedReason($request->date)) {
+            return back()->withInput()->with('error', "Attendance can't be taken on " . sm_date($request->date) . " — {$closed}.");
+        }
 
         $before = StudentAttendance::whereIn('student_id', $request->student_ids)->whereDate('date', $request->date)->pluck('status', 'student_id');
         foreach ($request->student_ids as $studentId) {
@@ -485,9 +489,12 @@ class StudentController extends Controller
     {
         $request->validate([
             'student_id' => 'required|exists:students,id',
-            'date'       => 'required|date',
+            'date'       => 'required|date|before_or_equal:today',
             'status'     => 'required|in:present,absent,late,excused',
         ]);
+        if ($closed = SchoolCalendar::closedReason($request->date)) {
+            return response()->json(['success' => false, 'message' => "No attendance on " . sm_date($request->date) . " — {$closed}."], 422);
+        }
         $student = Student::findOrFail($request->student_id);
         $before = StudentAttendance::where('student_id', $student->id)->whereDate('date', $request->date)->value('status');
         $att = StudentAttendance::updateOrCreate(

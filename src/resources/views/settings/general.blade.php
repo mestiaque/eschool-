@@ -37,6 +37,19 @@
                             </select>
                         </div>
                         <div class="mb-3">
+                            <label class="form-label">{{ sm_t('Weekly holidays') }}</label>
+                            @php $weekend = array_filter(explode(',', $settings['weekend_days'] ?? '5,6'), 'strlen'); @endphp
+                            <div>
+                                @foreach([6 => 'Saturday', 0 => 'Sunday', 1 => 'Monday', 2 => 'Tuesday', 3 => 'Wednesday', 4 => 'Thursday', 5 => 'Friday'] as $num => $day)
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" name="weekend_days[]" value="{{ $num }}" id="wd{{ $num }}" {{ in_array((string) $num, $weekend, true) ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="wd{{ $num }}">{{ sm_t($day) }}</label>
+                                </div>
+                                @endforeach
+                            </div>
+                            <div class="form-text">{{ sm_t('Attendance cannot be taken on these days. Add a make-up class day on the Holidays page as an "Extra school day".') }}</div>
+                        </div>
+                        <div class="mb-3">
                             <div class="form-check">
                                 <input type="checkbox" class="form-check-input" name="optional_subject_bonus" value="1" id="optBonus" {{ ($settings['optional_subject_bonus'] ?? '1') === '1' ? 'checked' : '' }}>
                                 <label class="form-check-label" for="optBonus">{{ sm_t('4th subject bonus') }}</label>
