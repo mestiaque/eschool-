@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Income extends Model
 {
-    protected $fillable = ['income_category_id', 'academic_year_id', 'amount', 'date', 'description', 'document'];
+    protected $fillable = ['income_category_id', 'academic_year_id', 'amount', 'date', 'description', 'document', 'source_type', 'source_id'];
     protected $casts = ['amount' => 'decimal:2', 'date' => 'date'];
 
     public function incomeCategory(): BelongsTo

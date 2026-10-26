@@ -73,12 +73,16 @@ class ExpenseController extends Controller
 
     public function expenseUpdate(Request $request, $id)
     {
+        $row = Expense::findOrFail($id);
+        if ($owner = \ME\SchoolManagement\Services\Ledger::ownerLabel($row)) {
+            return back()->with('error', "This entry is managed from {$owner}; change it there.");
+        }
         $request->validate([
             'expense_category_id' => 'required|exists:expense_categories,id',
             'amount'              => 'required|numeric|min:0.01',
             'date'                => 'required|date',
         ]);
-        Expense::findOrFail($id)->update([
+        $row->update([
             'expense_category_id' => $request->expense_category_id,
             'amount'              => $request->amount,
             'date'                => $request->date,
@@ -91,6 +95,9 @@ class ExpenseController extends Controller
     public function expenseDestroy($id)
     {
         $expense = Expense::findOrFail($id);
+        if ($owner = \ME\SchoolManagement\Services\Ledger::ownerLabel($expense)) {
+            return back()->with('error', "This entry is managed from {$owner}; change it there.");
+        }
         if ($expense->salary_payment_id) {
             return back()->with('error', 'This expense was posted by a salary payment and cannot be deleted here.');
         }
@@ -161,12 +168,16 @@ class ExpenseController extends Controller
 
     public function incomeUpdate(Request $request, $id)
     {
+        $row = Income::findOrFail($id);
+        if ($owner = \ME\SchoolManagement\Services\Ledger::ownerLabel($row)) {
+            return back()->with('error', "This entry is managed from {$owner}; change it there.");
+        }
         $request->validate([
             'income_category_id' => 'required|exists:income_categories,id',
             'amount'             => 'required|numeric|min:0.01',
             'date'               => 'required|date',
         ]);
-        Income::findOrFail($id)->update([
+        $row->update([
             'income_category_id' => $request->income_category_id,
             'amount'             => $request->amount,
             'date'               => $request->date,
@@ -178,6 +189,9 @@ class ExpenseController extends Controller
     public function incomeDestroy($id)
     {
         $income = Income::findOrFail($id);
+        if ($owner = \ME\SchoolManagement\Services\Ledger::ownerLabel($income)) {
+            return back()->with('error', "This entry is managed from {$owner}; change it there.");
+        }
         $this->logDelete($income, 'Income ' . number_format($income->amount, 2), fn () => $income->delete());
         return back()->with('success', 'Income deleted');
     }

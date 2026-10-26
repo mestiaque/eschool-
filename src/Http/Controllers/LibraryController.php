@@ -15,6 +15,7 @@ use ME\SchoolManagement\Models\LibrarySetting;
 use ME\SchoolManagement\Models\Staff;
 use ME\SchoolManagement\Models\Student;
 use ME\SchoolManagement\Models\Teacher;
+use ME\SchoolManagement\Services\Ledger;
 
 class LibraryController extends Controller
 {
@@ -264,13 +265,16 @@ class LibraryController extends Controller
             'fine_paid'   => $totalPaid,
             'fine_status' => $status,
         ]);
+        Ledger::income('book_issue', $issue->id, $totalPaid, now()->toDateString(),
+            'Library fine: ' . ($issue->book->title ?? 'book') . ' (' . ($issue->copy->copy_id ?? '#' . $issue->id) . ')');
         return back()->with('success', 'Fine payment recorded.');
     }
 
     public function waiveFine($id)
     {
-        BookIssue::findOrFail($id)->update(['fine_status' => 'waived', 'fine_paid' => 0]);
-        return back()->with('success', 'Fine waived.');
+        // Waive what is still owed; money already paid stays recorded.
+        BookIssue::findOrFail($id)->update(['fine_status' => 'waived']);
+        return back()->with('success', 'Remaining fine waived.');
     }
 
     // ── Availability Chart ─────────────────────────────────────────────────

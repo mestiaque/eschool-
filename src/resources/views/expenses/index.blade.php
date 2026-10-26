@@ -45,17 +45,21 @@
             <tbody>
                 @foreach($expenses as $expense)
                 <tr>
-                    <td>{{ $expense->date }}</td>
+                    <td>{{ sm_date($expense->date) }}</td>
                     <td>{{ $expense->expenseCategory->name ?? '' }}</td>
                     <td>{{ sm_money($expense->amount, 2) }}</td>
                     <td>{{ $expense->description ?? '-' }}</td>
                     <td>{{ $expense->vendor_name ?? '-' }}</td>
                     <td>
-                        <button class="btn btn-sm btn-encodex-edit" onclick="editExpense({{ $expense->id }}, {{ $expense->expense_category_id }}, {{ $expense->amount }}, '{{ $expense->date }}', '{{ addslashes($expense->description ?? '') }}', '{{ addslashes($expense->vendor_name ?? '') }}')"><i class="fas fa-edit"></i></button>
+                        @if($owner = \ME\SchoolManagement\Services\Ledger::ownerLabel($expense))
+                            <span class="badge bg-secondary-subtle text-secondary" title="{{ sm_t('Managed automatically') }}">{{ sm_t($owner) }}</span>
+                        @else
+                        <button class="btn btn-sm btn-encodex-edit" onclick="editExpense({{ $expense->id }}, {{ $expense->expense_category_id }}, {{ $expense->amount }}, '{{ \Carbon\Carbon::parse($expense->date)->format('Y-m-d') }}', '{{ addslashes($expense->description ?? '') }}', '{{ addslashes($expense->vendor_name ?? '') }}')"><i class="fas fa-edit"></i></button>
                         <form method="POST" action="{{ route('expenses.destroy', $expense->id) }}" class="d-inline" onsubmit="return confirm('Delete this expense?')">
                             @csrf @method('DELETE')
                             <button type="submit" class="btn btn-sm btn-encodex-delete"><i class="fas fa-trash"></i></button>
                         </form>
+                        @endif
                     </td>
                 </tr>
                 @endforeach

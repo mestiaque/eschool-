@@ -708,4 +708,9 @@ return [
     'Generate transport fees' => 'পরিবহন ফি তৈরি করুন',
     'Create this month\'s transport invoices for every student on a route?' => 'রুটে থাকা সব ছাত্রের এই মাসের পরিবহন ইনভয়েস তৈরি করবেন?',
     'Each student on a route is billed the route fee plus their stop\'s extra fee. Assign routes on the student\'s profile.' => 'রুটে থাকা প্রত্যেক ছাত্রের রুটের ফি আর তার স্টপেজের বাড়তি ফি বিল হয়। রুট ছাত্রের প্রোফাইল থেকে দিন।',
+    'Managed automatically' => 'স্বয়ংক্রিয়ভাবে পরিচালিত',
+    'Salary payments' => 'বেতন পরিশোধ',
+    'Tour Fees' => 'সফর ফি',
+    'Library Fines' => 'লাইব্রেরি জরিমানা',
+    'Tour Expenses' => 'সফর খরচ',
 ];

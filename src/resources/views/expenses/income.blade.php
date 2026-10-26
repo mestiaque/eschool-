@@ -32,11 +32,15 @@
                     <td>{{ sm_date($inc->date) }}</td>
                     <td><small>{{ $inc->description ?? '-' }}</small></td>
                     <td>
+                        @if($owner = \ME\SchoolManagement\Services\Ledger::ownerLabel($inc))
+                            <span class="badge bg-secondary-subtle text-secondary" title="{{ sm_t('Managed automatically') }}">{{ sm_t($owner) }}</span>
+                        @else
                         <button class="btn btn-sm btn-encodex-edit" onclick="editIncome({{ $inc->id }}, {{ $inc->income_category_id }}, {{ $inc->amount }}, '{{ $inc->date?->format('Y-m-d') }}', '{{ addslashes($inc->description ?? '') }}')"><i class="fas fa-edit"></i></button>
                         <form method="POST" action="{{ route('expenses.income.destroy', $inc->id) }}" class="d-inline" onsubmit="return confirm('Delete?')">
                             @csrf @method('DELETE')
                             <button type="submit" class="btn btn-sm btn-encodex-delete"><i class="fas fa-trash"></i></button>
                         </form>
+                        @endif
                     </td>
                 </tr>
                 @empty

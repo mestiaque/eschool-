@@ -13,6 +13,7 @@ use ME\SchoolManagement\Models\Teacher;
 use ME\SchoolManagement\Models\TourExpense;
 use ME\SchoolManagement\Models\TourFeeCategory;
 use ME\SchoolManagement\Models\TourRegistration;
+use ME\SchoolManagement\Services\Ledger;
 
 class TourController extends Controller
 {
@@ -213,12 +214,17 @@ class TourController extends Controller
             : ($data['paid_amount'] >= (float) $data['fee'] ? 'paid' : 'partial');
         $data['is_approved'] = $request->boolean('is_approved');
         $reg->update($data);
+        // The amount paid lives in the income ledger too (one row per registration).
+        Ledger::income('tour_registration', $reg->id, (float) $reg->paid_amount, now()->toDateString(),
+            'Tour fee: ' . $reg->tour?->title);
         return back()->with('success', 'Registration updated.');
     }
 
     public function destroyRegistration($id, $regId)
     {
-        TourRegistration::where('tour_id', $id)->findOrFail($regId)->delete();
+        $reg = TourRegistration::where('tour_id', $id)->findOrFail($regId);
+        Ledger::forget('tour_registration', $reg->id);
+        $reg->delete();
         return back()->with('success', 'Participant removed from tour.');
     }
 
@@ -233,16 +239,20 @@ class TourController extends Controller
             'amount'       => 'required|numeric|min:0',
             'expense_date' => 'required|date',
         ]);
-        TourExpense::create(array_merge(
+        $expense = TourExpense::create(array_merge(
             $request->only(['category','description','amount','expense_date','paid_by','notes']),
             ['tour_id' => $id]
         ));
+        Ledger::expense('tour_expense', $expense->id, (float) $expense->amount, $expense->expense_date,
+            SchoolTour::whereKey($id)->value('title') . ': ' . $expense->description);
         return back()->with('success', 'Expense recorded.');
     }
 
     public function destroyExpense($id, $expId)
     {
-        TourExpense::where('tour_id', $id)->findOrFail($expId)->delete();
+        $expense = TourExpense::where('tour_id', $id)->findOrFail($expId);
+        Ledger::forget('tour_expense', $expense->id);
+        $expense->delete();
         return back()->with('success', 'Expense deleted.');
     }
 
