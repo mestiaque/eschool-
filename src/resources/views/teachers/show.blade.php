@@ -97,8 +97,8 @@
                         @forelse($teacher->attendances?->sortByDesc('date')->take(10) ?? [] as $att)
                         <tr>
                             <td>{{ sm_date($att->date) }}</td>
-                            <td>{{ $att->in_time ?? '-' }}</td>
-                            <td>{{ $att->out_time ?? '-' }}</td>
+                            <td>{{ sm_time($att->in_time) }}</td>
+                            <td>{{ sm_time($att->out_time) }}</td>
                             <td><span class="badge bg-{{ $bc = ['present'=>'success','absent'=>'danger','late'=>'warning','excused'=>'info'][$att->status] ?? 'secondary' }}-subtle text-{{ $bc }}">{{ ucfirst($att->status) }}</span></td>
                         </tr>
                         @empty

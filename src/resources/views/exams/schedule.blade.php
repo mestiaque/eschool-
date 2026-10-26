@@ -56,7 +56,7 @@
                     <td class="small">{{ $schedule->class->name ?? '—' }}</td>
                     <td class="small">{{ $schedule->subject->name ?? '—' }}</td>
                     <td class="small">{{ $schedule->date ? sm_date($schedule->date) : '—' }}</td>
-                    <td class="small">{{ $schedule->start_time }} – {{ $schedule->end_time }}</td>
+                    <td class="small">{{ sm_time($schedule->start_time) }} – {{ sm_time($schedule->end_time) }}</td>
                     <td class="small">{{ $schedule->room ?? '—' }}</td>
                     <td class="text-center">{{ $schedule->full_mark }}</td>
                     <td class="text-center">{{ $schedule->pass_mark }}</td>

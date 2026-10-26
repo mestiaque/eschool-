@@ -51,3 +51,16 @@ if (!function_exists('sm_t')) {
         return trans()->has($key) ? trans($key) : $text;
     }
 }
+
+if (!function_exists('sm_time')) {
+    /** Time of day as "08:00 AM" ("—" when empty), the format used across the school pages. */
+    function sm_time($time): string
+    {
+        if (empty($time)) return '—';
+        try {
+            return \Carbon\Carbon::parse($time)->format('h:i A');
+        } catch (\Throwable $e) {
+            return (string) $time;
+        }
+    }
+}

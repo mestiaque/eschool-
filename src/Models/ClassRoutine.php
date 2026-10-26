@@ -33,4 +33,14 @@ class ClassRoutine extends Model
     {
         return $this->belongsTo(Room::class);
     }
+
+    /** Bangladesh school week order. */
+    public const WEEK = ['Saturday', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+
+    /** Order by day of the school week (Saturday first) instead of alphabetically. */
+    public function scopeOrderByWeekday($query)
+    {
+        $cases = collect(self::WEEK)->map(fn ($d, $i) => "WHEN '{$d}' THEN {$i}")->implode(' ');
+        return $query->orderByRaw("CASE day {$cases} ELSE 7 END");
+    }
 }

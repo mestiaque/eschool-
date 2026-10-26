@@ -175,8 +175,8 @@ document.addEventListener('DOMContentLoaded', function() {
                         <td>{{ $routine->subject->name ?? '' }}</td>
                         <td>{{ $routine->teacher?->full_name ?? '-' }}</td>
                         <td>{{ $routine->day }}</td>
-                        <td>{{ $routine->start_time }}</td>
-                        <td>{{ $routine->end_time }}</td>
+                        <td>{{ sm_time($routine->start_time) }}</td>
+                        <td>{{ sm_time($routine->end_time) }}</td>
                         <td>
                             @if($routine->room)
                                 <a href="{{ route('academic.rooms.schedule', $routine->room_id) }}" class="text-decoration-none">

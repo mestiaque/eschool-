@@ -34,8 +34,8 @@
             <td>{{ $routine->section->name ?? '-' }}</td>
             <td>{{ $routine->subject->name ?? '' }}</td>
             <td>{{ $routine->day }}</td>
-            <td>{{ $routine->start_time }}</td>
-            <td>{{ $routine->end_time }}</td>
+            <td>{{ sm_time($routine->start_time) }}</td>
+            <td>{{ sm_time($routine->end_time) }}</td>
             <td>{{ $routine->room->name ?? '-' }}</td>
         </tr>
         @empty

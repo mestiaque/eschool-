@@ -340,7 +340,7 @@ class AcademicController extends Controller
             $query->where('title', request('title'));
         }
 
-        $routines = $query->orderBy('day')->orderBy('start_time')->paginate(30)->withQueryString();
+        $routines = $query->orderByWeekday()->orderBy('start_time')->paginate(30)->withQueryString();
 
         return view('school-management::academic.routines.index', compact('classes', 'rooms', 'teachers', 'routines', 'titles'));
     }
@@ -365,7 +365,7 @@ class AcademicController extends Controller
             $query->where('title', request('title'));
         }
 
-        $routines = $query->orderBy('day')->orderBy('start_time')->get();
+        $routines = $query->orderByWeekday()->orderBy('start_time')->get();
 
         return view('school-management::academic.routines.print', compact('classes', 'rooms', 'routines'));
     }
@@ -379,7 +379,7 @@ class AcademicController extends Controller
         $routines = ClassRoutine::with(['subject', 'section', 'teacher'])
             ->where('class_id', $class_id)
             ->when($selectedTitle, fn($q) => $q->where('title', $selectedTitle), fn($q) => $q->whereNull('title'))
-            ->orderBy('day')
+            ->orderByWeekday()
             ->orderBy('start_time')
             ->get();
 
@@ -405,7 +405,7 @@ class AcademicController extends Controller
         $routines = ClassRoutine::with(['subject', 'section'])
             ->where('class_id', $class_id)
             ->when($selectedTitle, fn($q) => $q->where('title', $selectedTitle), fn($q) => $q->whereNull('title'))
-            ->orderBy('day')
+            ->orderByWeekday()
             ->orderBy('start_time')
             ->get();
 
