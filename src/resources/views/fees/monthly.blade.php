@@ -10,7 +10,7 @@
         <form method="POST" action="{{ route('fees.generate-monthly') }}" class="row g-2 align-items-end">
             @csrf
             <div class="col-md-2">
-                <label class="form-label">Class *</label>
+                <label class="form-label">{{ sm_t('Class') }} *</label>
                 <select name="class_id" class="form-control form-control-sm" required>
                     <option value="">{{ sm_t('Select Class') }}</option>
                     @foreach($classes as $class)
@@ -19,7 +19,7 @@
                 </select>
             </div>
             <div class="col-md-2">
-                <label class="form-label">Academic Year *</label>
+                <label class="form-label">{{ sm_t('Academic Year') }} *</label>
                 <select name="academic_year_id" class="form-control form-control-sm" required>
                     <option value="">{{ sm_t('Select Year') }}</option>
                     @foreach($academicYears as $year)
@@ -28,7 +28,7 @@
                 </select>
             </div>
             <div class="col-md-2">
-                <label class="form-label">Fee Type *</label>
+                <label class="form-label">{{ sm_t('Fee Type') }} *</label>
                 <select name="fee_type_id" class="form-control form-control-sm" required>
                     <option value="">{{ sm_t('Select Fee Type') }}</option>
                     @foreach($feeTypes as $ft)
@@ -37,7 +37,7 @@
                 </select>
             </div>
             <div class="col-md-2">
-                <label class="form-label">Month *</label>
+                <label class="form-label">{{ sm_t('Month') }} *</label>
                 <select name="month" class="form-control form-control-sm" required>
                     @for($m=1; $m<=12; $m++)
                     <option value="{{ $m }}" {{ now()->month == $m ? 'selected' : '' }}>{{ date('F', mktime(0,0,0,$m,1)) }}</option>
@@ -116,18 +116,18 @@
                     <td>{{ number_format($col->due_amount, 2) }}</td>
                     <td>
                         @php $colors = ['paid'=>'success','partial'=>'warning','unpaid'=>'danger']; @endphp
-                        <span class="badge bg-{{ $bc = $colors[$col->status] ?? 'secondary' }}-subtle text-{{ $bc }}">{{ ucfirst($col->status) }}</span>
+                        <span class="badge bg-{{ $bc = $colors[$col->status] ?? 'secondary' }}-subtle text-{{ $bc }}">{{ sm_t(ucfirst($col->status)) }}</span>
                     </td>
                     <td>
                         @if($col->status !== 'paid')
-                        <button class="btn btn-sm btn-encodex-payment" data-bs-toggle="modal" data-bs-target="#payModal{{ $col->id }}">Pay</button>
+                        <button class="btn btn-sm btn-encodex-payment" data-bs-toggle="modal" data-bs-target="#payModal{{ $col->id }}">{{ sm_t('Pay') }}</button>
                         @else
-                        <span class="text-success small"><i class="fas fa-check"></i> Paid</span>
+                        <span class="text-success small"><i class="fas fa-check"></i> {{ sm_t('Paid') }}</span>
                         @endif
                     </td>
                 </tr>
                 @empty
-                <tr><td colspan="10" class="text-center text-muted py-3">No records found</td></tr>
+                <tr><td colspan="10" class="text-center text-muted py-3">{{ sm_t('No records found') }}</td></tr>
                 @endforelse
             </tbody>
         </table>
@@ -145,8 +145,8 @@
             <div class="modal-content">
                 <div class="modal-header"><h6 class="modal-title">{{ sm_t('Pay Fee') }}</h6><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
                 <div class="modal-body">
-                    <p class="small text-muted mb-2">Due: <strong>{{ number_format($col->due_amount, 2) }}</strong></p>
-                    <input type="number" name="paid_amount" class="form-control form-control-sm mb-2" placeholder="Amount" step="0.01" required>
+                    <p class="small text-muted mb-2">{{ sm_t('Due') }}: <strong>{{ number_format($col->due_amount, 2) }}</strong></p>
+                    <input type="number" name="paid_amount" class="form-control form-control-sm mb-2" placeholder="{{ sm_t('Amount') }}" step="0.01" required>
                     <input type="date" name="payment_date" class="form-control form-control-sm mb-2" value="{{ date('Y-m-d') }}">
                     <select name="payment_method" class="form-control form-control-sm">
                         <option value="cash">{{ sm_t('Cash') }}</option>

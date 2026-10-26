@@ -4,7 +4,7 @@
 
 @push('buttons')
 <button class="btn btn-sm btn-encodex-create" data-bs-toggle="modal" data-bs-target="#classTextModal">
-    <i class="fas fa-plus"></i> Add Class Text
+    <i class="fas fa-plus"></i> {{ sm_t('Add Class Text') }}
 </button>
 @endpush
 
@@ -37,7 +37,7 @@
                             </select>
                         </div>
                         <div class="col-md-4">
-                            <input type="text" name="search" class="form-control form-control-sm" placeholder="Search title..." value="{{ request('search') }}">
+                            <input type="text" name="search" class="form-control form-control-sm" placeholder="{{ sm_t('Search title...') }}" value="{{ request('search') }}">
                         </div>
                         <div class="col-md-2">
                             <button type="submit" class="btn btn-sm btn-encodex-search w-100">{{ sm_t('Filter') }}</button>
@@ -70,9 +70,9 @@
                                         <td>{{ $text->edition ?? 'N/A' }}</td>
                                         <td>
                                             @if($text->is_active)
-                                                <span class="badge bg-success-subtle text-success">Active</span>
+                                                <span class="badge bg-success-subtle text-success">{{ sm_t('Active') }}</span>
                                             @else
-                                                <span class="badge bg-secondary-subtle text-secondary">Inactive</span>
+                                                <span class="badge bg-secondary-subtle text-secondary">{{ sm_t('Inactive') }}</span>
                                             @endif
                                         </td>
                                         <td>
@@ -90,7 +90,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="8" class="text-center">No class texts found</td>
+                                        <td colspan="8" class="text-center">{{ sm_t('No class texts found') }}</td>
                                     </tr>
                                 @endforelse
                             </tbody>
@@ -154,7 +154,7 @@
                     </div>
                     <div class="mb-2 form-check">
                         <input type="checkbox" name="is_active" class="form-check-input" id="active{{ $text->id }}" {{ $text->is_active ? 'checked' : '' }}>
-                        <label class="form-check-label" for="active{{ $text->id }}">Active</label>
+                        <label class="form-check-label" for="active{{ $text->id }}">{{ sm_t('Active') }}</label>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -202,15 +202,15 @@
                     </div>
                     <div class="mb-2">
                         <label class="form-label">{{ sm_t('Author') }}</label>
-                        <input type="text" name="author" class="form-control form-control-sm" placeholder="Book author">
+                        <input type="text" name="author" class="form-control form-control-sm" placeholder="{{ sm_t('Book author') }}">
                     </div>
                     <div class="mb-2">
                         <label class="form-label">{{ sm_t('Edition') }}</label>
-                        <input type="text" name="edition" class="form-control form-control-sm" placeholder="e.g., 1st, 2nd">
+                        <input type="text" name="edition" class="form-control form-control-sm" placeholder="{{ sm_t('e.g., 1st, 2nd') }}">
                     </div>
                     <div class="mb-2">
                         <label class="form-label">{{ sm_t('Content/Description') }}</label>
-                        <textarea name="content" class="form-control form-control-sm" rows="2" placeholder="Brief description"></textarea>
+                        <textarea name="content" class="form-control form-control-sm" rows="2" placeholder="{{ sm_t('Brief description') }}"></textarea>
                     </div>
                     <div class="mb-2 form-check">
                         <input type="checkbox" name="is_active" class="form-check-input" id="isActive" checked>

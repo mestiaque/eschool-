@@ -47,17 +47,17 @@
             <td>{{ sm_money($c->fine, 2) }}</td>
             <td>{{ sm_money($c->paid_amount, 2) }}</td>
             <td>{{ sm_money($c->due_amount, 2) }}</td>
-            <td>{{ ucfirst($c->status) }}</td>
+            <td>{{ sm_t(ucfirst($c->status)) }}</td>
         </tr>
         @empty
         <tr>
-            <td colspan="10" class="text-center">No records</td>
+            <td colspan="10" class="text-center">{{ sm_t('No records') }}</td>
         </tr>
         @endforelse
     </tbody>
     <tfoot>
         <tr class="grandtotal-row">
-            <td colspan="5" class="text-right">Total</td>
+            <td colspan="5" class="text-right">{{ sm_t('Total') }}</td>
             <td>{{ sm_money($collections->sum('amount'), 2) }}</td>
             <td>{{ sm_money($collections->sum('fine'), 2) }}</td>
             <td>{{ sm_money($collections->sum('paid_amount'), 2) }}</td>

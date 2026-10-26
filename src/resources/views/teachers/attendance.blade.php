@@ -45,13 +45,13 @@
                         <td><input type="radio" name="status[{{ $teacher->id }}]" value="excused" {{ ($att && $att->status == 'excused') ? 'checked' : '' }}></td>
                     </tr>
                     @empty
-                    <tr><td colspan="9" class="text-center text-muted py-3">No teachers found</td></tr>
+                    <tr><td colspan="9" class="text-center text-muted py-3">{{ sm_t('No teachers found') }}</td></tr>
                     @endforelse
                 </tbody>
             </table>
             @if(count($teachers) > 0)
             <div class="p-2">
-                <button type="submit" class="btn btn-sm btn-encodex-save"><i class="fas fa-save"></i> Save Attendance</button>
+                <button type="submit" class="btn btn-sm btn-encodex-save"><i class="fas fa-save"></i> {{ sm_t('Save Attendance') }}</button>
             </div>
             @endif
         </form>

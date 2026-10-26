@@ -40,7 +40,7 @@
         </tr>
         @empty
         <tr>
-            <td colspan="8" class="text-center">No routines found</td>
+            <td colspan="8" class="text-center">{{ sm_t('No routines found') }}</td>
         </tr>
         @endforelse
     </tbody>

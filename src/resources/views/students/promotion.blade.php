@@ -10,7 +10,7 @@
     <div class="col-md-4 col-xl-3">
         <div class="card shadow">
             <div class="card-header">
-                <h6 class="mb-0"><i class="fas fa-filter me-1"></i> Load Students</h6>
+                <h6 class="mb-0"><i class="fas fa-filter me-1"></i> {{ sm_t('Load Students') }}</h6>
             </div>
             <div class="card-body">
                 <form method="GET" id="loadForm" class="glass-search-form">
@@ -33,7 +33,7 @@
                         </select>
                     </div>
                     <button type="submit" class="btn btn-sm btn-encodex-search w-100">
-                        <i class="fas fa-users me-1"></i> Load Students
+                        <i class="fas fa-users me-1"></i> {{ sm_t('Load Students') }}
                     </button>
                 </form>
             </div>
@@ -42,7 +42,7 @@
         @if(request('from_class') && request('from_year') && $students->isNotEmpty())
         <div class="card shadow mt-3">
             <div class="card-header">
-                <h6 class="mb-0"><i class="fas fa-arrow-right me-1"></i> Promote To</h6>
+                <h6 class="mb-0"><i class="fas fa-arrow-right me-1"></i> {{ sm_t('Promote To') }}</h6>
             </div>
             <div class="card-body">
                 <div class="mb-3">
@@ -53,7 +53,7 @@
                         <option value="{{ $class->id }}">{{ $class->name }}</option>
                         @endforeach
                     </select>
-                    <small class="text-muted">Applies to all selected students</small>
+                    <small class="text-muted">{{ sm_t('Applies to all selected students') }}</small>
                 </div>
                 <div class="mb-3">
                     <label class="form-label">{{ sm_t('To Academic Year') }} <span class="text-danger">*</span></label>
@@ -66,18 +66,18 @@
                 </div>
                 <hr>
                 <div class="d-flex justify-content-between align-items-center mb-2">
-                    <small class="text-muted">Mark all as:</small>
+                    <small class="text-muted">{{ sm_t('Mark all as') }}:</small>
                     <div class="btn-group btn-group-sm">
                         <button type="button" class="btn btn-encodex-active" onclick="markAll('promoted')">
-                            <i class="fas fa-check"></i> Promoted
+                            <i class="fas fa-check"></i> {{ sm_t('Promoted') }}
                         </button>
                         <button type="button" class="btn btn-encodex-deactive" onclick="markAll('detained')">
-                            <i class="fas fa-times"></i> Detained
+                            <i class="fas fa-times"></i> {{ sm_t('Detained') }}
                         </button>
                     </div>
                 </div>
                 <div class="d-flex justify-content-between align-items-center">
-                    <small class="text-muted">Select:</small>
+                    <small class="text-muted">{{ sm_t('Select') }}:</small>
                     <div class="btn-group btn-group-sm">
                         <button type="button" class="btn btn-encodex-clear" onclick="selectAll(true)">{{ sm_t('All') }}</button>
                         <button type="button" class="btn btn-encodex-clear" onclick="selectAll(false)">{{ sm_t('None') }}</button>
@@ -92,12 +92,12 @@
     <div class="col-md-8 col-xl-9">
         @if(!request('from_class') || !request('from_year'))
             <div class="alert alert-info">
-                <i class="fas fa-info-circle me-1"></i> Select class and academic year to load students.
+                <i class="fas fa-info-circle me-1"></i> {{ sm_t('Select class and academic year to load students.') }}
             </div>
         @elseif($students->isEmpty())
             <div class="alert alert-warning">
                 <i class="fas fa-exclamation-triangle me-1"></i>
-                No students found for the selected class and academic year.
+                {{ sm_t('No students found for the selected class and academic year.') }}
             </div>
         @else
         <div class="card shadow">
@@ -156,7 +156,7 @@
                                             name="roll_numbers[{{ $student->id }}]"
                                             class="form-control form-control-sm new-roll text-center"
                                             value="{{ $student->roll_number }}"
-                                            placeholder="New roll"
+                                            placeholder="{{ sm_t('New roll') }}"
                                             style="min-width:80px">
                                     </td>
                                     <td>
@@ -193,7 +193,7 @@
                             "Detained" students will be recorded but <strong>not moved</strong> to the new class.
                         </small>
                         <button type="button" class="btn btn-sm btn-encodex-save" onclick="submitPromotion()">
-                            <i class="fas fa-arrow-circle-up me-1"></i> Promote Selected
+                            <i class="fas fa-arrow-circle-up me-1"></i> {{ sm_t('Promote Selected') }}
                         </button>
                     </div>
                 </form>

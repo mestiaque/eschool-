@@ -7,28 +7,28 @@
         <div class="stat-card text-center">
             <div class="stat-icon mx-auto mb-2 bg-success bg-opacity-10 text-success"><i class="fas fa-check-circle"></i></div>
             <div class="fw-bold fs-4 text-success">{{ sm_money($totalPaid, 0) }}</div>
-            <div class="text-muted small">Total Paid</div>
+            <div class="text-muted small">{{ sm_t('Total Paid') }}</div>
         </div>
     </div>
     <div class="col-md-4">
         <div class="stat-card text-center">
             <div class="stat-icon mx-auto mb-2 bg-danger bg-opacity-10 text-danger"><i class="fas fa-clock"></i></div>
             <div class="fw-bold fs-4 text-danger">{{ sm_money($totalDue, 0) }}</div>
-            <div class="text-muted small">Total Due</div>
+            <div class="text-muted small">{{ sm_t('Total Due') }}</div>
         </div>
     </div>
     <div class="col-md-4">
         <div class="stat-card text-center">
             <div class="stat-icon mx-auto mb-2 bg-info bg-opacity-10 text-info"><i class="fas fa-tag"></i></div>
             <div class="fw-bold fs-4 text-info">{{ sm_money($totalWaived, 0) }}</div>
-            <div class="text-muted small">Waived / Discount</div>
+            <div class="text-muted small">{{ sm_t('Waived / Discount') }}</div>
         </div>
     </div>
 </div>
 
 <div class="portal-card">
     <div class="p-3 border-bottom d-flex justify-content-between align-items-center">
-        <h6 class="mb-0 fw-bold"><i class="fas fa-list me-2 text-primary"></i>Fee Records</h6>
+        <h6 class="mb-0 fw-bold"><i class="fas fa-list me-2 text-primary"></i>{{ sm_t('Fee Records') }}</h6>
     </div>
     <div class="table-responsive">
         <table class="table table-sm table-portal table-hover mb-0">
@@ -54,17 +54,17 @@
                     <td>
                         @php $due = max(0, $fee->amount - ($fee->paid_amount ?? 0)); @endphp
                         @if($due <= 0)
-                        <span class="badge badge-status-paid">Paid</span>
+                        <span class="badge badge-status-paid">{{ sm_t('Paid') }}</span>
                         @elseif(($fee->paid_amount ?? 0) > 0)
-                        <span class="badge badge-status-partial">Partial</span>
+                        <span class="badge badge-status-partial">{{ sm_t('Partial') }}</span>
                         @else
-                        <span class="badge badge-status-unpaid">Unpaid</span>
+                        <span class="badge badge-status-unpaid">{{ sm_t('Unpaid') }}</span>
                         @endif
                     </td>
                     <td class="small text-muted">{{ $fee->status === 'paid' ? sm_date($fee->updated_at) : '—' }}</td>
                 </tr>
                 @empty
-                <tr><td colspan="7" class="text-center text-muted py-4">No fee records found.</td></tr>
+                <tr><td colspan="7" class="text-center text-muted py-4">{{ sm_t('No fee records found.') }}</td></tr>
                 @endforelse
             </tbody>
         </table>
@@ -73,12 +73,12 @@
 
 @if($discounts->count())
 <div class="portal-card mt-3 p-3">
-    <h6 class="fw-bold mb-2"><i class="fas fa-tag text-success me-2"></i>Active Waivers / Discounts</h6>
+    <h6 class="fw-bold mb-2"><i class="fas fa-tag text-success me-2"></i>{{ sm_t('Active Waivers / Discounts') }}</h6>
     @foreach($discounts as $d)
     <div class="d-flex justify-content-between align-items-center py-1 border-bottom small">
         <div>
             <span class="fw-semibold">{{ $d->feeType?->name ?? 'All Fees' }}</span>
-            @if($d->discount_type)<span class="text-muted ms-2">– {{ ucfirst($d->discount_type) }}</span>@endif
+            @if($d->discount_type)<span class="text-muted ms-2">– {{ sm_t(ucfirst($d->discount_type)) }}</span>@endif
         </div>
         <span class="text-success fw-bold">{{ sm_money($d->discount_amount, 0) }}</span>
     </div>

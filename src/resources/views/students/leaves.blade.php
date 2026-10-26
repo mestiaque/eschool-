@@ -2,7 +2,7 @@
 @section('title', sm_t('Student Leaves'))
 
 @push('buttons')
-<button class="btn btn-sm btn-encodex-create" data-bs-toggle="modal" data-bs-target="#leaveModal"><i class="fas fa-plus"></i> Apply Leave</button>
+<button class="btn btn-sm btn-encodex-create" data-bs-toggle="modal" data-bs-target="#leaveModal"><i class="fas fa-plus"></i> {{ sm_t('Apply Leave') }}</button>
 @endpush
 
 @section('content')
@@ -37,7 +37,7 @@
                     <td><small>{{ Str::limit($leave->reason, 40) }}</small></td>
                     <td>
                         @php $c=['approved'=>'success','rejected'=>'danger','pending'=>'warning']; @endphp
-                        <span class="badge bg-{{ $bc = $c[$leave->status] ?? 'secondary' }}-subtle text-{{ $bc }}">{{ ucfirst($leave->status) }}</span>
+                        <span class="badge bg-{{ $bc = $c[$leave->status] ?? 'secondary' }}-subtle text-{{ $bc }}">{{ sm_t(ucfirst($leave->status)) }}</span>
                     </td>
                     <td>
                         @if($leave->status === 'pending')
@@ -47,7 +47,7 @@
                     </td>
                 </tr>
                 @empty
-                <tr><td colspan="10" class="text-center text-muted py-3">No leave applications</td></tr>
+                <tr><td colspan="10" class="text-center text-muted py-3">{{ sm_t('No leave applications') }}</td></tr>
                 @endforelse
             </tbody>
         </table>
@@ -63,11 +63,11 @@
                 <div class="modal-header"><h5 class="modal-title">{{ sm_t('Apply Student Leave') }}</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
                 <div class="modal-body">
                     <div class="mb-2">
-                        <label class="form-label">Student *</label>
+                        <label class="form-label">{{ sm_t('Student') }} *</label>
                         @include('school-management::partials.student-select', ['name' => 'student_id', 'required' => true, 'placeholder' => 'Select Student'])
                     </div>
                     <div class="mb-2">
-                        <label class="form-label">Leave Type *</label>
+                        <label class="form-label">{{ sm_t('Leave Type') }} *</label>
                         <select name="leave_type_id" class="form-control form-control-sm" required>
                             <option value="">{{ sm_t('Select Type') }}</option>
                             @foreach($leaveTypes as $lt)
@@ -76,8 +76,8 @@
                         </select>
                     </div>
                     <div class="row g-2 mb-2">
-                        <div class="col"><label class="form-label">From *</label><input type="date" name="start_date" class="form-control form-control-sm" required></div>
-                        <div class="col"><label class="form-label">To *</label><input type="date" name="end_date" class="form-control form-control-sm" required></div>
+                        <div class="col"><label class="form-label">{{ sm_t('From') }} *</label><input type="date" name="start_date" class="form-control form-control-sm" required></div>
+                        <div class="col"><label class="form-label">{{ sm_t('To') }} *</label><input type="date" name="end_date" class="form-control form-control-sm" required></div>
                     </div>
                     <div class="mb-2">
                         <label class="form-label">{{ sm_t('Reason') }}</label>

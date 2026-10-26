@@ -4,7 +4,7 @@
 
 @push('buttons')
 <button class="btn btn-encodex-create btn-sm" data-bs-toggle="modal" data-bs-target="#holidayModal">
-    <i class="fas fa-plus"></i> Add Holiday
+    <i class="fas fa-plus"></i> {{ sm_t('Add Holiday') }}
 </button>
 @endpush
 
@@ -48,7 +48,7 @@
                                     </td>
                                 </tr>
                                 @empty
-                                <tr><td colspan="6" class="text-center text-muted py-3">No holidays found</td></tr>
+                                <tr><td colspan="6" class="text-center text-muted py-3">{{ sm_t('No holidays found') }}</td></tr>
                                 @endforelse
                             </tbody>
                         </table>

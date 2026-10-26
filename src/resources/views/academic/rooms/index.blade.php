@@ -2,7 +2,7 @@
 @section('title', sm_t('Rooms'))
 @push('buttons')
     <button class="btn btn-sm btn-encodex-create" data-bs-toggle="modal" data-bs-target="#roomModal">
-        <i class="fas fa-plus"></i> Add Room
+        <i class="fas fa-plus"></i> {{ sm_t('Add Room') }}
     </button>
 @endpush
 
@@ -36,7 +36,7 @@
                         </td>
                         <td class="text-center">
                             <span class="badge {{ $room->is_active ? 'bg-success-subtle text-success' : 'bg-secondary-subtle text-secondary' }}">
-                                {{ $room->is_active ? 'Active' : 'Inactive' }}
+                                {{ sm_t($room->is_active ? 'Active' : 'Inactive') }}
                             </span>
                         </td>
                         <td class="text-center">
@@ -58,7 +58,7 @@
             </table>
         </div>
         @if($rooms->isEmpty())
-        <div class="text-center py-3 text-muted">No rooms found. Add a room to get started.</div>
+        <div class="text-center py-3 text-muted">{{ sm_t('No rooms found. Add a room to get started.') }}</div>
         @endif
     </div>
 </div>
@@ -75,16 +75,16 @@
                 @csrf
                 <div class="modal-body">
                     <div class="mb-2">
-                        <label class="form-label">Room Name *</label>
-                        <input type="text" name="name" class="form-control form-control-sm" required placeholder="e.g. Room 101">
+                        <label class="form-label">{{ sm_t('Room Name') }} *</label>
+                        <input type="text" name="name" class="form-control form-control-sm" required placeholder="{{ sm_t('e.g. Room 101') }}">
                     </div>
                     <div class="mb-2">
                         <label class="form-label">{{ sm_t('Building') }}</label>
-                        <input type="text" name="building" class="form-control form-control-sm" placeholder="e.g. Main Building">
+                        <input type="text" name="building" class="form-control form-control-sm" placeholder="{{ sm_t('e.g. Main Building') }}">
                     </div>
                     <div class="mb-2">
                         <label class="form-label">{{ sm_t('Capacity') }}</label>
-                        <input type="number" name="capacity" class="form-control form-control-sm" min="1" placeholder="e.g. 40">
+                        <input type="number" name="capacity" class="form-control form-control-sm" min="1" placeholder="{{ sm_t('e.g. 40') }}">
                     </div>
                     <div class="mb-2">
                         <label class="form-label">{{ sm_t('Description') }}</label>
@@ -119,7 +119,7 @@
                 @csrf @method('PUT')
                 <div class="modal-body">
                     <div class="mb-2">
-                        <label class="form-label">Room Name *</label>
+                        <label class="form-label">{{ sm_t('Room Name') }} *</label>
                         <input type="text" name="name" class="form-control form-control-sm" required value="{{ $room->name }}">
                     </div>
                     <div class="mb-2">
@@ -138,7 +138,7 @@
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" name="is_active" value="1"
                                 id="isActiveEdit{{ $room->id }}" {{ $room->is_active ? 'checked' : '' }}>
-                            <label class="form-check-label" for="isActiveEdit{{ $room->id }}">Active</label>
+                            <label class="form-check-label" for="isActiveEdit{{ $room->id }}">{{ sm_t('Active') }}</label>
                         </div>
                     </div>
                 </div>

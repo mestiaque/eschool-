@@ -2,7 +2,7 @@
 @section('title', sm_t('Fee Structure'))
 @push('buttons')
     <button class="btn btn-sm btn-encodex-create" data-bs-toggle="modal" data-bs-target="#structureModal">
-        <i class="fas fa-plus"></i> Add Structure
+        <i class="fas fa-plus"></i> {{ sm_t('Add Structure') }}
     </button>
 @endpush
 
@@ -37,7 +37,7 @@
                     </td>
                 </tr>
                 @empty
-                <tr><td colspan="6" class="text-center text-muted py-4">No fee structures defined. Add one to enable monthly fee generation.</td></tr>
+                <tr><td colspan="6" class="text-center text-muted py-4">{{ sm_t('No fee structures defined. Add one to enable monthly fee generation.') }}</td></tr>
                 @endforelse
             </tbody>
         </table>
@@ -51,7 +51,7 @@
             @csrf
             <div class="modal-content">
                 <div class="modal-header py-2">
-                    <h6 class="modal-title"><i class="fas fa-sitemap me-2"></i>Add Fee Structure</h6>
+                    <h6 class="modal-title"><i class="fas fa-sitemap me-2"></i>{{ sm_t('Add Fee Structure') }}</h6>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
@@ -94,7 +94,7 @@
                 </div>
                 <div class="modal-footer py-2">
                     <button type="button" class="btn btn-sm btn-encodex-cancel" data-bs-dismiss="modal">{{ sm_t('Cancel') }}</button>
-                    <button type="submit" class="btn btn-sm btn-encodex-save"><i class="fas fa-save me-1"></i>Save</button>
+                    <button type="submit" class="btn btn-sm btn-encodex-save"><i class="fas fa-save me-1"></i>{{ sm_t('Save') }}</button>
                 </div>
             </div>
         </form>

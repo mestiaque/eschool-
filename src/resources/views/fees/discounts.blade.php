@@ -2,7 +2,7 @@
 @section('title', sm_t('Fee Discounts / Waivers'))
 @push('buttons')
     <button class="btn btn-sm btn-encodex-create" data-bs-toggle="modal" data-bs-target="#discountModal">
-        <i class="fas fa-plus"></i> Add Discount
+        <i class="fas fa-plus"></i> {{ sm_t('Add Discount') }}
     </button>
 @endpush
 
@@ -30,7 +30,7 @@
                     <td class="fw-semibold">{{ $d->student?->first_name }} {{ $d->student?->last_name }}</td>
                     <td class="small">{{ $d->student?->classe?->name ?? '—' }}</td>
                     <td>{{ $d->feeType?->name ?? '<span class="text-muted">All Fees</span>' }}</td>
-                    <td><span class="badge bg-info-subtle text-info">{{ ucfirst($d->discount_type ?? 'fixed') }}</span></td>
+                    <td><span class="badge bg-info-subtle text-info">{{ sm_t(ucfirst($d->discount_type ?? 'fixed')) }}</span></td>
                     <td class="text-end fw-semibold text-success">
                         @if($d->discount_type === 'percent')
                             {{ $d->discount_amount }}%
@@ -38,7 +38,7 @@
                             {{ sm_money($d->discount_amount, 2) }}
                         @endif
                     </td>
-                    <td><span class="badge bg-{{ $bc = $d->is_active ? 'success' : 'secondary' }}-subtle text-{{ $bc }}">{{ $d->is_active ? 'Active' : 'Inactive' }}</span></td>
+                    <td><span class="badge bg-{{ $bc = $d->is_active ? 'success' : 'secondary' }}-subtle text-{{ $bc }}">{{ sm_t($d->is_active ? 'Active' : 'Inactive') }}</span></td>
                     <td class="text-center">
                         <form method="POST" action="{{ route('fees.discounts.destroy', $d->id) }}" class="d-inline" onsubmit="return confirm('Remove this discount?')">
                             @csrf @method('DELETE')
@@ -47,7 +47,7 @@
                     </td>
                 </tr>
                 @empty
-                <tr><td colspan="8" class="text-center text-muted py-4">No discounts applied.</td></tr>
+                <tr><td colspan="8" class="text-center text-muted py-4">{{ sm_t('No discounts applied.') }}</td></tr>
                 @endforelse
             </tbody>
         </table>
@@ -61,7 +61,7 @@
             @csrf
             <div class="modal-content">
                 <div class="modal-header py-2">
-                    <h6 class="modal-title"><i class="fas fa-tag me-2"></i>Apply Discount / Waiver</h6>
+                    <h6 class="modal-title"><i class="fas fa-tag me-2"></i>{{ sm_t('Apply Discount / Waiver') }}</h6>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
@@ -101,7 +101,7 @@
                 </div>
                 <div class="modal-footer py-2">
                     <button type="button" class="btn btn-sm btn-encodex-cancel" data-bs-dismiss="modal">{{ sm_t('Cancel') }}</button>
-                    <button type="submit" class="btn btn-sm btn-encodex-save"><i class="fas fa-save me-1"></i>Apply</button>
+                    <button type="submit" class="btn btn-sm btn-encodex-save"><i class="fas fa-save me-1"></i>{{ sm_t('Apply') }}</button>
                 </div>
             </div>
         </form>

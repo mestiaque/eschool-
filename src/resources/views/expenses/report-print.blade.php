@@ -17,7 +17,7 @@
     <span style="{{ $profit < 0 ? 'color:#c00;' : '' }}">{{ sm_money($profit, 2) }}</span>
 </p>
 
-<p style="font-weight:bold;margin-bottom:5px;">Expenses</p>
+<p style="font-weight:bold;margin-bottom:5px;">{{ sm_t('Expenses') }}</p>
 <table>
     <thead>
         <tr>
@@ -37,19 +37,19 @@
         </tr>
         @empty
         <tr>
-            <td colspan="4" class="text-center">No expenses</td>
+            <td colspan="4" class="text-center">{{ sm_t('No expenses') }}</td>
         </tr>
         @endforelse
     </tbody>
     <tfoot>
         <tr class="subtotal-row">
-            <td colspan="2" class="text-right">Total Expense</td>
+            <td colspan="2" class="text-right">{{ sm_t('Total Expense') }}</td>
             <td colspan="2">{{ sm_money($totalExpense, 2) }}</td>
         </tr>
     </tfoot>
 </table>
 
-<p style="font-weight:bold;margin-bottom:5px;">Income</p>
+<p style="font-weight:bold;margin-bottom:5px;">{{ sm_t('Income') }}</p>
 <table>
     <thead>
         <tr>
@@ -69,13 +69,13 @@
         </tr>
         @empty
         <tr>
-            <td colspan="4" class="text-center">No income</td>
+            <td colspan="4" class="text-center">{{ sm_t('No income') }}</td>
         </tr>
         @endforelse
     </tbody>
     <tfoot>
         <tr class="subtotal-row">
-            <td colspan="2" class="text-right">Total Income</td>
+            <td colspan="2" class="text-right">{{ sm_t('Total Income') }}</td>
             <td colspan="2">{{ sm_money($totalIncome, 2) }}</td>
         </tr>
     </tfoot>

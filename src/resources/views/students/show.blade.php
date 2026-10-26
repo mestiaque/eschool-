@@ -1,9 +1,9 @@
 @extends('me::master')
 @section('title', sm_t('Student Profile'))
 @push('buttons')
-    <a href="{{ route('students.index') }}" class="btn btn-sm btn-encodex-list"><i class="fas fa-arrow-left"></i> Students</a>
-    <a href="{{ route('students.idcard.print', $student->id) }}" class="btn btn-sm btn-encodex-print" target="_blank"><i class="fas fa-id-card"></i> ID Card</a>
-    <button class="btn btn-sm btn-encodex-edit" data-bs-toggle="modal" data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</button>
+    <a href="{{ route('students.index') }}" class="btn btn-sm btn-encodex-list"><i class="fas fa-arrow-left"></i> {{ sm_t('Students') }}</a>
+    <a href="{{ route('students.idcard.print', $student->id) }}" class="btn btn-sm btn-encodex-print" target="_blank"><i class="fas fa-id-card"></i> {{ sm_t('ID Card') }}</a>
+    <button class="btn btn-sm btn-encodex-edit" data-bs-toggle="modal" data-bs-target="#editModal"><i class="fas fa-edit"></i> {{ sm_t('Edit') }}</button>
 @endpush
 
 @section('content')
@@ -22,26 +22,26 @@
                 @endif
                 <div class="fw-bold fs-6">{{ $student->first_name }} {{ $student->last_name }}</div>
                 <div class="text-primary small fw-semibold">{{ $student->student_id }}</div>
-                <span class="badge bg-{{ $bc = $student->is_active ? 'success' : 'secondary' }}-subtle text-{{ $bc }} mt-1">{{ $student->is_active ? 'Active' : 'Inactive' }}</span>
+                <span class="badge bg-{{ $bc = $student->is_active ? 'success' : 'secondary' }}-subtle text-{{ $bc }} mt-1">{{ sm_t($student->is_active ? 'Active' : 'Inactive') }}</span>
             </div>
             <ul class="list-group list-group-flush text-start small">
-                <li class="list-group-item d-flex justify-content-between py-1"><span class="text-muted">Class</span><strong>{{ $student->classe?->name ?? '—' }}</strong></li>
-                <li class="list-group-item d-flex justify-content-between py-1"><span class="text-muted">Section</span><strong>{{ $student->section?->name ?? '—' }}</strong></li>
-                <li class="list-group-item d-flex justify-content-between py-1"><span class="text-muted">Roll</span><strong>{{ $student->roll_number ?? '—' }}</strong></li>
-                <li class="list-group-item d-flex justify-content-between py-1"><span class="text-muted">Gender</span><strong>{{ ucfirst($student->gender ?? '—') }}</strong></li>
-                <li class="list-group-item d-flex justify-content-between py-1"><span class="text-muted">DOB</span><strong>{{ sm_date($student->date_of_birth) ?? '—' }}</strong></li>
-                <li class="list-group-item d-flex justify-content-between py-1"><span class="text-muted">Blood</span><strong>{{ $student->blood_group ?? '—' }}</strong></li>
-                <li class="list-group-item d-flex justify-content-between py-1"><span class="text-muted">Phone</span><strong>{{ $student->phone ?? '—' }}</strong></li>
-                <li class="list-group-item d-flex justify-content-between py-1"><span class="text-muted">Admitted</span><strong>{{ sm_date($student->admission_date) ?? '—' }}</strong></li>
+                <li class="list-group-item d-flex justify-content-between py-1"><span class="text-muted">{{ sm_t('Class') }}</span><strong>{{ $student->classe?->name ?? '—' }}</strong></li>
+                <li class="list-group-item d-flex justify-content-between py-1"><span class="text-muted">{{ sm_t('Section') }}</span><strong>{{ $student->section?->name ?? '—' }}</strong></li>
+                <li class="list-group-item d-flex justify-content-between py-1"><span class="text-muted">{{ sm_t('Roll') }}</span><strong>{{ $student->roll_number ?? '—' }}</strong></li>
+                <li class="list-group-item d-flex justify-content-between py-1"><span class="text-muted">{{ sm_t('Gender') }}</span><strong>{{ sm_t(ucfirst($student->gender ?? '—')) }}</strong></li>
+                <li class="list-group-item d-flex justify-content-between py-1"><span class="text-muted">{{ sm_t('DOB') }}</span><strong>{{ sm_date($student->date_of_birth) ?? '—' }}</strong></li>
+                <li class="list-group-item d-flex justify-content-between py-1"><span class="text-muted">{{ sm_t('Blood') }}</span><strong>{{ $student->blood_group ?? '—' }}</strong></li>
+                <li class="list-group-item d-flex justify-content-between py-1"><span class="text-muted">{{ sm_t('Phone') }}</span><strong>{{ $student->phone ?? '—' }}</strong></li>
+                <li class="list-group-item d-flex justify-content-between py-1"><span class="text-muted">{{ sm_t('Admitted') }}</span><strong>{{ sm_date($student->admission_date) ?? '—' }}</strong></li>
             </ul>
 
             {{-- Portal PIN --}}
             <div class="card-body pt-2 pb-2 border-top">
-                <div class="small text-muted mb-1"><i class="fas fa-lock me-1"></i>Portal PIN: <strong>{{ $student->portal_pin ? '••••' : 'Not set' }}</strong></div>
+                <div class="small text-muted mb-1"><i class="fas fa-lock me-1"></i>{{ sm_t('Portal PIN') }}: <strong>{{ $student->portal_pin ? '••••' : 'Not set' }}</strong></div>
                 <form method="POST" action="{{ route('students.portal-pin', $student->id) }}">
                     @csrf
                     <div class="d-flex gap-1">
-                        <input type="text" name="portal_pin" class="form-control form-control-sm" placeholder="Blank = random" maxlength="10" inputmode="numeric" pattern="\d{4,10}">
+                        <input type="text" name="portal_pin" class="form-control form-control-sm" placeholder="{{ sm_t('Blank = random') }}" maxlength="10" inputmode="numeric" pattern="\d{4,10}">
                         <button type="submit" class="btn btn-sm btn-encodex-save">{{ sm_t('Reset') }}</button>
                     </div>
                     <div class="form-check small mt-1">
@@ -57,45 +57,45 @@
     <div class="col-md-9">
         <ul class="nav nav-tabs nav-tabs-bordered mb-3" id="profileTabs">
             <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tabInfo">{{ sm_t('Info') }}</button></li>
-            <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabDocs"><i class="fas fa-paperclip me-1"></i>Documents <span class="badge bg-secondary-subtle text-secondary">{{ $student->documents->count() }}</span></button></li>
-            <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabFees"><i class="fas fa-money-bill me-1"></i>Fees <span class="badge bg-secondary-subtle text-secondary">{{ $student->feeCollections->count() }}</span></button></li>
-            <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabResults"><i class="fas fa-chart-bar me-1"></i>Results</button></li>
-            <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabLibrary"><i class="fas fa-book me-1"></i>Library</button></li>
-            <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabAttendance"><i class="fas fa-calendar me-1"></i>Attendance</button></li>
+            <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabDocs"><i class="fas fa-paperclip me-1"></i>{{ sm_t('Documents') }} <span class="badge bg-secondary-subtle text-secondary">{{ $student->documents->count() }}</span></button></li>
+            <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabFees"><i class="fas fa-money-bill me-1"></i>{{ sm_t('Fees') }} <span class="badge bg-secondary-subtle text-secondary">{{ $student->feeCollections->count() }}</span></button></li>
+            <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabResults"><i class="fas fa-chart-bar me-1"></i>{{ sm_t('Results') }}</button></li>
+            <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabLibrary"><i class="fas fa-book me-1"></i>{{ sm_t('Library') }}</button></li>
+            <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabAttendance"><i class="fas fa-calendar me-1"></i>{{ sm_t('Attendance') }}</button></li>
         </ul>
 
         <div class="tab-content">
             {{-- Info Tab --}}
             <div class="tab-pane fade show active" id="tabInfo">
                 <div class="card shadow mb-3">
-                    <div class="card-header py-2"><h6 class="mb-0 fw-bold"><i class="fas fa-user me-2"></i>Personal Details</h6></div>
+                    <div class="card-header py-2"><h6 class="mb-0 fw-bold"><i class="fas fa-user me-2"></i>{{ sm_t('Personal Details') }}</h6></div>
                     <div class="card-body">
                         <div class="row g-2 small">
-                            <div class="col-md-4"><span class="text-muted">Religion</span><div class="fw-semibold">{{ $student->religion ?? '—' }}</div></div>
-                            <div class="col-md-4"><span class="text-muted">Nationality</span><div class="fw-semibold">{{ $student->nationality ?? '—' }}</div></div>
-                            <div class="col-md-4"><span class="text-muted">Email</span><div class="fw-semibold">{{ $student->email ?? '—' }}</div></div>
-                            <div class="col-md-4"><span class="text-muted">Birth Cert. No.</span><div class="fw-semibold">{{ $student->birth_certificate_no ?? '—' }}</div></div>
-                            <div class="col-md-4"><span class="text-muted">Reg. No.</span><div class="fw-semibold">{{ $student->registration_number ?? '—' }}</div></div>
-                            <div class="col-md-4"><span class="text-muted">Previous School</span><div class="fw-semibold">{{ $student->previous_school ?? '—' }}</div></div>
-                            <div class="col-md-4"><span class="text-muted">Group</span><div class="fw-semibold">{{ $student->subjectGroup?->name ?? '—' }}</div></div>
-                            <div class="col-md-4"><span class="text-muted">Optional Subject</span><div class="fw-semibold">{{ $student->optionalSubject?->name ?? '—' }}</div></div>
-                            <div class="col-md-4"><span class="text-muted">Academic Year</span><div class="fw-semibold">{{ $student->academicYear?->name ?? '—' }}</div></div>
-                            <div class="col-md-6"><span class="text-muted">Present Address</span><div>{{ $student->present_address ?? '—' }}</div></div>
-                            <div class="col-md-6"><span class="text-muted">Permanent Address</span><div>{{ $student->permanent_address ?? '—' }}</div></div>
+                            <div class="col-md-4"><span class="text-muted">{{ sm_t('Religion') }}</span><div class="fw-semibold">{{ $student->religion ?? '—' }}</div></div>
+                            <div class="col-md-4"><span class="text-muted">{{ sm_t('Nationality') }}</span><div class="fw-semibold">{{ $student->nationality ?? '—' }}</div></div>
+                            <div class="col-md-4"><span class="text-muted">{{ sm_t('Email') }}</span><div class="fw-semibold">{{ $student->email ?? '—' }}</div></div>
+                            <div class="col-md-4"><span class="text-muted">{{ sm_t('Birth Cert. No.') }}</span><div class="fw-semibold">{{ $student->birth_certificate_no ?? '—' }}</div></div>
+                            <div class="col-md-4"><span class="text-muted">{{ sm_t('Reg. No.') }}</span><div class="fw-semibold">{{ $student->registration_number ?? '—' }}</div></div>
+                            <div class="col-md-4"><span class="text-muted">{{ sm_t('Previous School') }}</span><div class="fw-semibold">{{ $student->previous_school ?? '—' }}</div></div>
+                            <div class="col-md-4"><span class="text-muted">{{ sm_t('Group') }}</span><div class="fw-semibold">{{ $student->subjectGroup?->name ?? '—' }}</div></div>
+                            <div class="col-md-4"><span class="text-muted">{{ sm_t('Optional Subject') }}</span><div class="fw-semibold">{{ $student->optionalSubject?->name ?? '—' }}</div></div>
+                            <div class="col-md-4"><span class="text-muted">{{ sm_t('Academic Year') }}</span><div class="fw-semibold">{{ $student->academicYear?->name ?? '—' }}</div></div>
+                            <div class="col-md-6"><span class="text-muted">{{ sm_t('Present Address') }}</span><div>{{ $student->present_address ?? '—' }}</div></div>
+                            <div class="col-md-6"><span class="text-muted">{{ sm_t('Permanent Address') }}</span><div>{{ $student->permanent_address ?? '—' }}</div></div>
                         </div>
                     </div>
                 </div>
 
                 @if($student->guardian)
                 <div class="card shadow mb-3">
-                    <div class="card-header py-2"><h6 class="mb-0 fw-bold"><i class="fas fa-users me-2"></i>Guardian Information</h6></div>
+                    <div class="card-header py-2"><h6 class="mb-0 fw-bold"><i class="fas fa-users me-2"></i>{{ sm_t('Guardian Information') }}</h6></div>
                     <div class="card-body">
                         <div class="row g-2 small">
-                            <div class="col-md-4"><span class="text-muted">Father</span><div class="fw-semibold">{{ $student->guardian->father_name ?? '—' }}</div><div class="text-muted">{{ $student->guardian->father_phone ?? '' }}</div></div>
-                            <div class="col-md-4"><span class="text-muted">Mother</span><div class="fw-semibold">{{ $student->guardian->mother_name ?? '—' }}</div><div class="text-muted">{{ $student->guardian->mother_phone ?? '' }}</div></div>
-                            <div class="col-md-4"><span class="text-muted">Guardian</span><div class="fw-semibold">{{ $student->guardian->guardian_name ?? '—' }}</div><div class="text-muted">{{ $student->guardian->guardian_phone ?? '' }}</div></div>
-                            @if($student->guardian->father_occupation)<div class="col-md-4"><span class="text-muted">Father's Occ.</span><div>{{ $student->guardian->father_occupation }}</div></div>@endif
-                            @if($student->guardian->guardian_address)<div class="col-md-8"><span class="text-muted">Guardian Address</span><div>{{ $student->guardian->guardian_address }}</div></div>@endif
+                            <div class="col-md-4"><span class="text-muted">{{ sm_t('Father') }}</span><div class="fw-semibold">{{ $student->guardian->father_name ?? '—' }}</div><div class="text-muted">{{ $student->guardian->father_phone ?? '' }}</div></div>
+                            <div class="col-md-4"><span class="text-muted">{{ sm_t('Mother') }}</span><div class="fw-semibold">{{ $student->guardian->mother_name ?? '—' }}</div><div class="text-muted">{{ $student->guardian->mother_phone ?? '' }}</div></div>
+                            <div class="col-md-4"><span class="text-muted">{{ sm_t('Guardian') }}</span><div class="fw-semibold">{{ $student->guardian->guardian_name ?? '—' }}</div><div class="text-muted">{{ $student->guardian->guardian_phone ?? '' }}</div></div>
+                            @if($student->guardian->father_occupation)<div class="col-md-4"><span class="text-muted">{{ sm_t('Father\'s Occ.') }}</span><div>{{ $student->guardian->father_occupation }}</div></div>@endif
+                            @if($student->guardian->guardian_address)<div class="col-md-8"><span class="text-muted">{{ sm_t('Guardian Address') }}</span><div>{{ $student->guardian->guardian_address }}</div></div>@endif
                         </div>
                     </div>
                 </div>
@@ -104,7 +104,7 @@
                 {{-- Discounts / Waivers --}}
                 @if($student->discounts->count())
                 <div class="card shadow">
-                    <div class="card-header py-2"><h6 class="mb-0 fw-bold"><i class="fas fa-tag me-2 text-success"></i>Fee Waivers / Discounts</h6></div>
+                    <div class="card-header py-2"><h6 class="mb-0 fw-bold"><i class="fas fa-tag me-2 text-success"></i>{{ sm_t('Fee Waivers / Discounts') }}</h6></div>
                     <div class="card-body p-0">
                         <table class="table table-sm table-encodex mb-0">
                             <thead><tr><th>{{ sm_t('Fee Type') }}</th><th>{{ sm_t('Type') }}</th><th class="text-end">{{ sm_t('Amount') }}</th><th>{{ sm_t('Status') }}</th></tr></thead>
@@ -112,9 +112,9 @@
                                 @foreach($student->discounts as $d)
                                 <tr>
                                     <td>{{ $d->feeType?->name ?? 'All Fees' }}</td>
-                                    <td>{{ ucfirst($d->discount_type ?? 'fixed') }}</td>
+                                    <td>{{ sm_t(ucfirst($d->discount_type ?? 'fixed')) }}</td>
                                     <td class="text-end fw-semibold">{{ sm_money($d->discount_amount, 2) }}</td>
-                                    <td><span class="badge bg-{{ $bc = $d->is_active ? 'success' : 'secondary' }}-subtle text-{{ $bc }}">{{ $d->is_active ? 'Active' : 'Inactive' }}</span></td>
+                                    <td><span class="badge bg-{{ $bc = $d->is_active ? 'success' : 'secondary' }}-subtle text-{{ $bc }}">{{ sm_t($d->is_active ? 'Active' : 'Inactive') }}</span></td>
                                 </tr>
                                 @endforeach
                             </tbody>
@@ -128,7 +128,7 @@
             <div class="tab-pane fade" id="tabDocs">
                 <div class="card shadow mb-3">
                     <div class="card-header py-2 d-flex justify-content-between align-items-center">
-                        <h6 class="mb-0 fw-bold"><i class="fas fa-paperclip me-2"></i>Upload Document</h6>
+                        <h6 class="mb-0 fw-bold"><i class="fas fa-paperclip me-2"></i>{{ sm_t('Upload Document') }}</h6>
                     </div>
                     <div class="card-body">
                         <form method="POST" action="{{ route('students.documents.store', $student->id) }}" enctype="multipart/form-data" class="row g-2">
@@ -142,8 +142,8 @@
                                 </select>
                             </div>
                             <div class="col-md-4"><input type="file" name="file" class="form-control form-control-sm" required accept=".pdf,.jpg,.jpeg,.png"></div>
-                            <div class="col-md-3"><input type="text" name="description" class="form-control form-control-sm" placeholder="Description (optional)"></div>
-                            <div class="col-md-2"><button type="submit" class="btn btn-sm btn-encodex-create w-100"><i class="fas fa-upload me-1"></i>Upload</button></div>
+                            <div class="col-md-3"><input type="text" name="description" class="form-control form-control-sm" placeholder="{{ sm_t('Description (optional)') }}"></div>
+                            <div class="col-md-2"><button type="submit" class="btn btn-sm btn-encodex-create w-100"><i class="fas fa-upload me-1"></i>{{ sm_t('Upload') }}</button></div>
                         </form>
                     </div>
                 </div>
@@ -159,12 +159,12 @@
                                     <td class="small">{{ $doc->description ?? '—' }}</td>
                                     <td>
                                         <a href="{{ asset('storage/'.$doc->file_path) }}" target="_blank" class="btn btn-sm btn-encodex-show">
-                                            <i class="fas fa-eye"></i> View
+                                            <i class="fas fa-eye"></i> {{ sm_t('View') }}
                                         </a>
                                     </td>
                                     <td>
                                         @if($doc->is_verified)
-                                        <span class="badge bg-success-subtle text-success">Verified</span>
+                                        <span class="badge bg-success-subtle text-success">{{ sm_t('Verified') }}</span>
                                         @else
                                         <form method="POST" action="{{ route('students.documents.verify', [$student->id, $doc->id]) }}" class="d-inline">
                                             @csrf @method('PATCH')
@@ -181,7 +181,7 @@
                                     </td>
                                 </tr>
                                 @empty
-                                <tr><td colspan="6" class="text-center text-muted py-3">No documents uploaded.</td></tr>
+                                <tr><td colspan="6" class="text-center text-muted py-3">{{ sm_t('No documents uploaded.') }}</td></tr>
                                 @endforelse
                             </tbody>
                         </table>
@@ -197,13 +197,13 @@
                 @endphp
                 <div class="row g-2 mb-3">
                     <div class="col-md-4"><div class="stat-card text-center" style="background:#fff;border-radius:8px;padding:.75rem;border-left:3px solid #28a745;box-shadow:0 1px 4px rgba(0,0,0,.08)">
-                        <div class="small text-muted">Total Paid</div><div class="fw-bold text-success">{{ sm_money($totalPaid,2) }}</div>
+                        <div class="small text-muted">{{ sm_t('Total Paid') }}</div><div class="fw-bold text-success">{{ sm_money($totalPaid,2) }}</div>
                     </div></div>
                     <div class="col-md-4"><div class="stat-card text-center" style="background:#fff;border-radius:8px;padding:.75rem;border-left:3px solid #dc3545;box-shadow:0 1px 4px rgba(0,0,0,.08)">
-                        <div class="small text-muted">Total Due</div><div class="fw-bold text-danger">{{ sm_money($totalDue,2) }}</div>
+                        <div class="small text-muted">{{ sm_t('Total Due') }}</div><div class="fw-bold text-danger">{{ sm_money($totalDue,2) }}</div>
                     </div></div>
                     <div class="col-md-4">
-                        <a href="{{ route('fees.collection.create', ['student_id' => $student->id]) }}" class="btn btn-sm btn-encodex-create w-100"><i class="fas fa-plus me-1"></i>Add Fee Collection</a>
+                        <a href="{{ route('fees.collection.create', ['student_id' => $student->id]) }}" class="btn btn-sm btn-encodex-create w-100"><i class="fas fa-plus me-1"></i>{{ sm_t('Add Fee Collection') }}</a>
                     </div>
                 </div>
                 <div class="card shadow">
@@ -219,10 +219,10 @@
                                     <td class="text-end">{{ sm_money($fee->amount,2) }}</td>
                                     <td class="text-end text-success">{{ sm_money($fee->paid_amount,2) }}</td>
                                     <td class="text-end text-danger">{{ sm_money($fee->due_amount,2) }}</td>
-                                    <td><span class="badge bg-{{ $bc = ['paid'=>'success','partial'=>'warning','unpaid'=>'danger'][$fee->status] ?? 'secondary' }}-subtle text-{{ $bc }}">{{ ucfirst($fee->status) }}</span></td>
+                                    <td><span class="badge bg-{{ $bc = ['paid'=>'success','partial'=>'warning','unpaid'=>'danger'][$fee->status] ?? 'secondary' }}-subtle text-{{ $bc }}">{{ sm_t(ucfirst($fee->status)) }}</span></td>
                                 </tr>
                                 @empty
-                                <tr><td colspan="7" class="text-center text-muted py-3">No fee records.</td></tr>
+                                <tr><td colspan="7" class="text-center text-muted py-3">{{ sm_t('No fee records.') }}</td></tr>
                                 @endforelse
                             </tbody>
                         </table>
@@ -246,11 +246,11 @@
                                     <td class="text-center">{{ $res->gpa }}</td>
                                     <td class="text-center"><span class="badge bg-info-subtle text-info">{{ $res->grade ?? '—' }}</span></td>
                                     <td class="text-center">{{ $res->position ?? '—' }}</td>
-                                    <td><span class="badge bg-{{ $bc = $res->is_published ? 'success' : 'warning' }}-subtle text-{{ $bc }}">{{ $res->is_published ? 'Published' : 'Draft' }}</span></td>
+                                    <td><span class="badge bg-{{ $bc = $res->is_published ? 'success' : 'warning' }}-subtle text-{{ $bc }}">{{ sm_t($res->is_published ? 'Published' : 'Draft') }}</span></td>
                                     <td><a href="{{ route('exams.marksheet.view', [$student->id, $res->exam_id]) }}" target="_blank" class="btn btn-sm btn-encodex-show"><i class="fas fa-file-alt"></i></a></td>
                                 </tr>
                                 @empty
-                                <tr><td colspan="9" class="text-center text-muted py-3">No exam results.</td></tr>
+                                <tr><td colspan="9" class="text-center text-muted py-3">{{ sm_t('No exam results.') }}</td></tr>
                                 @endforelse
                             </tbody>
                         </table>
@@ -275,16 +275,16 @@
                                     <td class="small">@if($issue->fine_amount > 0)<span class="text-danger">{{ sm_money($issue->fine_amount,2) }}</span>@else—@endif</td>
                                     <td>
                                         @if($issue->status === 'issued')
-                                        <span class="badge bg-{{ $bc = $issue->overdue_days > 0 ? 'danger' : 'success' }}-subtle text-{{ $bc }}">{{ $issue->overdue_days > 0 ? 'Overdue' : 'Issued' }}</span>
+                                        <span class="badge bg-{{ $bc = $issue->overdue_days > 0 ? 'danger' : 'success' }}-subtle text-{{ $bc }}">{{ sm_t($issue->overdue_days > 0 ? 'Overdue' : 'Issued') }}</span>
                                         @elseif($issue->status === 'returned')
-                                        <span class="badge bg-light-subtle text-dark border">Returned</span>
+                                        <span class="badge bg-light-subtle text-dark border">{{ sm_t('Returned') }}</span>
                                         @else
-                                        <span class="badge bg-danger-subtle text-danger">{{ ucfirst($issue->status) }}</span>
+                                        <span class="badge bg-danger-subtle text-danger">{{ sm_t(ucfirst($issue->status)) }}</span>
                                         @endif
                                     </td>
                                 </tr>
                                 @empty
-                                <tr><td colspan="7" class="text-center text-muted py-3">No library records.</td></tr>
+                                <tr><td colspan="7" class="text-center text-muted py-3">{{ sm_t('No library records.') }}</td></tr>
                                 @endforelse
                             </tbody>
                         </table>
@@ -302,10 +302,10 @@
                     $attPct     = $attTotal > 0 ? round(($attPresent/$attTotal)*100) : 0;
                 @endphp
                 <div class="row g-2 mb-3">
-                    <div class="col-3"><div style="background:#fff;border-radius:8px;padding:.6rem;text-align:center;border-left:3px solid #1565c0;box-shadow:0 1px 4px rgba(0,0,0,.08)"><div class="small text-muted">Total</div><div class="fw-bold">{{ $attTotal }}</div></div></div>
-                    <div class="col-3"><div style="background:#fff;border-radius:8px;padding:.6rem;text-align:center;border-left:3px solid #28a745;box-shadow:0 1px 4px rgba(0,0,0,.08)"><div class="small text-muted">Present</div><div class="fw-bold text-success">{{ $attPresent }}</div></div></div>
-                    <div class="col-3"><div style="background:#fff;border-radius:8px;padding:.6rem;text-align:center;border-left:3px solid #dc3545;box-shadow:0 1px 4px rgba(0,0,0,.08)"><div class="small text-muted">Absent</div><div class="fw-bold text-danger">{{ $attAbsent }}</div></div></div>
-                    <div class="col-3"><div style="background:#fff;border-radius:8px;padding:.6rem;text-align:center;border-left:3px solid #ffc107;box-shadow:0 1px 4px rgba(0,0,0,.08)"><div class="small text-muted">Attendance</div><div class="fw-bold text-{{ $attPct >= 75 ? 'success' : 'danger' }}">{{ $attPct }}%</div></div></div>
+                    <div class="col-3"><div style="background:#fff;border-radius:8px;padding:.6rem;text-align:center;border-left:3px solid #1565c0;box-shadow:0 1px 4px rgba(0,0,0,.08)"><div class="small text-muted">{{ sm_t('Total') }}</div><div class="fw-bold">{{ $attTotal }}</div></div></div>
+                    <div class="col-3"><div style="background:#fff;border-radius:8px;padding:.6rem;text-align:center;border-left:3px solid #28a745;box-shadow:0 1px 4px rgba(0,0,0,.08)"><div class="small text-muted">{{ sm_t('Present') }}</div><div class="fw-bold text-success">{{ $attPresent }}</div></div></div>
+                    <div class="col-3"><div style="background:#fff;border-radius:8px;padding:.6rem;text-align:center;border-left:3px solid #dc3545;box-shadow:0 1px 4px rgba(0,0,0,.08)"><div class="small text-muted">{{ sm_t('Absent') }}</div><div class="fw-bold text-danger">{{ $attAbsent }}</div></div></div>
+                    <div class="col-3"><div style="background:#fff;border-radius:8px;padding:.6rem;text-align:center;border-left:3px solid #ffc107;box-shadow:0 1px 4px rgba(0,0,0,.08)"><div class="small text-muted">{{ sm_t('Attendance') }}</div><div class="fw-bold text-{{ $attPct >= 75 ? 'success' : 'danger' }}">{{ $attPct }}%</div></div></div>
                 </div>
                 <div class="card shadow">
                     <div class="card-body p-0">
@@ -315,11 +315,11 @@
                                 @forelse($student->attendances->sortByDesc('date')->take(30) as $att)
                                 <tr>
                                     <td>{{ sm_date($att->date) }}</td>
-                                    <td><span class="badge bg-{{ $bc = ['present'=>'success','absent'=>'danger','late'=>'warning','excused'=>'info'][$att->status] ?? 'secondary' }}-subtle text-{{ $bc }}">{{ ucfirst($att->status) }}</span></td>
+                                    <td><span class="badge bg-{{ $bc = ['present'=>'success','absent'=>'danger','late'=>'warning','excused'=>'info'][$att->status] ?? 'secondary' }}-subtle text-{{ $bc }}">{{ sm_t(ucfirst($att->status)) }}</span></td>
                                     <td class="small text-muted">{{ $att->note ?? '—' }}</td>
                                 </tr>
                                 @empty
-                                <tr><td colspan="3" class="text-center text-muted py-3">No attendance records.</td></tr>
+                                <tr><td colspan="3" class="text-center text-muted py-3">{{ sm_t('No attendance records.') }}</td></tr>
                                 @endforelse
                             </tbody>
                         </table>
@@ -335,14 +335,14 @@
     <div class="modal-dialog modal-xl glass-card">
         <div class="modal-content">
             <div class="modal-header py-2">
-                <h6 class="modal-title"><i class="fas fa-edit me-2"></i>Edit Student</h6>
+                <h6 class="modal-title"><i class="fas fa-edit me-2"></i>{{ sm_t('Edit Student') }}</h6>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <form method="POST" action="{{ route('students.update', $student->id) }}" enctype="multipart/form-data">
                 @csrf @method('PUT')
                 <div class="modal-body">
 
-                    <h6 class="text-primary fw-bold mb-2 border-bottom pb-1"><i class="fas fa-user me-1"></i>Personal Information</h6>
+                    <h6 class="text-primary fw-bold mb-2 border-bottom pb-1"><i class="fas fa-user me-1"></i>{{ sm_t('Personal Information') }}</h6>
                     <div class="row g-2">
                         <div class="col-md-3 mb-1"><label class="form-label form-label-sm">{{ sm_t('First Name') }} <span class="text-danger">*</span></label><input type="text" name="first_name" class="form-control form-control-sm" value="{{ $student->first_name }}" required></div>
                         <div class="col-md-3 mb-1"><label class="form-label form-label-sm">{{ sm_t('Last Name') }} <span class="text-danger">*</span></label><input type="text" name="last_name" class="form-control form-control-sm" value="{{ $student->last_name }}" required></div>
@@ -378,7 +378,7 @@
                         <div class="col-md-6 mb-1"><label class="form-label form-label-sm">{{ sm_t('Permanent Address') }}</label><input type="text" name="permanent_address" class="form-control form-control-sm" value="{{ $student->permanent_address }}"></div>
                     </div>
 
-                    <h6 class="text-primary fw-bold mb-2 border-bottom pb-1 mt-3"><i class="fas fa-school me-1"></i>Academic Information</h6>
+                    <h6 class="text-primary fw-bold mb-2 border-bottom pb-1 mt-3"><i class="fas fa-school me-1"></i>{{ sm_t('Academic Information') }}</h6>
                     <div class="row g-2">
                         <div class="col-md-2 mb-1"><label class="form-label form-label-sm">{{ sm_t('Class') }} <span class="text-danger">*</span></label>
                             <select name="class_id" id="editClassId" class="form-control form-control-sm" required>
@@ -428,13 +428,13 @@
                         <div class="col-md-2 mb-1"><label class="form-label form-label-sm">{{ sm_t('Previous Class') }}</label><input type="text" name="previous_class" class="form-control form-control-sm" value="{{ $student->previous_class }}"></div>
                         <div class="col-md-2 mb-1"><label class="form-label form-label-sm">{{ sm_t('Status') }}</label>
                             <select name="is_active" class="form-control form-control-sm">
-                                <option value="1" {{ $student->is_active ? 'selected' : '' }}>Active</option>
-                                <option value="0" {{ !$student->is_active ? 'selected' : '' }}>Inactive</option>
+                                <option value="1" {{ $student->is_active ? 'selected' : '' }}>{{ sm_t('Active') }}</option>
+                                <option value="0" {{ !$student->is_active ? 'selected' : '' }}>{{ sm_t('Inactive') }}</option>
                             </select>
                         </div>
                     </div>
 
-                    <h6 class="text-primary fw-bold mb-2 border-bottom pb-1 mt-3"><i class="fas fa-users me-1"></i>Guardian Information</h6>
+                    <h6 class="text-primary fw-bold mb-2 border-bottom pb-1 mt-3"><i class="fas fa-users me-1"></i>{{ sm_t('Guardian Information') }}</h6>
                     <div class="row g-2">
                         <div class="col-md-3 mb-1"><label class="form-label form-label-sm">{{ sm_t('Father\'s Name') }}</label><input type="text" name="father_name" class="form-control form-control-sm" value="{{ $student->guardian?->father_name }}"></div>
                         <div class="col-md-3 mb-1"><label class="form-label form-label-sm">{{ sm_t('Father\'s Phone') }}</label><input type="text" name="father_phone" class="form-control form-control-sm" value="{{ $student->guardian?->father_phone }}"></div>
@@ -449,7 +449,7 @@
                 </div>
                 <div class="modal-footer py-2">
                     <button type="button" class="btn btn-sm btn-encodex-cancel" data-bs-dismiss="modal">{{ sm_t('Cancel') }}</button>
-                    <button type="submit" class="btn btn-sm btn-encodex-save"><i class="fas fa-save me-1"></i>Save Changes</button>
+                    <button type="submit" class="btn btn-sm btn-encodex-save"><i class="fas fa-save me-1"></i>{{ sm_t('Save Changes') }}</button>
                 </div>
             </form>
         </div>

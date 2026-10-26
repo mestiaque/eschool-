@@ -3,7 +3,7 @@
 @push('buttons')
     @if($students->isNotEmpty())
     <a href="{{ route('exams.marks.print', request()->query()) }}" target="_blank" class="btn btn-sm btn-encodex-print no-print">
-        <i class="fas fa-print"></i> Print
+        <i class="fas fa-print"></i> {{ sm_t('Print') }}
     </a>
     @endif
 @endpush
@@ -15,7 +15,7 @@
     <div class="card-body py-2 border-bottom no-print">
         <form method="GET" class="glass-search-form row g-2 align-items-end" id="filterForm">
             <div class="col-md-3">
-                <label class="form-label form-label-sm mb-1">Exam *</label>
+                <label class="form-label form-label-sm mb-1">{{ sm_t('Exam') }} *</label>
                 <select name="exam_id" class="form-control form-control-sm" required>
                     <option value="">{{ sm_t('Select Exam') }}</option>
                     @foreach($exams as $exam)
@@ -26,7 +26,7 @@
                 </select>
             </div>
             <div class="col-md-3">
-                <label class="form-label form-label-sm mb-1">Class *</label>
+                <label class="form-label form-label-sm mb-1">{{ sm_t('Class') }} *</label>
                 <select name="class_id" class="form-control form-control-sm" id="classSelect" required>
                     <option value="">{{ sm_t('Select Class') }}</option>
                     @foreach($classes as $class)
@@ -37,7 +37,7 @@
                 </select>
             </div>
             <div class="col-md-3">
-                <label class="form-label form-label-sm mb-1">Subject *</label>
+                <label class="form-label form-label-sm mb-1">{{ sm_t('Subject') }} *</label>
                 <select name="subject_id" class="form-control form-control-sm" id="subjectSelect" required>
                     <option value="">{{ sm_t('Select Subject') }}</option>
                     @foreach($subjects as $subject)
@@ -50,7 +50,7 @@
             <div class="col-md">
                 <label class="form-label form-label-sm mb-1">&nbsp;</label>
                 <button type="submit" class="btn btn-sm btn-encodex-search d-block w-100">
-                    <i class="fas fa-search"></i> Load Students
+                    <i class="fas fa-search"></i> {{ sm_t('Load Students') }}
                 </button>
             </div>
         </form>
@@ -59,13 +59,13 @@
     @if(!request('exam_id') || !request('class_id') || !request('subject_id'))
     <div class="card-body">
         <div class="alert alert-info mb-0">
-            <i class="fas fa-info-circle me-1"></i> Select exam, class, and subject to start mark entry.
+            <i class="fas fa-info-circle me-1"></i> {{ sm_t('Select exam, class, and subject to start mark entry.') }}
         </div>
     </div>
     @elseif($students->isEmpty())
     <div class="card-body">
         <div class="alert alert-warning mb-0">
-            <i class="fas fa-exclamation-triangle me-1"></i> No active students found for the selected class.
+            <i class="fas fa-exclamation-triangle me-1"></i> {{ sm_t('No active students found for the selected class.') }}
         </div>
     </div>
     @else
@@ -82,10 +82,10 @@
         </h6>
         <div class="no-print">
             <button type="button" class="btn btn-sm btn-encodex-deactive" onclick="markAllAbsent()">
-                <i class="fas fa-user-slash"></i> Mark All Absent
+                <i class="fas fa-user-slash"></i> {{ sm_t('Mark All Absent') }}
             </button>
             <button type="button" class="btn btn-sm btn-encodex-active ms-1" onclick="clearAllAbsent()">
-                <i class="fas fa-user-check"></i> Clear Absent
+                <i class="fas fa-user-check"></i> {{ sm_t('Clear Absent') }}
             </button>
         </div>
     </div>
@@ -98,11 +98,13 @@
 
         <div class="table-responsive">
             <table class="table table-bordered table-sm table-encodex mb-0">
+                @php $multiSection = $students->pluck('section_id')->unique()->count() > 1; @endphp
                 <thead class="text-center">
                     <tr>
                         <th>#</th>
                         <th class="text-start">{{ sm_t('Student Name') }}</th>
                         <th>{{ sm_t('Roll') }}</th>
+                        @if($multiSection)<th>{{ sm_t('Section') }}</th>@endif
                         <th>{{ sm_t('Written') }}</th>
                         <th>{{ sm_t('MCQ') }}</th>
                         <th>{{ sm_t('Practical') }}</th>
@@ -119,6 +121,7 @@
                         <td class="text-center">{{ $i + 1 }}</td>
                         <td>{{ $student->first_name }} {{ $student->last_name }}</td>
                         <td class="text-center">{{ $student->roll_number ?? '—' }}</td>
+                        @if($multiSection)<td class="text-center">{{ $student->section?->name ?? '—' }}</td>@endif
 
                         <input type="hidden" name="student_ids[]" value="{{ $student->id }}">
 
@@ -177,10 +180,10 @@
         <div class="card-footer d-flex justify-content-between align-items-center no-print">
             <small class="text-muted">
                 <i class="fas fa-info-circle me-1"></i>
-                Totals are calculated automatically. Absent students will be saved with 0 marks.
+                {{ sm_t('Totals are calculated automatically. Absent students will be saved with 0 marks.') }}
             </small>
             <button type="submit" class="btn btn-sm btn-encodex-save">
-                <i class="fas fa-save me-1"></i> Save All Marks
+                <i class="fas fa-save me-1"></i> {{ sm_t('Save All Marks') }}
             </button>
         </div>
     </form>

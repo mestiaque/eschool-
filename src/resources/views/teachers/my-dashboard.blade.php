@@ -12,7 +12,7 @@
         <div class="card border-0 shadow-sm h-100">
             <div class="card-body d-flex align-items-center gap-3">
                 <div class="rounded-circle bg-primary bg-opacity-10 p-3"><i class="fas fa-calendar-day fa-lg text-primary"></i></div>
-                <div><div class="fs-4 fw-bold">{{ $todaysPeriods->count() }}</div><div class="text-muted small">Today's Classes</div></div>
+                <div><div class="fs-4 fw-bold">{{ $todaysPeriods->count() }}</div><div class="text-muted small">{{ sm_t('Today\'s Classes') }}</div></div>
             </div>
         </div>
     </div>
@@ -20,7 +20,7 @@
         <div class="card border-0 shadow-sm h-100">
             <div class="card-body d-flex align-items-center gap-3">
                 <div class="rounded-circle bg-info bg-opacity-10 p-3"><i class="fas fa-layer-group fa-lg text-info"></i></div>
-                <div><div class="fs-4 fw-bold">{{ $totalClasses }}</div><div class="text-muted small">My Classes</div></div>
+                <div><div class="fs-4 fw-bold">{{ $totalClasses }}</div><div class="text-muted small">{{ sm_t('My Classes') }}</div></div>
             </div>
         </div>
     </div>
@@ -28,7 +28,7 @@
         <div class="card border-0 shadow-sm h-100">
             <div class="card-body d-flex align-items-center gap-3">
                 <div class="rounded-circle bg-success bg-opacity-10 p-3"><i class="fas fa-user-graduate fa-lg text-success"></i></div>
-                <div><div class="fs-4 fw-bold">{{ $totalStudents }}</div><div class="text-muted small">Total Students</div></div>
+                <div><div class="fs-4 fw-bold">{{ $totalStudents }}</div><div class="text-muted small">{{ sm_t('Total Students') }}</div></div>
             </div>
         </div>
     </div>
@@ -36,7 +36,7 @@
         <div class="card border-0 shadow-sm h-100">
             <div class="card-body d-flex align-items-center gap-3">
                 <div class="rounded-circle bg-warning bg-opacity-10 p-3"><i class="fas fa-pencil-alt fa-lg text-warning"></i></div>
-                <div><div class="fs-4 fw-bold">{{ $pendingTests }}</div><div class="text-muted small">Pending Class Tests</div></div>
+                <div><div class="fs-4 fw-bold">{{ $pendingTests }}</div><div class="text-muted small">{{ sm_t('Pending Class Tests') }}</div></div>
             </div>
         </div>
     </div>
@@ -47,9 +47,9 @@
     <div class="col-md-7">
         <div class="card border-0 shadow-sm h-100">
             <div class="card-header bg-transparent d-flex justify-content-between align-items-center">
-                <h6 class="fw-semibold mb-0"><i class="fas fa-calendar-day text-primary me-2"></i>Today's Classes</h6>
+                <h6 class="fw-semibold mb-0"><i class="fas fa-calendar-day text-primary me-2"></i>{{ sm_t('Today\'s Classes') }}</h6>
                 <a href="{{ route('my.classes') }}" class="btn btn-sm btn-encodex-show ms-auto">
-                    View All <i class="fas fa-arrow-right ms-1"></i>
+                    {{ sm_t('View All') }} <i class="fas fa-arrow-right ms-1"></i>
                 </a>
             </div>
             <div class="card-body p-0">
@@ -74,7 +74,7 @@
                         <tr>
                             <td colspan="4" class="text-center text-muted py-4">
                                 <i class="fas fa-mug-hot fa-lg d-block mb-2 opacity-50"></i>
-                                No classes scheduled for today.
+                                {{ sm_t('No classes scheduled for today.') }}
                             </td>
                         </tr>
                         @endforelse
@@ -88,9 +88,9 @@
     <div class="col-md-5">
         <div class="card border-0 shadow-sm h-100">
             <div class="card-header bg-transparent d-flex justify-content-between align-items-center">
-                <h6 class="fw-semibold mb-0"><i class="fas fa-bullhorn text-danger me-2"></i>Recent Notices</h6>
+                <h6 class="fw-semibold mb-0"><i class="fas fa-bullhorn text-danger me-2"></i>{{ sm_t('Recent Notices') }}</h6>
                 <a href="{{ route('my.notices') }}" class="btn btn-sm btn-encodex-show ms-auto">
-                    View All <i class="fas fa-arrow-right ms-1"></i>
+                    {{ sm_t('View All') }} <i class="fas fa-arrow-right ms-1"></i>
                 </a>
             </div>
             <div class="card-body p-0">
@@ -101,7 +101,7 @@
                         <div class="fw-semibold small">
                             {{ $notice->title }}
                             @if($notice->created_at && $notice->created_at->gt(now()->subHours(24)))
-                            <span class="badge bg-danger-subtle text-danger ms-1">New</span>
+                            <span class="badge bg-danger-subtle text-danger ms-1">{{ sm_t('New') }}</span>
                             @endif
                         </div>
                         <div class="text-muted small"><i class="fas fa-clock me-1"></i>{{ sm_date($notice->publish_date) }}</div>
@@ -110,7 +110,7 @@
                 @empty
                 <div class="text-center text-muted py-4">
                     <i class="fas fa-inbox fa-lg d-block mb-2 opacity-50"></i>
-                    No notices available.
+                    {{ sm_t('No notices available.') }}
                 </div>
                 @endforelse
             </div>
@@ -121,7 +121,7 @@
 {{-- Quick Links --}}
 <div class="row g-3 mt-1">
     <div class="col-6 col-md-3">
-        <a href="{{ route('my.schedule') }}" class="btn btn-encodex w-100 py-3"><i class="fas fa-calendar-alt me-1"></i> My Schedule</a>
+        <a href="{{ route('my.schedule') }}" class="btn btn-encodex w-100 py-3"><i class="fas fa-calendar-alt me-1"></i> {{ sm_t('My Schedule') }}</a>
     </div>
     <div class="col-6 col-md-3">
         <a href="{{ route('my.class-tests') }}" class="btn btn-encodex w-100 py-3"><i class="fas fa-pencil-alt me-1"></i> Class Tests ({{ $pendingTests }})</a>
@@ -130,7 +130,7 @@
         <a href="{{ route('my.assignments') }}" class="btn btn-encodex w-100 py-3"><i class="fas fa-tasks me-1"></i> Assignments ({{ $activeAssignments }})</a>
     </div>
     <div class="col-6 col-md-3">
-        <a href="{{ route('my.notices') }}" class="btn btn-encodex w-100 py-3"><i class="fas fa-bullhorn me-1"></i> Notice Board</a>
+        <a href="{{ route('my.notices') }}" class="btn btn-encodex w-100 py-3"><i class="fas fa-bullhorn me-1"></i> {{ sm_t('Notice Board') }}</a>
     </div>
 </div>
 @endif

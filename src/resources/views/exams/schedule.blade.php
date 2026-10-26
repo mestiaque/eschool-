@@ -2,7 +2,7 @@
 @section('title', sm_t('Exam Schedule'))
 @push('buttons')
     <button class="btn btn-sm btn-encodex-create" data-bs-toggle="modal" data-bs-target="#scheduleModal" onclick="resetScheduleForm()">
-        <i class="fas fa-plus"></i> Add Schedule
+        <i class="fas fa-plus"></i> {{ sm_t('Add Schedule') }}
     </button>
 @endpush
 
@@ -28,7 +28,7 @@
                 </select>
             </div>
             <div class="col-md-4">
-                <a href="{{ route('exams.schedule') }}" class="btn btn-sm btn-encodex-cancel">Reset</a>
+                <a href="{{ route('exams.schedule') }}" class="btn btn-sm btn-encodex-cancel">{{ sm_t('Reset') }}</a>
             </div>
         </form>
     </div>
@@ -71,7 +71,7 @@
                     </td>
                 </tr>
                 @empty
-                <tr><td colspan="10" class="text-center text-muted py-3">No schedules found.</td></tr>
+                <tr><td colspan="10" class="text-center text-muted py-3">{{ sm_t('No schedules found.') }}</td></tr>
                 @endforelse
             </tbody>
         </table>

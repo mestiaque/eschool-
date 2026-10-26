@@ -2,11 +2,11 @@
 @section('title', $tour->title)
 @push('buttons')
     <a href="{{ route('academic.tours') }}" class="btn btn-sm btn-encodex-list no-print">
-        <i class="fas fa-arrow-left"></i> All Tours
+        <i class="fas fa-arrow-left"></i> {{ sm_t('All Tours') }}
     </a>
     @if($tour->registrations->isNotEmpty())
     <a href="{{ route('academic.tours.badges', $tour->id) }}" class="btn btn-sm btn-encodex-print no-print" target="_blank">
-        <i class="fas fa-id-card"></i> Print All Badges
+        <i class="fas fa-id-card"></i> {{ sm_t('Print All Badges') }}
     </a>
     @endif
 @endpush
@@ -38,25 +38,25 @@ $totalFee       = $tour->registrations->sum('fee');
                     <div class="col-3">
                         <div class="border rounded p-2">
                             <div class="h5 mb-0 text-primary">{{ $tour->registrations->count() }}</div>
-                            <small class="text-muted">Participants</small>
+                            <small class="text-muted">{{ sm_t('Participants') }}</small>
                         </div>
                     </div>
                     <div class="col-3">
                         <div class="border rounded p-2">
                             <div class="h5 mb-0 text-success">{{ sm_money($tour->budget, 0) }}</div>
-                            <small class="text-muted">Budget</small>
+                            <small class="text-muted">{{ sm_t('Budget') }}</small>
                         </div>
                     </div>
                     <div class="col-3">
                         <div class="border rounded p-2">
                             <div class="h5 mb-0 text-danger">{{ sm_money($totalExpense, 0) }}</div>
-                            <small class="text-muted">Expenses</small>
+                            <small class="text-muted">{{ sm_t('Expenses') }}</small>
                         </div>
                     </div>
                     <div class="col-3">
                         <div class="border rounded p-2">
                             <div class="h5 mb-0 text-info">{{ sm_money($totalCollected, 0) }}</div>
-                            <small class="text-muted">Collected</small>
+                            <small class="text-muted">{{ sm_t('Collected') }}</small>
                         </div>
                     </div>
                 </div>
@@ -69,24 +69,24 @@ $totalFee       = $tour->registrations->sum('fee');
 <ul class="nav nav-tabs mb-3 no-print" id="tourTabs">
     <li class="nav-item">
         <a class="nav-link active" data-bs-toggle="tab" href="#registrations">
-            <i class="fas fa-users me-1"></i> Participants
+            <i class="fas fa-users me-1"></i> {{ sm_t('Participants') }}
             <span class="badge bg-primary-subtle text-primary ms-1">{{ $tour->registrations->count() }}</span>
         </a>
     </li>
     <li class="nav-item">
         <a class="nav-link" data-bs-toggle="tab" href="#addParticipants">
-            <i class="fas fa-user-plus me-1"></i> Add Participants
+            <i class="fas fa-user-plus me-1"></i> {{ sm_t('Add Participants') }}
         </a>
     </li>
     <li class="nav-item">
         <a class="nav-link" data-bs-toggle="tab" href="#feeSetup">
-            <i class="fas fa-tags me-1"></i> Fee Setup
+            <i class="fas fa-tags me-1"></i> {{ sm_t('Fee Setup') }}
             <span class="badge bg-warning-subtle text-warning ms-1">{{ $tour->feeCategories->count() }}</span>
         </a>
     </li>
     <li class="nav-item">
         <a class="nav-link" data-bs-toggle="tab" href="#expenses">
-            <i class="fas fa-money-bill me-1"></i> Expenses
+            <i class="fas fa-money-bill me-1"></i> {{ sm_t('Expenses') }}
             <span class="badge bg-danger-subtle text-danger ms-1">{{ $tour->expenses->count() }}</span>
         </a>
     </li>
@@ -137,14 +137,14 @@ $totalFee       = $tour->registrations->sum('fee');
                         </select>
                     </div>
                     <div class="col-md-3 d-flex gap-2 align-items-end">
-                        <input type="text" id="filterSearch" class="form-control form-control-sm" placeholder="Search name...">
+                        <input type="text" id="filterSearch" class="form-control form-control-sm" placeholder="{{ sm_t('Search name...') }}">
                         <button type="button" class="btn btn-sm btn-encodex-clear" onclick="resetFilters()">
                             <i class="fas fa-times"></i>
                         </button>
                     </div>
                 </div>
                 <div class="mt-1">
-                    <small class="text-muted">Showing <span id="filterCount">{{ $tour->registrations->count() }}</span> of {{ $tour->registrations->count() }} participants</small>
+                    <small class="text-muted">{{ sm_t('Showing') }} <span id="filterCount">{{ $tour->registrations->count() }}</span> of {{ $tour->registrations->count() }} participants</small>
                 </div>
             </div>
         </div>
@@ -189,7 +189,7 @@ $totalFee       = $tour->registrations->sum('fee');
                             data-approved="{{ $reg->is_approved ? 'yes' : 'no' }}">
                             <td class="text-center row-num">{{ $i + 1 }}</td>
                             <td class="text-center">
-                                <span class="badge bg-{{ $bc = $typeBadge }}-subtle text-{{ $bc }}">{{ ucfirst($reg->participant_type) }}</span>
+                                <span class="badge bg-{{ $bc = $typeBadge }}-subtle text-{{ $bc }}">{{ sm_t(ucfirst($reg->participant_type)) }}</span>
                             </td>
                             <td>{{ $name }}</td>
                             <td class="text-center small">{{ $classRole }}</td>
@@ -200,11 +200,11 @@ $totalFee       = $tour->registrations->sum('fee');
                             <td class="text-end">{{ number_format($reg->paid_amount, 0) }}</td>
                             <td class="text-center">
                                 @php $pc = ['unpaid'=>'danger','partial'=>'warning','paid'=>'success'][$reg->payment_status] ?? 'secondary' @endphp
-                                <span class="badge bg-{{ $bc = $pc }}-subtle text-{{ $bc }}">{{ ucfirst($reg->payment_status) }}</span>
+                                <span class="badge bg-{{ $bc = $pc }}-subtle text-{{ $bc }}">{{ sm_t(ucfirst($reg->payment_status)) }}</span>
                             </td>
                             <td class="text-center">
                                 <span class="badge bg-{{ $bc = $reg->is_approved ? 'success' : 'secondary' }}-subtle text-{{ $bc }}">
-                                    {{ $reg->is_approved ? 'Yes' : 'No' }}
+                                    {{ sm_t($reg->is_approved ? 'Yes' : 'No') }}
                                 </span>
                             </td>
                             <td class="text-center">
@@ -229,13 +229,13 @@ $totalFee       = $tour->registrations->sum('fee');
                             </td>
                         </tr>
                         @empty
-                        <tr><td colspan="10" class="text-center text-muted py-3">No participants registered yet</td></tr>
+                        <tr><td colspan="10" class="text-center text-muted py-3">{{ sm_t('No participants registered yet') }}</td></tr>
                         @endforelse
                     </tbody>
                     @if($tour->registrations->isNotEmpty())
                     <tfoot class="table-light fw-bold text-end">
                         <tr>
-                            <td colspan="5" class="text-center">Total</td>
+                            <td colspan="5" class="text-center">{{ sm_t('Total') }}</td>
                             <td>{{ sm_money($totalFee, 0) }}</td>
                             <td>{{ sm_money($totalCollected, 0) }}</td>
                             <td colspan="3"></td>
@@ -254,17 +254,17 @@ $totalFee       = $tour->registrations->sum('fee');
                 <ul class="nav nav-pills" id="participantTypeTabs">
                     <li class="nav-item">
                         <a class="nav-link active py-1 px-3" data-bs-toggle="pill" href="#addStudents">
-                            <i class="fas fa-user-graduate me-1"></i> Students
+                            <i class="fas fa-user-graduate me-1"></i> {{ sm_t('Students') }}
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link py-1 px-3" data-bs-toggle="pill" href="#addTeachers">
-                            <i class="fas fa-chalkboard-teacher me-1"></i> Teachers
+                            <i class="fas fa-chalkboard-teacher me-1"></i> {{ sm_t('Teachers') }}
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link py-1 px-3" data-bs-toggle="pill" href="#addStaffTab">
-                            <i class="fas fa-people-carry me-1"></i> Staff
+                            <i class="fas fa-people-carry me-1"></i> {{ sm_t('Staff') }}
                         </a>
                     </li>
                 </ul>
@@ -309,7 +309,7 @@ $totalFee       = $tour->registrations->sum('fee');
                                     <button type="button" class="btn btn-sm btn-encodex" onclick="selectAll('stuCheck', true)">{{ sm_t('All') }}</button>
                                     <button type="button" class="btn btn-sm btn-encodex-clear" onclick="selectAll('stuCheck', false)">{{ sm_t('None') }}</button>
                                     <button type="submit" class="btn btn-sm btn-encodex-save ms-auto" onclick="return confirm('Register selected?')">
-                                        <i class="fas fa-user-plus me-1"></i> Register
+                                        <i class="fas fa-user-plus me-1"></i> {{ sm_t('Register') }}
                                     </button>
                                 </div>
                             </div>
@@ -341,7 +341,7 @@ $totalFee       = $tour->registrations->sum('fee');
                                             <td class="text-center">{{ $student->roll_number ?? '—' }}</td>
                                             <td class="text-center">
                                                 <span class="badge bg-{{ $bc = $alreadyReg ? 'success' : 'secondary' }}-subtle text-{{ $bc }}">
-                                                    {{ $alreadyReg ? 'Registered' : 'Not Registered' }}
+                                                    {{ sm_t($alreadyReg ? 'Registered' : 'Not Registered') }}
                                                 </span>
                                             </td>
                                         </tr>
@@ -376,7 +376,7 @@ $totalFee       = $tour->registrations->sum('fee');
                                     <button type="button" class="btn btn-sm btn-encodex" onclick="selectAll('tchCheck', true)">{{ sm_t('All') }}</button>
                                     <button type="button" class="btn btn-sm btn-encodex-clear" onclick="selectAll('tchCheck', false)">{{ sm_t('None') }}</button>
                                     <button type="submit" class="btn btn-sm btn-encodex-save ms-auto" onclick="return confirm('Register selected?')">
-                                        <i class="fas fa-user-plus me-1"></i> Register
+                                        <i class="fas fa-user-plus me-1"></i> {{ sm_t('Register') }}
                                     </button>
                                 </div>
                             </div>
@@ -406,7 +406,7 @@ $totalFee       = $tour->registrations->sum('fee');
                                             <td class="text-center">{{ $teacher->phone ?? '—' }}</td>
                                             <td class="text-center">
                                                 <span class="badge bg-{{ $bc = $alreadyReg ? 'success' : 'secondary' }}-subtle text-{{ $bc }}">
-                                                    {{ $alreadyReg ? 'Registered' : 'Not Registered' }}
+                                                    {{ sm_t($alreadyReg ? 'Registered' : 'Not Registered') }}
                                                 </span>
                                             </td>
                                         </tr>
@@ -441,7 +441,7 @@ $totalFee       = $tour->registrations->sum('fee');
                                     <button type="button" class="btn btn-sm btn-encodex" onclick="selectAll('stfCheck', true)">{{ sm_t('All') }}</button>
                                     <button type="button" class="btn btn-sm btn-encodex-clear" onclick="selectAll('stfCheck', false)">{{ sm_t('None') }}</button>
                                     <button type="submit" class="btn btn-sm btn-encodex-save ms-auto" onclick="return confirm('Register selected?')">
-                                        <i class="fas fa-user-plus me-1"></i> Register
+                                        <i class="fas fa-user-plus me-1"></i> {{ sm_t('Register') }}
                                     </button>
                                 </div>
                             </div>
@@ -471,7 +471,7 @@ $totalFee       = $tour->registrations->sum('fee');
                                             <td class="text-center">{{ $stf->phone ?? '—' }}</td>
                                             <td class="text-center">
                                                 <span class="badge bg-{{ $bc = $alreadyReg ? 'success' : 'secondary' }}-subtle text-{{ $bc }}">
-                                                    {{ $alreadyReg ? 'Registered' : 'Not Registered' }}
+                                                    {{ sm_t($alreadyReg ? 'Registered' : 'Not Registered') }}
                                                 </span>
                                             </td>
                                         </tr>
@@ -492,7 +492,7 @@ $totalFee       = $tour->registrations->sum('fee');
         <div class="row g-3">
             <div class="col-md-7">
                 <div class="card shadow">
-                    <div class="card-header"><h6 class="mb-0"><i class="fas fa-tags me-1"></i> Fee Categories for this Tour</h6></div>
+                    <div class="card-header"><h6 class="mb-0"><i class="fas fa-tags me-1"></i> {{ sm_t('Fee Categories for this Tour') }}</h6></div>
                     <div class="card-body p-0">
                         <table class="table table-bordered table-sm table-encodex mb-0">
                             <thead class="text-center">
@@ -529,7 +529,7 @@ $totalFee       = $tour->registrations->sum('fee');
                                     </td>
                                 </tr>
                                 @empty
-                                <tr><td colspan="6" class="text-center text-muted py-3">No fee categories defined. Add categories first before registering participants.</td></tr>
+                                <tr><td colspan="6" class="text-center text-muted py-3">{{ sm_t('No fee categories defined. Add categories first before registering participants.') }}</td></tr>
                                 @endforelse
                             </tbody>
                         </table>
@@ -539,14 +539,14 @@ $totalFee       = $tour->registrations->sum('fee');
 
             <div class="col-md-5">
                 <div class="card shadow mb-3">
-                    <div class="card-header"><h6 class="mb-0"><i class="fas fa-plus me-1"></i> Add Fee Category</h6></div>
+                    <div class="card-header"><h6 class="mb-0"><i class="fas fa-plus me-1"></i> {{ sm_t('Add Fee Category') }}</h6></div>
                     <div class="card-body">
                         <form method="POST" action="{{ route('academic.tours.fee.store', $tour->id) }}">
                             @csrf
                             <div class="mb-2">
                                 <label class="form-label form-label-sm">{{ sm_t('Category Label') }} <span class="text-danger">*</span></label>
                                 <input type="text" name="category_label" class="form-control form-control-sm" required
-                                    placeholder="e.g. Class 6, Senior Teacher, Staff, Management">
+                                    placeholder="{{ sm_t('e.g. Class 6, Senior Teacher, Staff, Management') }}">
                             </div>
                             <div class="mb-2">
                                 <label class="form-label form-label-sm">{{ sm_t('Category Type') }}</label>
@@ -572,7 +572,7 @@ $totalFee       = $tour->registrations->sum('fee');
                                 <input type="number" name="fee" class="form-control form-control-sm" required min="0" step="0.01">
                             </div>
                             <button type="submit" class="btn btn-sm btn-encodex-save w-100">
-                                <i class="fas fa-save me-1"></i> Save Category
+                                <i class="fas fa-save me-1"></i> {{ sm_t('Save Category') }}
                             </button>
                         </form>
                     </div>
@@ -591,7 +591,7 @@ $totalFee       = $tour->registrations->sum('fee');
             <div class="col-md-8">
                 <div class="card shadow">
                     <div class="card-header d-flex justify-content-between align-items-center">
-                        <h6 class="mb-0"><i class="fas fa-list me-1"></i> Expense List</h6>
+                        <h6 class="mb-0"><i class="fas fa-list me-1"></i> {{ sm_t('Expense List') }}</h6>
                         <strong class="text-danger">Total: {{ sm_money($totalExpense, 0) }}</strong>
                     </div>
                     <div class="card-body p-0">
@@ -630,7 +630,7 @@ $totalFee       = $tour->registrations->sum('fee');
                                     </td>
                                 </tr>
                                 @empty
-                                <tr><td colspan="7" class="text-center text-muted py-3">No expenses recorded</td></tr>
+                                <tr><td colspan="7" class="text-center text-muted py-3">{{ sm_t('No expenses recorded') }}</td></tr>
                                 @endforelse
                             </tbody>
                         </table>
@@ -649,19 +649,19 @@ $totalFee       = $tour->registrations->sum('fee');
                         </div>
                         @endforeach
                         <div class="d-flex justify-content-between pt-2">
-                            <strong>Total</strong>
+                            <strong>{{ sm_t('Total') }}</strong>
                             <strong class="text-danger">{{ sm_money($totalExpense, 0) }}</strong>
                         </div>
                     </div>
                 </div>
                 @endif
                 <div class="card shadow">
-                    <div class="card-header"><h6 class="mb-0"><i class="fas fa-plus me-1"></i> Add Expense</h6></div>
+                    <div class="card-header"><h6 class="mb-0"><i class="fas fa-plus me-1"></i> {{ sm_t('Add Expense') }}</h6></div>
                     <div class="card-body">
                         <form method="POST" action="{{ route('academic.tours.expenses.store', $tour->id) }}">
                             @csrf
                             <div class="mb-2">
-                                <label class="form-label form-label-sm">Category *</label>
+                                <label class="form-label form-label-sm">{{ sm_t('Category') }} *</label>
                                 <select name="category" class="form-control form-control-sm" required>
                                     @foreach($expenseCategories as $key => $label)
                                     <option value="{{ $key }}">{{ $label }}</option>
@@ -669,7 +669,7 @@ $totalFee       = $tour->registrations->sum('fee');
                                 </select>
                             </div>
                             <div class="mb-2">
-                                <label class="form-label form-label-sm">Description *</label>
+                                <label class="form-label form-label-sm">{{ sm_t('Description') }} *</label>
                                 <input type="text" name="description" class="form-control form-control-sm" required>
                             </div>
                             <div class="mb-2">
@@ -677,7 +677,7 @@ $totalFee       = $tour->registrations->sum('fee');
                                 <input type="number" name="amount" class="form-control form-control-sm" required min="0" step="0.01">
                             </div>
                             <div class="mb-2">
-                                <label class="form-label form-label-sm">Date *</label>
+                                <label class="form-label form-label-sm">{{ sm_t('Date') }} *</label>
                                 <input type="date" name="expense_date" class="form-control form-control-sm" required value="{{ $tour->start_date->format('Y-m-d') }}">
                             </div>
                             <div class="mb-2">
@@ -685,7 +685,7 @@ $totalFee       = $tour->registrations->sum('fee');
                                 <input type="text" name="paid_by" class="form-control form-control-sm">
                             </div>
                             <button type="submit" class="btn btn-sm btn-encodex-save w-100">
-                                <i class="fas fa-save me-1"></i> Save Expense
+                                <i class="fas fa-save me-1"></i> {{ sm_t('Save Expense') }}
                             </button>
                         </form>
                     </div>
@@ -765,7 +765,7 @@ $totalFee       = $tour->registrations->sum('fee');
                 @csrf @method('PUT')
                 <div class="modal-body">
                     <div class="mb-2">
-                        <label class="form-label form-label-sm">Category Label *</label>
+                        <label class="form-label form-label-sm">{{ sm_t('Category Label') }} *</label>
                         <input type="text" name="category_label" class="form-control form-control-sm" required>
                     </div>
                     <div class="mb-2">

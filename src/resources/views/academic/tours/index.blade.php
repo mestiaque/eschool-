@@ -2,7 +2,7 @@
 @section('title', sm_t('School Tours'))
 @push('buttons')
     <button class="btn btn-sm btn-encodex-create" data-bs-toggle="modal" data-bs-target="#tourModal">
-        <i class="fas fa-plus"></i> Add Tour
+        <i class="fas fa-plus"></i> {{ sm_t('Add Tour') }}
     </button>
 @endpush
 
@@ -52,7 +52,7 @@ $statusColors = ['planning'=>'warning','approved'=>'success','ongoing'=>'info','
                     </td>
                     <td class="text-center">
                         <span class="badge bg-{{ $bc = $statusColors[$tour->status] ?? 'secondary' }}-subtle text-{{ $bc }}">
-                            {{ ucfirst($tour->status) }}
+                            {{ sm_t(ucfirst($tour->status)) }}
                         </span>
                     </td>
                     <td class="text-center">
@@ -73,7 +73,7 @@ $statusColors = ['planning'=>'warning','approved'=>'success','ongoing'=>'info','
                     </td>
                 </tr>
                 @empty
-                <tr><td colspan="10" class="text-center text-muted py-3">No tours found</td></tr>
+                <tr><td colspan="10" class="text-center text-muted py-3">{{ sm_t('No tours found') }}</td></tr>
                 @endforelse
             </tbody>
         </table>

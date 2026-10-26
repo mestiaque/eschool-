@@ -3,7 +3,7 @@
 
 @push('buttons')
 <a href="{{ route('reports.students.print', request()->query()) }}" target="_blank" class="btn btn-sm btn-encodex-print">
-    <i class="fas fa-print"></i> Print
+    <i class="fas fa-print"></i> {{ sm_t('Print') }}
 </a>
 @endpush
 
@@ -36,9 +36,9 @@
                     <td>{{ $student->gender }}</td>
                     <td>
                         @if($student->is_active)
-                        <span class="badge bg-success-subtle text-success">Active</span>
+                        <span class="badge bg-success-subtle text-success">{{ sm_t('Active') }}</span>
                         @else
-                        <span class="badge bg-danger-subtle text-danger">Inactive</span>
+                        <span class="badge bg-danger-subtle text-danger">{{ sm_t('Inactive') }}</span>
                         @endif
                     </td>
                 </tr>

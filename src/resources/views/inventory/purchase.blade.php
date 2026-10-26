@@ -3,7 +3,7 @@
 @section('title', sm_t('Purchase Management'))
 @push('buttons')
     <button class="btn btn-encodex-create btn-sm" data-bs-toggle="modal" data-bs-target="#purchaseModal">
-        <i class="fas fa-plus"></i> New Purchase
+        <i class="fas fa-plus"></i> {{ sm_t('New Purchase') }}
     </button>
 @endpush
 
@@ -55,7 +55,7 @@
                             </td>
                         </tr>
                         @empty
-                        <tr><td colspan="9" class="text-center">No purchases found</td></tr>
+                        <tr><td colspan="9" class="text-center">{{ sm_t('No purchases found') }}</td></tr>
                         @endforelse
                     </tbody>
                 </table>
@@ -100,11 +100,11 @@
                         <thead><tr><th>{{ sm_t('Product') }}</th><th style="width:110px">{{ sm_t('Qty') }}</th><th style="width:140px">{{ sm_t('Unit price') }}</th><th style="width:120px" class="text-end">{{ sm_t('Line total') }}</th><th style="width:40px"></th></tr></thead>
                         <tbody></tbody>
                     </table>
-                    <button type="button" class="btn btn-encodex-create btn-sm" id="addItem"><i class="fas fa-plus"></i> Add item</button>
+                    <button type="button" class="btn btn-encodex-create btn-sm" id="addItem"><i class="fas fa-plus"></i> {{ sm_t('Add item') }}</button>
 
                     <div class="row g-2 mt-2">
                         <div class="col-md-4 ms-auto">
-                            <div class="d-flex justify-content-between small"><span>Total</span><strong id="purchaseTotal">{{ sm_money(0, 2) }}</strong></div>
+                            <div class="d-flex justify-content-between small"><span>{{ sm_t('Total') }}</span><strong id="purchaseTotal">{{ sm_money(0, 2) }}</strong></div>
                             <label class="form-label mt-2">{{ sm_t('Paid now') }}</label>
                             <input type="number" name="paid_amount" class="form-control form-control-sm" min="0" step="0.01" value="0">
                         </div>

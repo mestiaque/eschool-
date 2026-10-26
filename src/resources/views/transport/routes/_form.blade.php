@@ -1,15 +1,15 @@
 <div class="row g-2">
     <div class="col-12 mb-2">
         <label class="form-label form-label-sm">{{ sm_t('Route Name') }} <span class="text-danger">*</span></label>
-        <input type="text" name="route_name" class="form-control form-control-sm" required placeholder="e.g. Dhaka - Mirpur Route">
+        <input type="text" name="route_name" class="form-control form-control-sm" required placeholder="{{ sm_t('e.g. Dhaka - Mirpur Route') }}">
     </div>
     <div class="col-md-6 mb-2">
         <label class="form-label form-label-sm">{{ sm_t('Start Point') }} <span class="text-danger">*</span></label>
-        <input type="text" name="start_point" class="form-control form-control-sm" required placeholder="Starting location">
+        <input type="text" name="start_point" class="form-control form-control-sm" required placeholder="{{ sm_t('Starting location') }}">
     </div>
     <div class="col-md-6 mb-2">
         <label class="form-label form-label-sm">{{ sm_t('End Point') }} <span class="text-danger">*</span></label>
-        <input type="text" name="end_point" class="form-control form-control-sm" required placeholder="Destination">
+        <input type="text" name="end_point" class="form-control form-control-sm" required placeholder="{{ sm_t('Destination') }}">
     </div>
     <div class="col-md-6 mb-2">
         <label class="form-label form-label-sm">{{ sm_t('Distance (km)') }}</label>

@@ -2,7 +2,7 @@
 @section('title', sm_t('Classes'))
 @push('buttons')
     <button class="btn btn-sm btn-encodex-create" data-bs-toggle="modal" data-bs-target="#classModal">
-        <i class="fas fa-plus"></i> Add Class
+        <i class="fas fa-plus"></i> {{ sm_t('Add Class') }}
     </button>
 @endpush
 @section('content')
@@ -53,9 +53,9 @@
                         <td class="text-center">{{ $class->sections->count() }}</td>
                         <td class="text-center">
                             @if($class->is_active)
-                            <span class="badge bg-success-subtle text-success">Active</span>
+                            <span class="badge bg-success-subtle text-success">{{ sm_t('Active') }}</span>
                             @else
-                            <span class="badge bg-danger-subtle text-danger">Inactive</span>
+                            <span class="badge bg-danger-subtle text-danger">{{ sm_t('Inactive') }}</span>
                             @endif
                         </td>
                         <td class="text-center">
@@ -80,7 +80,7 @@
         </div>
         @if($classes->isEmpty())
         <div class="text-center py-3 text-muted">
-            No classes found
+            {{ sm_t('No classes found') }}
         </div>
         @endif
         <div class="mt-2">{{ $classes->links('pagination::bootstrap-5') }}</div>
@@ -93,7 +93,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">
-                    <span id="modalTitle">Add Class</span>
+                    <span id="modalTitle">{{ sm_t('Add Class') }}</span>
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
@@ -103,12 +103,12 @@
                 <input type="hidden" id="methodField" name="_method" value="POST">
                 <div class="modal-body">
                     <div class="mb-2">
-                        <label class="form-label">Class Name *</label>
-                        <input type="text" id="nameField" name="name" class="form-control form-control-sm" placeholder="e.g. Class One" required>
+                        <label class="form-label">{{ sm_t('Class Name') }} *</label>
+                        <input type="text" id="nameField" name="name" class="form-control form-control-sm" placeholder="{{ sm_t('e.g. Class One') }}" required>
                     </div>
                     <div class="mb-2">
-                        <label class="form-label">Numeric Name *</label>
-                        <input type="number" id="numericField" name="numeric_name" class="form-control form-control-sm" placeholder="e.g. 1" required>
+                        <label class="form-label">{{ sm_t('Numeric Name') }} *</label>
+                        <input type="number" id="numericField" name="numeric_name" class="form-control form-control-sm" placeholder="{{ sm_t('e.g. 1') }}" required>
                     </div>
                     <div class="mb-2">
                         <label class="form-label">{{ sm_t('Description') }}</label>
@@ -137,7 +137,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">
-                    <span id="modalTitle">Edit Class</span>
+                    <span id="modalTitle">{{ sm_t('Edit Class') }}</span>
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
@@ -148,11 +148,11 @@
                 <input type="hidden" id="methodField" name="_method" value="PUT">
                 <div class="modal-body">
                     <div class="mb-2">
-                        <label class="form-label">Class Name *</label>
+                        <label class="form-label">{{ sm_t('Class Name') }} *</label>
                         <input type="text" id="nameField" name="name" class="form-control form-control-sm" value="{{ $class->name }}" required>
                     </div>
                     <div class="mb-2">
-                        <label class="form-label">Numeric Name *</label>
+                        <label class="form-label">{{ sm_t('Numeric Name') }} *</label>
                         <input type="number" id="numericField" name="numeric_name" class="form-control form-control-sm" value="{{ $class->numeric_name }}" required>
                     </div>
                     <div class="mb-2">

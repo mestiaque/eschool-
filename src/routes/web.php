@@ -21,6 +21,7 @@ use ME\SchoolManagement\Http\Controllers\UserController;
 use ME\SchoolManagement\Http\Controllers\StudentPortalController;
 use ME\SchoolManagement\Http\Controllers\TrashController;
 use ME\SchoolManagement\Http\Middleware\SchoolPermission;
+use ME\SchoolManagement\Http\Middleware\TranslateFlash;
 
 
 // Authentication, logout and profile management (login, logout, profile.edit,
@@ -33,7 +34,7 @@ use ME\SchoolManagement\Http\Middleware\SchoolPermission;
 // Config/permissions.php (see the middleware for the table).
 // LocaleMiddleware applies the language chosen in the theme; activityLog
 // records each request in the theme's Activity Log.
-Route::middleware(['web', 'auth', LocaleMiddleware::class, 'activityLog', SchoolPermission::class])->group(function () {
+Route::middleware(['web', 'auth', LocaleMiddleware::class, 'activityLog', SchoolPermission::class, TranslateFlash::class])->group(function () {
 
     // Dashboard
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
@@ -520,7 +521,7 @@ Route::middleware(['web', 'auth', LocaleMiddleware::class, 'activityLog', School
 });
 
 // ── Student Portal (session-based PIN auth, no Laravel guard) ─────────────
-Route::middleware(['web', LocaleMiddleware::class])->prefix('student-portal')->group(function () {
+Route::middleware(['web', LocaleMiddleware::class, TranslateFlash::class])->prefix('student-portal')->group(function () {
     Route::get('/login',  [StudentPortalController::class, 'login'])->name('portal.login');
     Route::post('/login', [StudentPortalController::class, 'loginPost'])->name('portal.login.post');
     Route::post('/logout',[StudentPortalController::class, 'logout'])->name('portal.logout');

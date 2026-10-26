@@ -4,7 +4,7 @@
 
 @push('buttons')
 <button class="btn btn-encodex-create btn-sm" data-bs-toggle="modal" data-bs-target="#salaryModal">
-    <i class="fas fa-plus"></i> Pay Salary
+    <i class="fas fa-plus"></i> {{ sm_t('Pay Salary') }}
 </button>
 @endpush
 
@@ -35,8 +35,8 @@
                     <input type="number" name="year" class="form-control form-control-sm" value="{{ request('year') }}" placeholder="{{ date('Y') }}">
                 </div>
                 <div class="col-md-3">
-                    <button class="btn btn-encodex-search btn-sm"><i class="fas fa-search"></i> Filter</button>
-                    <a href="{{ route('expenses.staff-salary') }}" class="btn btn-encodex-clear btn-sm">Clear</a>
+                    <button class="btn btn-encodex-search btn-sm"><i class="fas fa-search"></i> {{ sm_t('Filter') }}</button>
+                    <a href="{{ route('expenses.staff-salary') }}" class="btn btn-encodex-clear btn-sm">{{ sm_t('Clear') }}</a>
                 </div>
             </form>
         </div>
@@ -65,7 +65,7 @@
                         <tr>
                             <td>{{ $payment->id }}</td>
                             <td>{{ $payment->payee_name }}</td>
-                            <td><span class="badge bg-{{ $bc = $payment->staff_type === 'teacher' ? 'info' : 'secondary' }}-subtle text-{{ $bc }}">{{ ucfirst($payment->staff_type) }}</span></td>
+                            <td><span class="badge bg-{{ $bc = $payment->staff_type === 'teacher' ? 'info' : 'secondary' }}-subtle text-{{ $bc }}">{{ sm_t(ucfirst($payment->staff_type)) }}</span></td>
                             <td>{{ $payment->month_name }} {{ $payment->year }}</td>
                             <td class="text-end">{{ sm_money($payment->basic_salary, 2) }}</td>
                             <td class="text-end">{{ sm_money($payment->allowance, 2) }}</td>
@@ -74,7 +74,7 @@
                             <td>{{ sm_date($payment->payment_date) }}</td>
                         </tr>
                         @empty
-                        <tr><td colspan="9" class="text-center">No payments found</td></tr>
+                        <tr><td colspan="9" class="text-center">{{ sm_t('No payments found') }}</td></tr>
                         @endforelse
                     </tbody>
                 </table>

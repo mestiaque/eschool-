@@ -32,10 +32,10 @@
                     <h6 class="fw-semibold mb-1">{{ sm_t('Gateway & mail server') }}</h6>
                     <p class="text-muted small">SMS gateway and SMTP credentials are managed (encrypted, with test buttons and delivery logs) in the theme configuration:</p>
                     <div class="d-grid gap-2">
-                        @if(Route::has('sms-config.edit'))<a href="{{ route('sms-config.edit') }}" class="btn btn-encodex-edit btn-sm text-start"><i class="fas fa-sms me-2"></i>SMS configuration</a>@endif
-                        @if(Route::has('mail-config.edit'))<a href="{{ route('mail-config.edit') }}" class="btn btn-encodex-edit btn-sm text-start"><i class="fas fa-envelope me-2"></i>Mail configuration</a>@endif
-                        @if(Route::has('sms-log.index'))<a href="{{ route('sms-log.index') }}" class="btn btn-encodex-list btn-sm text-start"><i class="fas fa-list me-2"></i>SMS log & balance</a>@endif
-                        @if(Route::has('mail-log.index'))<a href="{{ route('mail-log.index') }}" class="btn btn-encodex-list btn-sm text-start"><i class="fas fa-inbox me-2"></i>Mail log</a>@endif
+                        @if(Route::has('sms-config.edit'))<a href="{{ route('sms-config.edit') }}" class="btn btn-encodex-edit btn-sm text-start"><i class="fas fa-sms me-2"></i>{{ sm_t('SMS configuration') }}</a>@endif
+                        @if(Route::has('mail-config.edit'))<a href="{{ route('mail-config.edit') }}" class="btn btn-encodex-edit btn-sm text-start"><i class="fas fa-envelope me-2"></i>{{ sm_t('Mail configuration') }}</a>@endif
+                        @if(Route::has('sms-log.index'))<a href="{{ route('sms-log.index') }}" class="btn btn-encodex-list btn-sm text-start"><i class="fas fa-list me-2"></i>{{ sm_t('SMS log & balance') }}</a>@endif
+                        @if(Route::has('mail-log.index'))<a href="{{ route('mail-log.index') }}" class="btn btn-encodex-list btn-sm text-start"><i class="fas fa-inbox me-2"></i>{{ sm_t('Mail log') }}</a>@endif
                     </div>
                 </div>
             </div>

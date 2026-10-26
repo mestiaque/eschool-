@@ -10,6 +10,12 @@ class SchoolSetting extends Model
 
     public const CACHE_KEY = 'school-management.settings';
 
+    /** Cache key per database, so two apps/databases sharing a cache never mix settings. */
+    public static function cacheKey(): string
+    {
+        return self::CACHE_KEY . '.' . (new static)->getConnection()->getDatabaseName();
+    }
+
     public static function get(string $key, $default = null)
     {
         return static::cached()[$key] ?? $default;
@@ -19,7 +25,7 @@ class SchoolSetting extends Model
     public static function cached(): array
     {
         try {
-            return \Illuminate\Support\Facades\Cache::rememberForever(self::CACHE_KEY, fn () => static::pluck('value', 'key')->all());
+            return \Illuminate\Support\Facades\Cache::rememberForever(static::cacheKey(), fn () => static::pluck('value', 'key')->all());
         } catch (\Throwable $e) {
             return []; // table not migrated yet
         }
@@ -34,6 +40,6 @@ class SchoolSetting extends Model
     public static function put(string $key, $value, string $type = 'text'): void
     {
         static::updateOrCreate(['key' => $key], ['value' => $value, 'type' => $type]);
-        \Illuminate\Support\Facades\Cache::forget(self::CACHE_KEY);
+        \Illuminate\Support\Facades\Cache::forget(static::cacheKey());
     }
 }

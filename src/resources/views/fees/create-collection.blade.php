@@ -1,14 +1,14 @@
 @extends('me::master')
 @section('title', sm_t('New Fee Invoice'))
 @push('buttons')
-    <a href="{{ route('fees.collection') }}" class="btn btn-sm btn-encodex-list"><i class="fas fa-arrow-left"></i> Back</a>
+    <a href="{{ route('fees.collection') }}" class="btn btn-sm btn-encodex-list"><i class="fas fa-arrow-left"></i> {{ sm_t('Back') }}</a>
 @endpush
 
 @section('content')
 @if($errors->any())<div class="alert alert-danger py-2 small"><ul class="mb-0">@foreach($errors->all() as $e)<li>{{ $e }}</li>@endforeach</ul></div>@endif
 
 <div class="card shadow" style="max-width:860px">
-    <div class="card-header py-2"><h6 class="mb-0 fw-bold"><i class="fas fa-file-invoice me-2"></i>Create Fee Invoice</h6></div>
+    <div class="card-header py-2"><h6 class="mb-0 fw-bold"><i class="fas fa-file-invoice me-2"></i>{{ sm_t('Create Fee Invoice') }}</h6></div>
     <div class="card-body">
         <form method="POST" action="{{ route('fees.collection.store') }}" id="feeForm">
             @csrf
@@ -65,7 +65,7 @@
                     <label class="form-label form-label-sm">{{ sm_t('Discount') }}</label>
                     <div class="input-group input-group-sm">
                         <span class="input-group-text">{{ sm_currency() }}</span>
-                        <input type="number" name="discount" id="discountField" class="form-control form-control-sm" step="0.01" min="0" value="{{ old('discount') }}" placeholder="Auto: student's discount" oninput="recalc()">
+                        <input type="number" name="discount" id="discountField" class="form-control form-control-sm" step="0.01" min="0" value="{{ old('discount') }}" placeholder="{{ sm_t('Auto: student\'s discount') }}" oninput="recalc()">
                     </div>
                 </div>
 
@@ -131,11 +131,11 @@
                 {{-- Note --}}
                 <div class="col-12 mb-2">
                     <label class="form-label form-label-sm">{{ sm_t('Note') }}</label>
-                    <input type="text" name="note" class="form-control form-control-sm" placeholder="Optional note" value="{{ old('note') }}">
+                    <input type="text" name="note" class="form-control form-control-sm" placeholder="{{ sm_t('Optional note') }}" value="{{ old('note') }}">
                 </div>
 
                 <div class="col-12">
-                    <button type="submit" class="btn btn-encodex-save"><i class="fas fa-file-invoice me-2"></i>Create Invoice</button>
+                    <button type="submit" class="btn btn-encodex-save"><i class="fas fa-file-invoice me-2"></i>{{ sm_t('Create Invoice') }}</button>
                 </div>
             </div>
         </form>

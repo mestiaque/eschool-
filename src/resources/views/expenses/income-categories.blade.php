@@ -1,7 +1,7 @@
 @extends('me::master')
 @section('title', sm_t('Income Categories'))
 @push('buttons')
-<button class="btn btn-sm btn-encodex-create" data-bs-toggle="modal" data-bs-target="#catModal"><i class="fas fa-plus"></i> Add Category</button>
+<button class="btn btn-sm btn-encodex-create" data-bs-toggle="modal" data-bs-target="#catModal"><i class="fas fa-plus"></i> {{ sm_t('Add Category') }}</button>
 @endpush
 
 @section('content')
@@ -16,7 +16,7 @@
                     <td>{{ $i+1 }}</td>
                     <td>{{ $cat->name }}</td>
                     <td>{{ $cat->description ?? '-' }}</td>
-                    <td><span class="badge bg-{{ $bc = $cat->is_active ? 'success' : 'secondary' }}-subtle text-{{ $bc }}">{{ $cat->is_active ? 'Active' : 'Inactive' }}</span></td>
+                    <td><span class="badge bg-{{ $bc = $cat->is_active ? 'success' : 'secondary' }}-subtle text-{{ $bc }}">{{ sm_t($cat->is_active ? 'Active' : 'Inactive') }}</span></td>
                     <td>
                         <button class="btn btn-sm btn-encodex-edit" onclick="editCat({{ $cat->id }}, '{{ addslashes($cat->name) }}', '{{ addslashes($cat->description ?? '') }}', {{ $cat->is_active }})"><i class="fas fa-edit"></i></button>
                         <form method="POST" action="{{ route('expenses.income-categories.destroy', $cat->id) }}" class="d-inline" onsubmit="return confirm('Delete?')">
@@ -26,7 +26,7 @@
                     </td>
                 </tr>
                 @empty
-                <tr><td colspan="5" class="text-center text-muted py-3">No income categories</td></tr>
+                <tr><td colspan="5" class="text-center text-muted py-3">{{ sm_t('No income categories') }}</td></tr>
                 @endforelse
             </tbody>
         </table>
@@ -41,7 +41,7 @@
             <form id="catForm" method="POST" action="{{ route('expenses.income-categories.store') }}">
                 @csrf<input type="hidden" name="_method" id="catMethod" value="POST">
                 <div class="modal-body">
-                    <div class="mb-2"><label class="form-label">Name *</label><input type="text" name="name" id="catName" class="form-control form-control-sm" required></div>
+                    <div class="mb-2"><label class="form-label">{{ sm_t('Name') }} *</label><input type="text" name="name" id="catName" class="form-control form-control-sm" required></div>
                     <div class="mb-2"><label class="form-label">{{ sm_t('Description') }}</label><textarea name="description" id="catDesc" class="form-control form-control-sm" rows="2"></textarea></div>
                     <div class="mb-2">
                         <label class="form-label">{{ sm_t('Status') }}</label>

@@ -42,12 +42,12 @@
                     <td>{{ $student->roll_number ?? '-' }}</td>
                     <td>
                         <a href="{{ route('students.idcard.print', $student->id) }}" target="_blank" class="btn btn-sm btn-encodex-print">
-                            <i class="fas fa-id-card"></i> Print
+                            <i class="fas fa-id-card"></i> {{ sm_t('Print') }}
                         </a>
                     </td>
                 </tr>
                 @empty
-                <tr><td colspan="7" class="text-center text-muted py-3">No students found</td></tr>
+                <tr><td colspan="7" class="text-center text-muted py-3">{{ sm_t('No students found') }}</td></tr>
                 @endforelse
             </tbody>
         </table>

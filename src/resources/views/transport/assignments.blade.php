@@ -2,7 +2,7 @@
 @section('title', sm_t('Transport Assignments'))
 
 @push('buttons')
-<button class="btn btn-sm btn-encodex-create" data-bs-toggle="modal" data-bs-target="#assignModal"><i class="fas fa-plus"></i> Assign Vehicle</button>
+<button class="btn btn-sm btn-encodex-create" data-bs-toggle="modal" data-bs-target="#assignModal"><i class="fas fa-plus"></i> {{ sm_t('Assign Vehicle') }}</button>
 @endpush
 
 @section('content')
@@ -33,7 +33,7 @@
                     <td>{{ $a->vehicle?->vehicle_number }}</td>
                     <td>{{ $a->vehicle?->driver_name ?? '-' }}</td>
                     <td>{{ $a->route?->route_name }}</td>
-                    <td><span class="badge bg-{{ $bc = $a->is_active ? 'success' : 'secondary' }}-subtle text-{{ $bc }}">{{ $a->is_active ? 'Active' : 'Inactive' }}</span></td>
+                    <td><span class="badge bg-{{ $bc = $a->is_active ? 'success' : 'secondary' }}-subtle text-{{ $bc }}">{{ sm_t($a->is_active ? 'Active' : 'Inactive') }}</span></td>
                     <td>
                         <form method="POST" action="{{ route('transport.assignments.destroy', $a->id) }}" class="d-inline" onsubmit="return confirm('Remove?')">
                             @csrf @method('DELETE')
@@ -42,7 +42,7 @@
                     </td>
                 </tr>
                 @empty
-                <tr><td colspan="6" class="text-center text-muted py-3">No transport assignments</td></tr>
+                <tr><td colspan="6" class="text-center text-muted py-3">{{ sm_t('No transport assignments') }}</td></tr>
                 @endforelse
             </tbody>
         </table>
@@ -58,14 +58,14 @@
                 <div class="modal-header"><h5 class="modal-title">{{ sm_t('Assign Vehicle to Route') }}</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
                 <div class="modal-body">
                     <div class="mb-2">
-                        <label class="form-label">Vehicle *</label>
+                        <label class="form-label">{{ sm_t('Vehicle') }} *</label>
                         <select name="vehicle_id" class="form-control form-control-sm" required>
                             <option value="">{{ sm_t('Select Vehicle') }}</option>
                             @foreach($vehicles as $v)<option value="{{ $v->id }}">{{ $v->vehicle_number }}{{ $v->driver_name ? ' - '.$v->driver_name : '' }}</option>@endforeach
                         </select>
                     </div>
                     <div class="mb-2">
-                        <label class="form-label">Route *</label>
+                        <label class="form-label">{{ sm_t('Route') }} *</label>
                         <select name="route_id" class="form-control form-control-sm" required>
                             <option value="">{{ sm_t('Select Route') }}</option>
                             @foreach($routes as $r)<option value="{{ $r->id }}">{{ $r->route_name }}</option>@endforeach

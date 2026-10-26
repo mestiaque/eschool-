@@ -4,7 +4,7 @@
 
 @push('buttons')
 <button class="btn btn-encodex-create btn-sm" data-bs-toggle="modal" data-bs-target="#stockModal">
-    <i class="fas fa-plus"></i> Add Stock
+    <i class="fas fa-plus"></i> {{ sm_t('Add Stock') }}
 </button>
 @endpush
 
@@ -33,9 +33,9 @@
                                         <td>{{ $stock->product->name ?? 'N/A' }}</td>
                                         <td>
                                             @if($stock->type == 'in')
-                                                <span class="badge bg-success-subtle text-success">In</span>
+                                                <span class="badge bg-success-subtle text-success">{{ sm_t('In') }}</span>
                                             @else
-                                                <span class="badge bg-danger-subtle text-danger">Out</span>
+                                                <span class="badge bg-danger-subtle text-danger">{{ sm_t('Out') }}</span>
                                             @endif
                                         </td>
                                         <td>{{ $stock->quantity }}</td>
@@ -44,7 +44,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="6" class="text-center">No stock records found</td>
+                                        <td colspan="6" class="text-center">{{ sm_t('No stock records found') }}</td>
                                     </tr>
                                 @endforelse
                             </tbody>

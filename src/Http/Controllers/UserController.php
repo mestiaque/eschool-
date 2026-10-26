@@ -69,6 +69,10 @@ class UserController extends Controller
             'school_code'    => 'nullable|string|max:50',
         ]);
         $this->saveSettings($data);
+        // The theme shows its own app name in the sidebar and footer; keep it the school's name.
+        if (class_exists(\ME\Models\Setting::class)) {
+            \ME\Models\Setting::set('app_name', $data['school_name']);
+        }
         return back()->with('success', 'School settings updated');
     }
 

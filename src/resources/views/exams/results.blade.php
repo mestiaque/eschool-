@@ -29,7 +29,7 @@
                     <input type="hidden" name="exam_id"  value="{{ request('exam_id') }}">
                     <input type="hidden" name="class_id" value="{{ request('class_id') }}">
                     <button type="submit" class="btn btn-sm btn-encodex-save" onclick="return confirm('Re-generate results? This will overwrite existing results.')">
-                        <i class="fas fa-sync-alt me-1"></i> Generate
+                        <i class="fas fa-sync-alt me-1"></i> {{ sm_t('Generate') }}
                     </button>
                 </form>
                 <form method="POST" action="{{ route('exams.results.publish') }}" class="d-inline">
@@ -37,12 +37,12 @@
                     <input type="hidden" name="exam_id"  value="{{ request('exam_id') }}">
                     <input type="hidden" name="class_id" value="{{ request('class_id') }}">
                     <button type="submit" class="btn btn-sm btn-encodex-active" onclick="return confirm('Publish all results for this exam and class?')">
-                        <i class="fas fa-bullhorn me-1"></i> Publish All
+                        <i class="fas fa-bullhorn me-1"></i> {{ sm_t('Publish All') }}
                     </button>
                 </form>
                 @else
                 <a href="{{ route('exams.marksheet.index') }}" class="btn btn-sm btn-encodex-list">
-                    <i class="fas fa-file-alt me-1"></i> Marksheet
+                    <i class="fas fa-file-alt me-1"></i> {{ sm_t('Marksheet') }}
                 </a>
                 @endif
             </div>
@@ -80,7 +80,7 @@
                     </td>
                     <td class="text-center">{{ $r->gpa }}</td>
                     <td class="text-center"><span class="badge bg-success-subtle text-success">{{ $r->grade ?? '—' }}</span></td>
-                    <td><span class="badge bg-{{ $bc = $r->is_published ? 'success' : 'warning' }}-subtle text-{{ $bc }}">{{ $r->is_published ? 'Published' : 'Draft' }}</span></td>
+                    <td><span class="badge bg-{{ $bc = $r->is_published ? 'success' : 'warning' }}-subtle text-{{ $bc }}">{{ sm_t($r->is_published ? 'Published' : 'Draft') }}</span></td>
                     <td>
                         @if($r->student_id && $r->exam_id)
                         <a href="{{ route('exams.marksheet.view', [$r->student_id, $r->exam_id]) }}" target="_blank" class="btn btn-sm btn-encodex-show" title="Marksheet">
@@ -94,7 +94,7 @@
                     @if(!request('exam_id'))
                         Select an exam to view results.
                     @else
-                        No results found. Click <strong>Generate</strong> after entering marks.
+                        No results found. Click <strong>{{ sm_t('Generate') }}</strong> after entering marks.
                     @endif
                 </td></tr>
                 @endforelse

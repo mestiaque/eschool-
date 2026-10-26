@@ -2,10 +2,10 @@
 @section('title', sm_t('Routine Titles'))
 @push('buttons')
     <a href="{{ route('academic.routines') }}" class="btn btn-sm btn-encodex-list">
-        <i class="fas fa-arrow-left"></i> Class Routines
+        <i class="fas fa-arrow-left"></i> {{ sm_t('Class Routines') }}
     </a>
     <button class="btn btn-sm btn-encodex-create" data-bs-toggle="modal" data-bs-target="#routineTitleModal">
-        <i class="fas fa-plus"></i> Add Routine Title
+        <i class="fas fa-plus"></i> {{ sm_t('Add Routine Title') }}
     </button>
 @endpush
 
@@ -30,7 +30,7 @@
                         <td>{{ $rt->name }}</td>
                         <td class="text-center">
                             <span class="badge {{ $rt->is_active ? 'bg-success-subtle text-success' : 'bg-secondary-subtle text-secondary' }}">
-                                {{ $rt->is_active ? 'Active' : 'Inactive' }}
+                                {{ sm_t($rt->is_active ? 'Active' : 'Inactive') }}
                             </span>
                         </td>
                         <td class="text-center">
@@ -69,8 +69,8 @@
                 @csrf
                 <div class="modal-body">
                     <div class="mb-2">
-                        <label class="form-label">Title *</label>
-                        <input type="text" name="name" class="form-control form-control-sm" required placeholder="e.g. v1, Summer, Winter, Ramadan, Morning">
+                        <label class="form-label">{{ sm_t('Title') }} *</label>
+                        <input type="text" name="name" class="form-control form-control-sm" required placeholder="{{ sm_t('e.g. v1, Summer, Winter, Ramadan, Morning') }}">
                     </div>
                     <div class="mb-2">
                         <div class="form-check">
@@ -101,14 +101,14 @@
                 @csrf @method('PUT')
                 <div class="modal-body">
                     <div class="mb-2">
-                        <label class="form-label">Title *</label>
+                        <label class="form-label">{{ sm_t('Title') }} *</label>
                         <input type="text" name="name" class="form-control form-control-sm" required value="{{ $rt->name }}">
                     </div>
                     <div class="mb-2">
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" name="is_active" value="1"
                                 id="rtIsActiveEdit{{ $rt->id }}" {{ $rt->is_active ? 'checked' : '' }}>
-                            <label class="form-check-label" for="rtIsActiveEdit{{ $rt->id }}">Active</label>
+                            <label class="form-check-label" for="rtIsActiveEdit{{ $rt->id }}">{{ sm_t('Active') }}</label>
                         </div>
                     </div>
                 </div>

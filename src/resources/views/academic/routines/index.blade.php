@@ -2,16 +2,16 @@
 @section('title', sm_t('Class Routines'))
 @push('buttons')
     <a href="{{ route('academic.routines.print', request()->query()) }}" target="_blank" class="btn btn-sm btn-encodex-print no-print">
-        <i class="fas fa-print"></i> Print
+        <i class="fas fa-print"></i> {{ sm_t('Print') }}
     </a>
     <a href="{{ route('academic.rooms') }}" class="btn btn-sm btn-encodex-list no-print">
-        <i class="fas fa-door-open"></i> Manage Rooms
+        <i class="fas fa-door-open"></i> {{ sm_t('Manage Rooms') }}
     </a>
     <a href="{{ route('academic.routine-titles') }}" class="btn btn-sm btn-encodex-list no-print">
-        <i class="fas fa-tags"></i> Manage Versions
+        <i class="fas fa-tags"></i> {{ sm_t('Manage Versions') }}
     </a>
     <button class="btn btn-sm btn-encodex-create" data-bs-toggle="modal" data-bs-target="#routineModal">
-        <i class="fas fa-plus"></i> Add Routine
+        <i class="fas fa-plus"></i> {{ sm_t('Add Routine') }}
     </button>
 @endpush
 
@@ -143,7 +143,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     </a>
                     @if(request('room_id'))
                     <a href="{{ route('academic.rooms.schedule', request('room_id')) }}" class="btn btn-sm btn-encodex-show">
-                        <i class="fas fa-calendar-alt"></i> Room Schedule
+                        <i class="fas fa-calendar-alt"></i> {{ sm_t('Room Schedule') }}
                     </a>
                     @endif
                 </div>
@@ -205,7 +205,7 @@ document.addEventListener('DOMContentLoaded', function() {
         </div>
         @if($routines->isEmpty())
         <div class="text-center py-3 text-muted">
-            No routines found
+            {{ sm_t('No routines found') }}
         </div>
         @endif
         <div class="mt-2">{{ $routines->links('pagination::bootstrap-5') }}</div>
@@ -218,7 +218,7 @@ document.addEventListener('DOMContentLoaded', function() {
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">
-                    <span id="modalTitle">Add Class Routine</span>
+                    <span id="modalTitle">{{ sm_t('Add Class Routine') }}</span>
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
@@ -237,7 +237,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         </select>
                     </div>
                     <div class="mb-2">
-                        <label class="form-label">Class *</label>
+                        <label class="form-label">{{ sm_t('Class') }} *</label>
                         <select id="classField" name="class_id" class="form-control form-control-sm" required>
                             <option value="">{{ sm_t('Select Class') }}</option>
                             @foreach($classes as $class)
@@ -252,7 +252,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         </select>
                     </div>
                     <div class="mb-2">
-                        <label class="form-label">Subject *</label>
+                        <label class="form-label">{{ sm_t('Subject') }} *</label>
                         <select id="subjectField" name="subject_id" class="form-control form-control-sm" required>
                             <option value="">{{ sm_t('Select Subject') }}</option>
                         </select>
@@ -267,7 +267,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         </select>
                     </div>
                     <div class="mb-2">
-                        <label class="form-label">Day *</label>
+                        <label class="form-label">{{ sm_t('Day') }} *</label>
                         <select id="dayField" name="day" class="form-control form-control-sm" required>
                             <option value="">{{ sm_t('Select Day') }}</option>
                             <option value="Saturday">{{ sm_t('Saturday') }}</option>
@@ -281,11 +281,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     </div>
                     <div class="row">
                         <div class="col-md-6 mb-2">
-                            <label class="form-label">Start Time *</label>
+                            <label class="form-label">{{ sm_t('Start Time') }} *</label>
                             <input type="time" id="startTimeField" name="start_time" class="form-control form-control-sm" required>
                         </div>
                         <div class="col-md-6 mb-2">
-                            <label class="form-label">End Time *</label>
+                            <label class="form-label">{{ sm_t('End Time') }} *</label>
                             <input type="time" id="endTimeField" name="end_time" class="form-control form-control-sm" required>
                         </div>
                     </div>
@@ -314,7 +314,7 @@ document.addEventListener('DOMContentLoaded', function() {
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">
-                        <span id="modalTitle">Edit Class Routine</span>
+                        <span id="modalTitle">{{ sm_t('Edit Class Routine') }}</span>
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
@@ -337,7 +337,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             </select>
                         </div>
                         <div class="mb-2">
-                            <label class="form-label">Class *</label>
+                            <label class="form-label">{{ sm_t('Class') }} *</label>
                             <select name="class_id" class="form-control form-control-sm" required>
                                 <option value="">{{ sm_t('Select Class') }}</option>
                                 @foreach($classes as $class)
@@ -352,7 +352,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             </select>
                         </div>
                         <div class="mb-2">
-                            <label class="form-label">Subject *</label>
+                            <label class="form-label">{{ sm_t('Subject') }} *</label>
                             <select name="subject_id" class="form-control form-control-sm" required>
                                 <option value="">{{ sm_t('Select Subject') }}</option>
                             </select>
@@ -367,25 +367,25 @@ document.addEventListener('DOMContentLoaded', function() {
                             </select>
                         </div>
                         <div class="mb-2">
-                            <label class="form-label">Day *</label>
+                            <label class="form-label">{{ sm_t('Day') }} *</label>
                             <select id="dayField" name="day" class="form-control form-control-sm" required>
                                 <option value="">{{ sm_t('Select Day') }}</option>
-                                <option value="Saturday" {{ $routine->day == 'Saturday' ? 'selected' : '' }}>Saturday</option>
-                                <option value="Sunday" {{ $routine->day == 'Sunday' ? 'selected' : '' }}>Sunday</option>
-                                <option value="Monday" {{ $routine->day == 'Monday' ? 'selected' : '' }}>Monday</option>
-                                <option value="Tuesday" {{ $routine->day == 'Tuesday' ? 'selected' : '' }}>Tuesday</option>
-                                <option value="Wednesday" {{ $routine->day == 'Wednesday' ? 'selected' : '' }}>Wednesday</option>
-                                <option value="Thursday" {{ $routine->day == 'Thursday' ? 'selected' : '' }}>Thursday</option>
-                                <option value="Friday" {{ $routine->day == 'Friday' ? 'selected' : '' }}>Friday</option>
+                                <option value="Saturday" {{ $routine->day == 'Saturday' ? 'selected' : '' }}>{{ sm_t('Saturday') }}</option>
+                                <option value="Sunday" {{ $routine->day == 'Sunday' ? 'selected' : '' }}>{{ sm_t('Sunday') }}</option>
+                                <option value="Monday" {{ $routine->day == 'Monday' ? 'selected' : '' }}>{{ sm_t('Monday') }}</option>
+                                <option value="Tuesday" {{ $routine->day == 'Tuesday' ? 'selected' : '' }}>{{ sm_t('Tuesday') }}</option>
+                                <option value="Wednesday" {{ $routine->day == 'Wednesday' ? 'selected' : '' }}>{{ sm_t('Wednesday') }}</option>
+                                <option value="Thursday" {{ $routine->day == 'Thursday' ? 'selected' : '' }}>{{ sm_t('Thursday') }}</option>
+                                <option value="Friday" {{ $routine->day == 'Friday' ? 'selected' : '' }}>{{ sm_t('Friday') }}</option>
                             </select>
                         </div>
                         <div class="row">
                             <div class="col-md-6 mb-2">
-                                <label class="form-label">Start Time *</label>
+                                <label class="form-label">{{ sm_t('Start Time') }} *</label>
                                 <input type="time" id="startTimeField" name="start_time" class="form-control form-control-sm" value="{{ $routine->start_time }}" required>
                             </div>
                             <div class="col-md-6 mb-2">
-                                <label class="form-label">End Time *</label>
+                                <label class="form-label">{{ sm_t('End Time') }} *</label>
                                 <input type="time" id="endTimeField" name="end_time" class="form-control form-control-sm" value="{{ $routine->end_time }}" required>
                             </div>
                         </div>

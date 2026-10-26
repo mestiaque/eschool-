@@ -27,8 +27,8 @@
 @section('contents')
 <div class="id-card">
     <div class="card-header">
-        <h3>School Management System</h3>
-        <p>Student Identification Card</p>
+        <h3>{{ sm_t('School Management System') }}</h3>
+        <p>{{ sm_t('Student Identification Card') }}</p>
     </div>
     <div class="card-body">
         <div class="photo-section">
@@ -45,14 +45,14 @@
             </div>
         </div>
         <div class="details">
-            <div class="detail-row"><span>Date of Birth</span><span>{{ sm_date($student->date_of_birth) }}</span></div>
-            <div class="detail-row"><span>Blood Group</span><span>{{ $student->blood_group ?? 'N/A' }}</span></div>
-            <div class="detail-row"><span>Phone</span><span>{{ $student->phone }}</span></div>
+            <div class="detail-row"><span>{{ sm_t('Date of Birth') }}</span><span>{{ sm_date($student->date_of_birth) }}</span></div>
+            <div class="detail-row"><span>{{ sm_t('Blood Group') }}</span><span>{{ $student->blood_group ?? 'N/A' }}</span></div>
+            <div class="detail-row"><span>{{ sm_t('Phone') }}</span><span>{{ $student->phone }}</span></div>
             @if($student->guardian)
-            <div class="detail-row"><span>Guardian</span><span>{{ $student->guardian->guardian_name ?? $student->guardian->father_name }}</span></div>
-            <div class="detail-row"><span>Guardian Phone</span><span>{{ $student->guardian->guardian_phone }}</span></div>
+            <div class="detail-row"><span>{{ sm_t('Guardian') }}</span><span>{{ $student->guardian->guardian_name ?? $student->guardian->father_name }}</span></div>
+            <div class="detail-row"><span>{{ sm_t('Guardian Phone') }}</span><span>{{ $student->guardian->guardian_phone }}</span></div>
             @endif
-            <div class="detail-row"><span>Admission Date</span><span>{{ sm_date($student->admission_date) }}</span></div>
+            <div class="detail-row"><span>{{ sm_t('Admission Date') }}</span><span>{{ sm_date($student->admission_date) }}</span></div>
         </div>
     </div>
     <div class="card-footer-custom">

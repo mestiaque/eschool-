@@ -160,7 +160,7 @@
             $schoolName = \ME\SchoolManagement\Models\SchoolSetting::where('key','school_name')->value('value') ?? config('app.name','School');
         @endphp
         <div class="school-name">{{ $schoolName }}</div>
-        <div class="tour-label">School Tour Participant</div>
+        <div class="tour-label">{{ sm_t('School Tour Participant') }}</div>
         <div class="tour-title">{{ $tour->title }}</div>
     </div>
 
@@ -182,32 +182,32 @@
 
         <div class="info-grid">
             <div class="info-row">
-                <span class="info-label">Class</span>
+                <span class="info-label">{{ sm_t('Class') }}</span>
                 <span class="info-value">{{ $student->classe?->name ?? '—' }}</span>
             </div>
             <div class="info-row">
-                <span class="info-label">Section</span>
+                <span class="info-label">{{ sm_t('Section') }}</span>
                 <span class="info-value">{{ $student->section?->name ?? '—' }}</span>
             </div>
             <div class="info-row">
-                <span class="info-label">Roll No</span>
+                <span class="info-label">{{ sm_t('Roll No') }}</span>
                 <span class="info-value">{{ $student->roll_number ?? '—' }}</span>
             </div>
             @if($student->contact_number)
             <div class="info-row">
-                <span class="info-label">Contact</span>
+                <span class="info-label">{{ sm_t('Contact') }}</span>
                 <span class="info-value">{{ $student->contact_number }}</span>
             </div>
             @endif
             <div class="info-row">
-                <span class="info-label">Payment</span>
+                <span class="info-label">{{ sm_t('Payment') }}</span>
                 <span class="info-value" style="color:{{ $registration->payment_status === 'paid' ? '#28a745' : ($registration->payment_status === 'partial' ? '#fd7e14' : '#dc3545') }}">
-                    {{ ucfirst($registration->payment_status) }}
+                    {{ sm_t(ucfirst($registration->payment_status)) }}
                 </span>
             </div>
             @if($tour->organizer)
             <div class="info-row">
-                <span class="info-label">Organizer</span>
+                <span class="info-label">{{ sm_t('Organizer') }}</span>
                 <span class="info-value">{{ $tour->organizer }}</span>
             </div>
             @endif
@@ -215,7 +215,7 @@
     </div>
 
     {{-- Type Strip --}}
-    <div class="badge-type-strip">Participant</div>
+    <div class="badge-type-strip">{{ sm_t('Participant') }}</div>
 
     {{-- Footer --}}
     <div class="badge-footer">

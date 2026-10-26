@@ -11,6 +11,15 @@ class SchoolManagementServiceProvider extends ServiceProvider
         $this->loadRoutesFrom(__DIR__ . '/routes/api.php');
         $this->loadViewsFrom(__DIR__ . '/resources/views', 'school-management');
         $this->loadTranslationsFrom(__DIR__.'/resources/lang', 'school-management');
+
+        // Bangla validation messages when the host app has none of its own.
+        $this->app->booted(function () {
+            if (!is_file(lang_path('bn/validation.php'))) {
+                $lines = \Illuminate\Support\Arr::dot(require __DIR__ . '/resources/lang/bn/validation.php');
+                $this->app['translator']->addLines(
+                    collect($lines)->mapWithKeys(fn ($v, $k) => ["validation.{$k}" => $v])->all(), 'bn');
+            }
+        });
         $this->loadMigrationsFrom(__DIR__.'/Database/migrations');
         $this->publishes([
             __DIR__.'/Database/Seeders' => database_path('seeders'),
@@ -18,6 +27,11 @@ class SchoolManagementServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/Config' => config_path('school-management'),
         ], 'school-management-config');
+        // The theme header falls back to backend/img/undraw_profile.svg for users
+        // without a photo but doesn't ship that file.
+        $this->publishes([
+            __DIR__.'/public/img/avatar.svg' => public_path('backend/img/undraw_profile.svg'),
+        ], ['school-management-assets', 'laravel-assets']);
 
         // Swap the admin sidebar for a teacher-only one when the logged-in
         // account is linked to a teacher, without touching the host theme.

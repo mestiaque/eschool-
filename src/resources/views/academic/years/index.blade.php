@@ -2,7 +2,7 @@
 @section('title', sm_t('Academic Years'))
 @push('buttons')
     <button class="btn btn-sm btn-encodex-create" data-bs-toggle="modal" data-bs-target="#yearModal" onclick="resetForm()">
-        <i class="fas fa-plus"></i> Add Year
+        <i class="fas fa-plus"></i> {{ sm_t('Add Year') }}
     </button>
 @endpush
 @section('content')
@@ -58,9 +58,9 @@
                         <td>{{ sm_date(\Carbon\Carbon::parse($year->end_date)) }}</td>
                         <td class="text-center">
                             @if($year->is_active)
-                            <span class="badge bg-success-subtle text-success">Active</span>
+                            <span class="badge bg-success-subtle text-success">{{ sm_t('Active') }}</span>
                             @else
-                            <span class="badge bg-danger-subtle text-danger">Inactive</span>
+                            <span class="badge bg-danger-subtle text-danger">{{ sm_t('Inactive') }}</span>
                             @endif
                         </td>
                         <td class="text-center">
@@ -82,7 +82,7 @@
         </div>
         @if($years->isEmpty())
         <div class="text-center py-3 text-muted">
-            No academic years found
+            {{ sm_t('No academic years found') }}
         </div>
         @endif
         <div class="mt-2">{{ $years->links('pagination::bootstrap-5') }}</div>
@@ -96,7 +96,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">
-                    <span id="modalTitle">Add Academic Year</span>
+                    <span id="modalTitle">{{ sm_t('Add Academic Year') }}</span>
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
@@ -106,16 +106,16 @@
                 <input type="hidden" id="methodField" name="_method" value="POST">
                 <div class="modal-body">
                     <div class="mb-2">
-                        <label class="form-label">Name *</label>
-                        <input type="text" id="nameField" name="name" class="form-control form-control-sm" placeholder="e.g. 2026" required>
-                        <small class="text-muted">Leave blank to auto-generate</small>
+                        <label class="form-label">{{ sm_t('Name') }} *</label>
+                        <input type="text" id="nameField" name="name" class="form-control form-control-sm" placeholder="{{ sm_t('e.g. 2026') }}" required>
+                        <small class="text-muted">{{ sm_t('Leave blank to auto-generate') }}</small>
                     </div>
                     <div class="mb-2">
-                        <label class="form-label">Start Date *</label>
+                        <label class="form-label">{{ sm_t('Start Date') }} *</label>
                         <input type="date" id="startDateField" name="start_date" class="form-control form-control-sm" required>
                     </div>
                     <div class="mb-2">
-                        <label class="form-label">End Date *</label>
+                        <label class="form-label">{{ sm_t('End Date') }} *</label>
                         <input type="date" id="endDateField" name="end_date" class="form-control form-control-sm" required>
                     </div>
                     <div class="mb-2">
@@ -147,7 +147,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">
-                        <span id="modalTitle">Add Academic Year</span>
+                        <span id="modalTitle">{{ sm_t('Add Academic Year') }}</span>
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
@@ -158,17 +158,17 @@
                     <input type="hidden" id="methodField" name="_method" value="PUT">
                     <div class="modal-body">
                         <div class="mb-2">
-                            <label class="form-label">Name *</label>
-                            <input type="text" id="nameField" name="name" class="form-control form-control-sm" value="{{ $year->name ?? '' }}" placeholder="e.g. 2026" required>
-                            <small class="text-muted">Leave blank to auto-generate</small>
+                            <label class="form-label">{{ sm_t('Name') }} *</label>
+                            <input type="text" id="nameField" name="name" class="form-control form-control-sm" value="{{ $year->name ?? '' }}" placeholder="{{ sm_t('e.g. 2026') }}" required>
+                            <small class="text-muted">{{ sm_t('Leave blank to auto-generate') }}</small>
                         </div>
                         <div class="mb-2">
-                            <label class="form-label">Start Date *</label>
+                            <label class="form-label">{{ sm_t('Start Date') }} *</label>
 
                             <input type="date" id="startDateField" name="start_date" class="form-control form-control-sm" value="{{ isset($year->start_date) ? $year->start_date->format('Y-m-d') : '' }}" required>
                         </div>
                         <div class="mb-2">
-                            <label class="form-label">End Date *</label>
+                            <label class="form-label">{{ sm_t('End Date') }} *</label>
                             <input type="date" id="endDateField" name="end_date" class="form-control form-control-sm" value="{{ isset($year->end_date) ? $year->end_date->format('Y-m-d') : '' }}" required>
                         </div>
                         <div class="mb-2">

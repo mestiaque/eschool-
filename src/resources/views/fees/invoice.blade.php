@@ -3,7 +3,7 @@
 
 @push('buttons')
 <a href="{{ route('fees.collection.create') }}" class="btn btn-sm btn-encodex-create">
-    <i class="fas fa-plus"></i> Create Invoice
+    <i class="fas fa-plus"></i> {{ sm_t('Create Invoice') }}
 </a>
 @endpush
 
@@ -13,7 +13,7 @@
     <div class="card-body py-2 border-bottom">
         <form method="GET" class="glass-search-form row g-2 align-items-end">
             <div class="col-md-3">
-                <input type="text" name="search" class="form-control form-control-sm" placeholder="Student name or invoice no..." value="{{ request('search') }}">
+                <input type="text" name="search" class="form-control form-control-sm" placeholder="{{ sm_t('Student name or invoice no...') }}" value="{{ request('search') }}">
             </div>
             <div class="col-md-2">
                 <select name="status" class="form-control form-control-sm">
@@ -24,10 +24,10 @@
                 </select>
             </div>
             <div class="col-md-2">
-                <input type="date" name="from_date" class="form-control form-control-sm" placeholder="From" value="{{ request('from_date') }}">
+                <input type="date" name="from_date" class="form-control form-control-sm" placeholder="{{ sm_t('From') }}" value="{{ request('from_date') }}">
             </div>
             <div class="col-md-2">
-                <input type="date" name="to_date" class="form-control form-control-sm" placeholder="To" value="{{ request('to_date') }}">
+                <input type="date" name="to_date" class="form-control form-control-sm" placeholder="{{ sm_t('To') }}" value="{{ request('to_date') }}">
             </div>
             <div class="col-md-1">
                 <button type="submit" class="btn btn-sm btn-encodex-search w-100">{{ sm_t('Filter') }}</button>
@@ -65,18 +65,18 @@
                     <td>{{ sm_date($col->due_date) }}</td>
                     <td>
                         @php $colors = ['paid'=>'success','partial'=>'warning','unpaid'=>'danger']; @endphp
-                        <span class="badge bg-{{ $bc = $colors[$col->status] ?? 'secondary' }}-subtle text-{{ $bc }}">{{ ucfirst($col->status) }}</span>
+                        <span class="badge bg-{{ $bc = $colors[$col->status] ?? 'secondary' }}-subtle text-{{ $bc }}">{{ sm_t(ucfirst($col->status)) }}</span>
                     </td>
                     <td>
                         @if($col->status !== 'paid')
-                        <button class="btn btn-sm btn-encodex-payment" data-bs-toggle="modal" data-bs-target="#payModal{{ $col->id }}">Pay</button>
+                        <button class="btn btn-sm btn-encodex-payment" data-bs-toggle="modal" data-bs-target="#payModal{{ $col->id }}">{{ sm_t('Pay') }}</button>
                         @else
                         <span class="text-success small"><i class="fas fa-check-circle"></i></span>
                         @endif
                     </td>
                 </tr>
                 @empty
-                <tr><td colspan="11" class="text-center text-muted py-3">No invoices found</td></tr>
+                <tr><td colspan="11" class="text-center text-muted py-3">{{ sm_t('No invoices found') }}</td></tr>
                 @endforelse
             </tbody>
         </table>
@@ -93,16 +93,16 @@
             <div class="modal-content">
                 <div class="modal-header"><h6 class="modal-title">{{ sm_t('Receive Payment') }}</h6><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
                 <div class="modal-body">
-                    <p class="small mb-1">Student: <strong>{{ $col->student?->full_name }}</strong></p>
-                    <p class="small mb-2">Due: <strong>{{ sm_money($col->due_amount, 2) }}</strong></p>
-                    <input type="number" name="paid_amount" class="form-control form-control-sm mb-2" placeholder="Amount to pay" step="0.01" max="{{ $col->due_amount }}" required>
+                    <p class="small mb-1">{{ sm_t('Student') }}: <strong>{{ $col->student?->full_name }}</strong></p>
+                    <p class="small mb-2">{{ sm_t('Due') }}: <strong>{{ sm_money($col->due_amount, 2) }}</strong></p>
+                    <input type="number" name="paid_amount" class="form-control form-control-sm mb-2" placeholder="{{ sm_t('Amount to pay') }}" step="0.01" max="{{ $col->due_amount }}" required>
                     <input type="date" name="payment_date" class="form-control form-control-sm mb-2" value="{{ date('Y-m-d') }}">
                     <select name="payment_method" class="form-control form-control-sm mb-2">
                         <option value="cash">{{ sm_t('Cash') }}</option>
                         <option value="bank">{{ sm_t('Bank Transfer') }}</option>
                         <option value="mobile">{{ sm_t('Mobile Banking') }}</option>
                     </select>
-                    <input type="text" name="transaction_id" class="form-control form-control-sm" placeholder="Transaction ID (optional)">
+                    <input type="text" name="transaction_id" class="form-control form-control-sm" placeholder="{{ sm_t('Transaction ID (optional)') }}">
                 </div>
                 <div class="modal-footer"><button type="submit" class="btn btn-sm btn-encodex-payment w-100">{{ sm_t('Confirm') }}</button></div>
             </div>

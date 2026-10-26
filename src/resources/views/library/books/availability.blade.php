@@ -1,13 +1,13 @@
 @extends('me::master')
 @section('title', sm_t('Book Availability Chart'))
 @push('buttons')
-    <a href="{{ route('library.books') }}" class="btn btn-sm btn-encodex-cancel"><i class="fas fa-arrow-left"></i> Books</a>
-    <a href="{{ route('library.issues') }}" class="btn btn-sm btn-encodex-list"><i class="fas fa-hand-holding me-1"></i>Issue / Return</a>
+    <a href="{{ route('library.books') }}" class="btn btn-sm btn-encodex-cancel"><i class="fas fa-arrow-left"></i> {{ sm_t('Books') }}</a>
+    <a href="{{ route('library.issues') }}" class="btn btn-sm btn-encodex-list"><i class="fas fa-hand-holding me-1"></i>{{ sm_t('Issue / Return') }}</a>
 @endpush
 
 @section('content')
 <form method="GET" class="glass-search-form row g-2 align-items-end mb-3">
-    <div class="col-md-4"><input type="text" name="search" class="form-control form-control-sm" placeholder="Book title or ID" value="{{ request('search') }}"></div>
+    <div class="col-md-4"><input type="text" name="search" class="form-control form-control-sm" placeholder="{{ sm_t('Book title or ID') }}" value="{{ request('search') }}"></div>
     <div class="col-md-2">
         <select name="type" class="form-control form-control-sm">
             <option value="">{{ sm_t('All Types') }}</option>
@@ -24,16 +24,16 @@
         </select>
     </div>
     <div class="col-md-4">
-        <button type="submit" class="btn btn-sm btn-encodex-search me-1"><i class="fas fa-search"></i> Filter</button>
-        <a href="{{ route('library.availability') }}" class="btn btn-sm btn-encodex-cancel">Reset</a>
+        <button type="submit" class="btn btn-sm btn-encodex-search me-1"><i class="fas fa-search"></i> {{ sm_t('Filter') }}</button>
+        <a href="{{ route('library.availability') }}" class="btn btn-sm btn-encodex-cancel">{{ sm_t('Reset') }}</a>
     </div>
 </form>
 
 <div class="mb-3 d-flex gap-3 small">
-    <span class="d-flex align-items-center gap-1"><span style="width:14px;height:14px;background:#28a745;border-radius:3px;display:inline-block"></span> Available</span>
-    <span class="d-flex align-items-center gap-1"><span style="width:14px;height:14px;background:#ffc107;border-radius:3px;display:inline-block"></span> Issued</span>
-    <span class="d-flex align-items-center gap-1"><span style="width:14px;height:14px;background:#dc3545;border-radius:3px;display:inline-block"></span> Lost</span>
-    <span class="d-flex align-items-center gap-1"><span style="width:14px;height:14px;background:#6c757d;border-radius:3px;display:inline-block"></span> Damaged</span>
+    <span class="d-flex align-items-center gap-1"><span style="width:14px;height:14px;background:#28a745;border-radius:3px;display:inline-block"></span> {{ sm_t('Available') }}</span>
+    <span class="d-flex align-items-center gap-1"><span style="width:14px;height:14px;background:#ffc107;border-radius:3px;display:inline-block"></span> {{ sm_t('Issued') }}</span>
+    <span class="d-flex align-items-center gap-1"><span style="width:14px;height:14px;background:#dc3545;border-radius:3px;display:inline-block"></span> {{ sm_t('Lost') }}</span>
+    <span class="d-flex align-items-center gap-1"><span style="width:14px;height:14px;background:#6c757d;border-radius:3px;display:inline-block"></span> {{ sm_t('Damaged') }}</span>
 </div>
 
 @foreach($books as $book)
@@ -89,7 +89,7 @@
             @endforeach
 
             @if($book->copies->isEmpty())
-            <span class="text-muted small">No copies added yet.</span>
+            <span class="text-muted small">{{ sm_t('No copies added yet.') }}</span>
             @endif
         </div>
     </div>

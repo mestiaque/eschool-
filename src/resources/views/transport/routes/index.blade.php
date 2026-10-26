@@ -2,10 +2,10 @@
 @section('title', sm_t('Transport Routes'))
 @push('buttons')
     <a href="{{ route('transport.schedule') }}" class="btn btn-sm btn-encodex-show">
-        <i class="fas fa-clock"></i> Schedule Chart
+        <i class="fas fa-clock"></i> {{ sm_t('Schedule Chart') }}
     </a>
     <button class="btn btn-sm btn-encodex-create" data-bs-toggle="modal" data-bs-target="#routeModal">
-        <i class="fas fa-plus"></i> Add Route
+        <i class="fas fa-plus"></i> {{ sm_t('Add Route') }}
     </button>
 @endpush
 
@@ -25,7 +25,7 @@ $dirColors  = ['morning'=>'warning','afternoon'=>'info','evening'=>'success','ni
             <h6 class="mb-0 d-inline">
                 <i class="fas fa-route me-1 text-primary"></i>{{ $route->route_name }}
             </h6>
-            <span class="badge bg-{{ $bc = $route->is_active ? 'success' : 'secondary' }}-subtle text-{{ $bc }} ms-2">{{ $route->is_active ? 'Active' : 'Inactive' }}</span>
+            <span class="badge bg-{{ $bc = $route->is_active ? 'success' : 'secondary' }}-subtle text-{{ $bc }} ms-2">{{ sm_t($route->is_active ? 'Active' : 'Inactive') }}</span>
         </div>
         <div class="d-flex gap-2 align-items-center">
             <span class="text-muted small">
@@ -56,7 +56,7 @@ $dirColors  = ['morning'=>'warning','afternoon'=>'info','evening'=>'success','ni
                     <small class="fw-semibold text-muted"><i class="fas fa-clock me-1"></i> Schedules ({{ $route->schedules->count() }})</small>
                     <button class="btn btn-sm btn-encodex-create"
                         data-bs-toggle="collapse" data-bs-target="#addSched{{ $route->id }}">
-                        <i class="fas fa-plus"></i> Add Schedule
+                        <i class="fas fa-plus"></i> {{ sm_t('Add Schedule') }}
                     </button>
                 </div>
 
@@ -95,7 +95,7 @@ $dirColors  = ['morning'=>'warning','afternoon'=>'info','evening'=>'success','ni
                             </td>
                             <td>
                                 @if(empty($sched->days))
-                                    <span class="text-muted small">Every day</span>
+                                    <span class="text-muted small">{{ sm_t('Every day') }}</span>
                                 @else
                                     @foreach($sched->days as $d)
                                     <span class="badge bg-light-subtle text-dark border" style="font-size:10px">{{ $allDays[$d] ?? $d }}</span>
@@ -130,7 +130,7 @@ $dirColors  = ['morning'=>'warning','afternoon'=>'info','evening'=>'success','ni
                             <input type="hidden" name="route_id" value="{{ $route->id }}">
                             <div class="row g-2 align-items-end">
                                 <div class="col-md-2">
-                                    <label class="form-label form-label-sm">Direction *</label>
+                                    <label class="form-label form-label-sm">{{ sm_t('Direction') }} *</label>
                                     <select name="direction" class="form-control form-control-sm" required>
                                         @foreach($directions as $dk => $dv)
                                         <option value="{{ $dk }}">{{ $dv }}</option>
@@ -138,7 +138,7 @@ $dirColors  = ['morning'=>'warning','afternoon'=>'info','evening'=>'success','ni
                                     </select>
                                 </div>
                                 <div class="col-md-2">
-                                    <label class="form-label form-label-sm">Departure *</label>
+                                    <label class="form-label form-label-sm">{{ sm_t('Departure') }} *</label>
                                     <input type="time" name="departure_time" class="form-control form-control-sm" required>
                                 </div>
                                 <div class="col-md-2">
@@ -156,11 +156,11 @@ $dirColors  = ['morning'=>'warning','afternoon'=>'info','evening'=>'success','ni
                                 </div>
                                 <div class="col-md-2">
                                     <label class="form-label form-label-sm">{{ sm_t('Notes') }}</label>
-                                    <input type="text" name="notes" class="form-control form-control-sm" placeholder="Optional">
+                                    <input type="text" name="notes" class="form-control form-control-sm" placeholder="{{ sm_t('Optional') }}">
                                 </div>
                                 <div class="col-md-2">
                                     <button type="submit" class="btn btn-sm btn-encodex-save w-100">
-                                        <i class="fas fa-save me-1"></i> Save
+                                        <i class="fas fa-save me-1"></i> {{ sm_t('Save') }}
                                     </button>
                                 </div>
                                 <div class="col-12">
@@ -202,14 +202,14 @@ $dirColors  = ['morning'=>'warning','afternoon'=>'info','evening'=>'success','ni
                     @endforeach
                 </div>
                 @else
-                <div class="text-center text-muted py-2 small">No stops</div>
+                <div class="text-center text-muted py-2 small">{{ sm_t('No stops') }}</div>
                 @endif
                 {{-- Add Stop --}}
                 <div class="p-2 border-top">
                     <form method="POST" action="{{ route('transport.stops.store') }}" class="d-flex gap-1">
                         @csrf
                         <input type="hidden" name="route_id" value="{{ $route->id }}">
-                        <input type="text" name="stop_name" class="form-control form-control-sm" placeholder="Stop name" required style="font-size:12px">
+                        <input type="text" name="stop_name" class="form-control form-control-sm" placeholder="{{ sm_t('Stop name') }}" required style="font-size:12px">
                         <input type="time" name="arrival_time" class="form-control form-control-sm" style="font-size:12px;width:110px">
                         <button type="submit" class="btn btn-sm btn-encodex-save flex-shrink-0"><i class="fas fa-plus"></i></button>
                     </form>
@@ -219,7 +219,7 @@ $dirColors  = ['morning'=>'warning','afternoon'=>'info','evening'=>'success','ni
     </div>
 </div>
 @empty
-<div class="alert alert-info">No routes found. Add a route to get started.</div>
+<div class="alert alert-info">{{ sm_t('No routes found. Add a route to get started.') }}</div>
 @endforelse
 <div class="mt-2">{{ $routes->links('pagination::bootstrap-5') }}</div>
 
@@ -280,7 +280,7 @@ $dirColors  = ['morning'=>'warning','afternoon'=>'info','evening'=>'success','ni
                 <div class="modal-body">
                     <div class="row g-2">
                         <div class="col-md-6 mb-2">
-                            <label class="form-label form-label-sm">Direction *</label>
+                            <label class="form-label form-label-sm">{{ sm_t('Direction') }} *</label>
                             <select name="direction" id="es_direction" class="form-control form-control-sm" required>
                                 @foreach($directions as $dk => $dv)
                                 <option value="{{ $dk }}">{{ $dv }}</option>
@@ -297,7 +297,7 @@ $dirColors  = ['morning'=>'warning','afternoon'=>'info','evening'=>'success','ni
                             </select>
                         </div>
                         <div class="col-md-6 mb-2">
-                            <label class="form-label form-label-sm">Departure *</label>
+                            <label class="form-label form-label-sm">{{ sm_t('Departure') }} *</label>
                             <input type="time" name="departure_time" id="es_dep" class="form-control form-control-sm" required>
                         </div>
                         <div class="col-md-6 mb-2">

@@ -11,13 +11,13 @@
                     <!-- Filter -->
                     <form method="GET" class="glass-search-form mb-3 row g-2">
                         <div class="col-md-3">
-                            <input type="text" name="invoice_no" class="form-control form-control-sm" placeholder="Invoice No" value="{{ request('invoice_no') }}">
+                            <input type="text" name="invoice_no" class="form-control form-control-sm" placeholder="{{ sm_t('Invoice No') }}" value="{{ request('invoice_no') }}">
                         </div>
                         <div class="col-md-3">
-                            <input type="date" name="from_date" class="form-control form-control-sm" placeholder="From Date" value="{{ request('from_date') }}">
+                            <input type="date" name="from_date" class="form-control form-control-sm" placeholder="{{ sm_t('From Date') }}" value="{{ request('from_date') }}">
                         </div>
                         <div class="col-md-3">
-                            <input type="date" name="to_date" class="form-control form-control-sm" placeholder="To Date" value="{{ request('to_date') }}">
+                            <input type="date" name="to_date" class="form-control form-control-sm" placeholder="{{ sm_t('To Date') }}" value="{{ request('to_date') }}">
                         </div>
                         <div class="col-md-2">
                             <button type="submit" class="btn btn-encodex-search btn-sm w-100">{{ sm_t('Filter') }}</button>
@@ -50,7 +50,7 @@
                                 </tr>
                                 @empty
                                 <tr>
-                                    <td colspan="7" class="text-center">No payments found</td>
+                                    <td colspan="7" class="text-center">{{ sm_t('No payments found') }}</td>
                                 </tr>
                                 @endforelse
                             </tbody>

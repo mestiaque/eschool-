@@ -13,9 +13,9 @@
             <div class="fw-bold">{{ $notice->title }}</div>
             <div class="d-flex gap-2 align-items-center flex-shrink-0">
                 @if($notice->for === 'all')
-                <span class="badge bg-secondary-subtle text-secondary" style="font-size:10px">All</span>
+                <span class="badge bg-secondary-subtle text-secondary" style="font-size:10px">{{ sm_t('All') }}</span>
                 @elseif($notice->for === 'students')
-                <span class="badge bg-primary-subtle text-primary" style="font-size:10px">Students</span>
+                <span class="badge bg-primary-subtle text-primary" style="font-size:10px">{{ sm_t('Students') }}</span>
                 @elseif($notice->for === 'class')
                 <span class="badge bg-info-subtle text-info" style="font-size:10px">{{ $portalStudent->classe?->name }}</span>
                 @endif
@@ -27,14 +27,14 @@
         @endif
         @if($notice->attachment)
         <a href="{{ asset('storage/'.$notice->attachment) }}" class="btn btn-sm btn-outline-secondary mt-2" target="_blank">
-            <i class="fas fa-paperclip me-1"></i>Attachment
+            <i class="fas fa-paperclip me-1"></i>{{ sm_t('Attachment') }}
         </a>
         @endif
     </div>
     @empty
     <div class="p-4 text-center text-muted">
         <i class="fas fa-bell-slash fa-2x mb-2 opacity-25"></i>
-        <div>No notices available.</div>
+        <div>{{ sm_t('No notices available.') }}</div>
     </div>
     @endforelse
 

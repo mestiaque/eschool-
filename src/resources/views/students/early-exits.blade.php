@@ -2,7 +2,7 @@
 @section('title', sm_t('Student Early Exit'))
 
 @push('buttons')
-<button class="btn btn-sm btn-encodex-create" data-bs-toggle="modal" data-bs-target="#earlyExitModal"><i class="fas fa-plus"></i> Add Early Exit</button>
+<button class="btn btn-sm btn-encodex-create" data-bs-toggle="modal" data-bs-target="#earlyExitModal"><i class="fas fa-plus"></i> {{ sm_t('Add Early Exit') }}</button>
 @endpush
 
 @section('content')
@@ -35,7 +35,7 @@
                     <td><small>{{ Str::limit($exit->reason, 40) }}</small></td>
                     <td>
                         @php $c=['approved'=>'success','rejected'=>'danger','pending'=>'warning']; @endphp
-                        <span class="badge bg-{{ $bc = $c[$exit->status] ?? 'secondary' }}-subtle text-{{ $bc }}">{{ ucfirst($exit->status) }}</span>
+                        <span class="badge bg-{{ $bc = $c[$exit->status] ?? 'secondary' }}-subtle text-{{ $bc }}">{{ sm_t(ucfirst($exit->status)) }}</span>
                     </td>
                     <td>
                         @if($exit->status === 'pending')
@@ -46,7 +46,7 @@
                     </td>
                 </tr>
                 @empty
-                <tr><td colspan="9" class="text-center text-muted py-3">No early exit records</td></tr>
+                <tr><td colspan="9" class="text-center text-muted py-3">{{ sm_t('No early exit records') }}</td></tr>
                 @endforelse
             </tbody>
         </table>
@@ -62,19 +62,19 @@
                 <div class="modal-header"><h5 class="modal-title">{{ sm_t('Add Early Exit') }}</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
                 <div class="modal-body">
                     <div class="mb-2">
-                        <label class="form-label">Student *</label>
+                        <label class="form-label">{{ sm_t('Student') }} *</label>
                         @include('school-management::partials.student-select', ['name' => 'student_id', 'required' => true, 'placeholder' => 'Select Student'])
                     </div>
                     <div class="row g-2 mb-2">
-                        <div class="col"><label class="form-label">Date *</label><input type="date" name="exit_date" class="form-control form-control-sm" value="{{ date('Y-m-d') }}" required></div>
-                        <div class="col"><label class="form-label">Time *</label><input type="time" name="exit_time" class="form-control form-control-sm" required></div>
+                        <div class="col"><label class="form-label">{{ sm_t('Date') }} *</label><input type="date" name="exit_date" class="form-control form-control-sm" value="{{ date('Y-m-d') }}" required></div>
+                        <div class="col"><label class="form-label">{{ sm_t('Time') }} *</label><input type="time" name="exit_time" class="form-control form-control-sm" required></div>
                     </div>
                     <div class="mb-2">
                         <label class="form-label">{{ sm_t('Picked Up By') }}</label>
-                        <input type="text" name="picked_up_by" class="form-control form-control-sm" placeholder="Guardian / relative name">
+                        <input type="text" name="picked_up_by" class="form-control form-control-sm" placeholder="{{ sm_t('Guardian / relative name') }}">
                     </div>
                     <div class="mb-2">
-                        <label class="form-label">Reason *</label>
+                        <label class="form-label">{{ sm_t('Reason') }} *</label>
                         <textarea name="reason" class="form-control form-control-sm" rows="3" required></textarea>
                     </div>
                 </div>

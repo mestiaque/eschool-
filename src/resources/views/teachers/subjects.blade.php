@@ -4,7 +4,7 @@
 
 @push('buttons')
 <button class="btn btn-encodex-create btn-sm" data-bs-toggle="modal" data-bs-target="#assignModal">
-    <i class="fas fa-plus"></i> Assign Subject
+    <i class="fas fa-plus"></i> {{ sm_t('Assign Subject') }}
 </button>
 @endpush
 
@@ -41,7 +41,7 @@
                                 </tr>
                                 @empty
                                 <tr>
-                                    <td colspan="5" class="text-center">No assignments found</td>
+                                    <td colspan="5" class="text-center">{{ sm_t('No assignments found') }}</td>
                                 </tr>
                                 @endforelse
                             </tbody>

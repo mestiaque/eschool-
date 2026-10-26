@@ -19,8 +19,8 @@
 <body>
 <div class="portal-card">
     <div class="portal-logo"><i class="fas fa-graduation-cap"></i></div>
-    <h4 class="text-center fw-bold text-primary mb-0">Student Portal</h4>
-    <p class="text-center text-muted small mb-4">Login with your Student ID and PIN</p>
+    <h4 class="text-center fw-bold text-primary mb-0">{{ sm_t('Student Portal') }}</h4>
+    <p class="text-center text-muted small mb-4">{{ sm_t('Login with your Student ID and PIN') }}</p>
 
     @if(session('error'))
     <div class="alert alert-danger py-2 small">{{ session('error') }}</div>
@@ -33,7 +33,7 @@
             <div class="input-group">
                 <span class="input-group-text"><i class="fas fa-id-card"></i></span>
                 <input type="text" name="student_id" class="form-control @error('student_id') is-invalid @enderror"
-                       placeholder="e.g. STU-2026-0001" value="{{ old('student_id') }}" required autofocus>
+                       placeholder="{{ sm_t('e.g. STU-2026-0001') }}" value="{{ old('student_id') }}" required autofocus>
             </div>
             @error('student_id')<div class="text-danger small mt-1">{{ $message }}</div>@enderror
         </div>
@@ -46,10 +46,10 @@
             </div>
             @error('portal_pin')<div class="text-danger small mt-1">{{ $message }}</div>@enderror
         </div>
-        <button type="submit" class="btn btn-portal"><i class="fas fa-sign-in-alt me-2"></i>Login</button>
+        <button type="submit" class="btn btn-portal"><i class="fas fa-sign-in-alt me-2"></i>{{ sm_t('Login') }}</button>
     </form>
 
-    <p class="text-center text-muted small mt-3 mb-0">Contact your school admin for PIN setup.</p>
+    <p class="text-center text-muted small mt-3 mb-0">{{ sm_t('Contact your school admin for PIN setup.') }}</p>
 </div>
 </body>
 </html>

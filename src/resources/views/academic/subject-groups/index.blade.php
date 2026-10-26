@@ -2,7 +2,7 @@
 @section('title', sm_t('Subject Groups'))
 @push('buttons')
     <button class="btn btn-sm btn-encodex-create" data-bs-toggle="modal" data-bs-target="#groupModal">
-        <i class="fas fa-plus"></i> Add Group
+        <i class="fas fa-plus"></i> {{ sm_t('Add Group') }}
     </button>
 @endpush
 @section('content')
@@ -32,7 +32,7 @@
                     <td class="text-center"><span class="badge bg-info-subtle text-info">{{ $group->students_count }}</span></td>
                     <td class="text-center">
                         <span class="badge bg-{{ $bc = $group->is_active ? 'success' : 'secondary' }}-subtle text-{{ $bc }}">
-                            {{ $group->is_active ? 'Active' : 'Inactive' }}
+                            {{ sm_t($group->is_active ? 'Active' : 'Inactive') }}
                         </span>
                     </td>
                     <td class="text-center">
@@ -48,7 +48,7 @@
                     </td>
                 </tr>
                 @empty
-                <tr><td colspan="7" class="text-center text-muted py-4">No subject groups found. Add one to get started.</td></tr>
+                <tr><td colspan="7" class="text-center text-muted py-4">{{ sm_t('No subject groups found. Add one to get started.') }}</td></tr>
                 @endforelse
             </tbody>
         </table>
@@ -71,12 +71,12 @@
                     <div class="mb-2">
                         <label class="form-label">{{ sm_t('Group Name') }} <span class="text-danger">*</span></label>
                         <input type="text" name="name" id="groupName" class="form-control form-control-sm"
-                               placeholder="e.g. Science, Arts, Commerce" required>
+                               placeholder="{{ sm_t('e.g. Science, Arts, Commerce') }}" required>
                     </div>
                     <div class="mb-2">
                         <label class="form-label">{{ sm_t('Description') }}</label>
                         <textarea name="description" id="groupDesc" class="form-control form-control-sm" rows="2"
-                                  placeholder="Optional description"></textarea>
+                                  placeholder="{{ sm_t('Optional description') }}"></textarea>
                     </div>
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" name="is_active" id="groupActive" value="1" checked>

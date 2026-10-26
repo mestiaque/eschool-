@@ -2,7 +2,7 @@
 @section('title', sm_t('Subjects'))
 @push('buttons')
     <button class="btn btn-sm btn-encodex-create" data-bs-toggle="modal" data-bs-target="#subjectModal">
-        <i class="fas fa-plus"></i> Add Subject
+        <i class="fas fa-plus"></i> {{ sm_t('Add Subject') }}
     </button>
 @endpush
 @section('content')
@@ -66,7 +66,7 @@
                             <td>{{ $subject->class->name ?? '' }}</td>
                             <td class="text-center">
                                 <span class="badge bg-{{ $bc = $typeColors[$subject->type] ?? 'secondary' }}-subtle text-{{ $bc }}">
-                                    {{ ucfirst($subject->type) }}
+                                    {{ sm_t(ucfirst($subject->type)) }}
                                 </span>
                             </td>
                             <td class="text-center">{{ $subject->subjectGroup?->name ?? '—' }}</td>
@@ -74,9 +74,9 @@
                             <td class="text-center">{{ $subject->full_mark }}</td>
                             <td class="text-center">
                                 @if($subject->is_active)
-                                <span class="badge bg-success-subtle text-success">Active</span>
+                                <span class="badge bg-success-subtle text-success">{{ sm_t('Active') }}</span>
                                 @else
-                                <span class="badge bg-danger-subtle text-danger">Inactive</span>
+                                <span class="badge bg-danger-subtle text-danger">{{ sm_t('Inactive') }}</span>
                                 @endif
                             </td>
                             <td class="text-center">
@@ -98,7 +98,7 @@
             </div>
             @if($subjects->isEmpty())
             <div class="text-center py-3 text-muted">
-                No subjects found
+                {{ sm_t('No subjects found') }}
             </div>
             @endif
             <div class="mt-2">{{ $subjects->links('pagination::bootstrap-5') }}</div>
@@ -111,7 +111,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">
-                        <span id="modalTitle">Add Subject</span>
+                        <span id="modalTitle">{{ sm_t('Add Subject') }}</span>
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
@@ -121,7 +121,7 @@
                     <div class="modal-body">
                         <div class="row g-2 mb-2">
                             <div class="col-md-8">
-                                <label class="form-label">Subject Name *</label>
+                                <label class="form-label">{{ sm_t('Subject Name') }} *</label>
                                 <input type="text" id="nameField" name="name" class="form-control form-control-sm" required>
                             </div>
                             <div class="col-md-4">
@@ -131,7 +131,7 @@
                         </div>
                         <div class="row g-2 mb-2">
                             <div class="col-md-6">
-                                <label class="form-label">Class *</label>
+                                <label class="form-label">{{ sm_t('Class') }} *</label>
                                 <select id="classField" name="class_id" class="form-control form-control-sm" required>
                                     <option value="">{{ sm_t('Select Class') }}</option>
                                     @foreach($classes as $class)
@@ -140,7 +140,7 @@
                                 </select>
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label">Type *</label>
+                                <label class="form-label">{{ sm_t('Type') }} *</label>
                                 <select id="typeField" name="type" class="form-control form-control-sm" onchange="toggleGroupField('groupRow', this.value)">
                                     <option value="compulsory">Compulsory — সবার জন্য</option>
                                     <option value="group">Group Subject — নির্দিষ্ট Group এর জন্য</option>
@@ -162,11 +162,11 @@
                         </div>
                         <div class="row g-2 mb-2">
                             <div class="col-md-6">
-                                <label class="form-label">Pass Mark *</label>
+                                <label class="form-label">{{ sm_t('Pass Mark') }} *</label>
                                 <input type="number" id="passMarkField" name="pass_mark" class="form-control form-control-sm" required>
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label">Full Mark *</label>
+                                <label class="form-label">{{ sm_t('Full Mark') }} *</label>
                                 <input type="number" id="fullMarkField" name="full_mark" class="form-control form-control-sm" required>
                             </div>
                         </div>
@@ -191,7 +191,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">
-                        <span id="modalTitle">Edit Subject</span>
+                        <span id="modalTitle">{{ sm_t('Edit Subject') }}</span>
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
@@ -200,7 +200,7 @@
                     <div class="modal-body">
                         <div class="row g-2 mb-2">
                             <div class="col-md-8">
-                                <label class="form-label">Subject Name *</label>
+                                <label class="form-label">{{ sm_t('Subject Name') }} *</label>
                                 <input type="text" name="name" class="form-control form-control-sm" value="{{ $subject->name }}" required>
                             </div>
                             <div class="col-md-4">
@@ -210,7 +210,7 @@
                         </div>
                         <div class="row g-2 mb-2">
                             <div class="col-md-6">
-                                <label class="form-label">Class *</label>
+                                <label class="form-label">{{ sm_t('Class') }} *</label>
                                 <select name="class_id" class="form-control form-control-sm" required>
                                     <option value="">{{ sm_t('Select Class') }}</option>
                                     @foreach($classes as $class)
@@ -219,7 +219,7 @@
                                 </select>
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label">Type *</label>
+                                <label class="form-label">{{ sm_t('Type') }} *</label>
                                 <select name="type" class="form-control form-control-sm edit-type-select"
                                         data-target="editGroupRow{{ $subject->id }}"
                                         onchange="toggleGroupField('editGroupRow{{ $subject->id }}', this.value)">
@@ -242,11 +242,11 @@
                         </div>
                         <div class="row g-2 mb-2">
                             <div class="col-md-6">
-                                <label class="form-label">Pass Mark *</label>
+                                <label class="form-label">{{ sm_t('Pass Mark') }} *</label>
                                 <input type="number" name="pass_mark" class="form-control form-control-sm" value="{{ $subject->pass_mark }}" required>
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label">Full Mark *</label>
+                                <label class="form-label">{{ sm_t('Full Mark') }} *</label>
                                 <input type="number" name="full_mark" class="form-control form-control-sm" value="{{ $subject->full_mark }}" required>
                             </div>
                         </div>

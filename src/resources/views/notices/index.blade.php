@@ -3,7 +3,7 @@
 
 @push('buttons')
 <button class="btn btn-sm btn-encodex-create" data-bs-toggle="modal" data-bs-target="#noticeModal">
-    <i class="fas fa-plus"></i> Add Notice
+    <i class="fas fa-plus"></i> {{ sm_t('Add Notice') }}
 </button>
 @endpush
 
@@ -26,15 +26,15 @@
                 @foreach($notices as $notice)
                 <tr>
                     <td>{{ $notice->title }}</td>
-                    <td>{{ ucfirst($notice->type) }}</td>
+                    <td>{{ sm_t(ucfirst($notice->type)) }}</td>
                     <td>{{ $notice->publish_date?->format('Y-m-d') }}</td>
                     <td>{{ $notice->end_date?->format('Y-m-d') ?? '-' }}</td>
-                    <td>{{ ucfirst($notice->for) }}</td>
+                    <td>{{ sm_t(ucfirst($notice->for)) }}</td>
                     <td>
                         @if($notice->is_active)
-                        <span class="badge bg-success-subtle text-success">Active</span>
+                        <span class="badge bg-success-subtle text-success">{{ sm_t('Active') }}</span>
                         @else
-                        <span class="badge bg-danger-subtle text-danger">Inactive</span>
+                        <span class="badge bg-danger-subtle text-danger">{{ sm_t('Inactive') }}</span>
                         @endif
                     </td>
                     <td>
@@ -65,16 +65,16 @@
                 @csrf @method('PUT')
                 <div class="modal-body">
                     <div class="mb-2">
-                        <label class="form-label">Title *</label>
+                        <label class="form-label">{{ sm_t('Title') }} *</label>
                         <input type="text" name="title" class="form-control form-control-sm" value="{{ $notice->title }}" required>
                     </div>
                     <div class="mb-2">
-                        <label class="form-label">Content *</label>
+                        <label class="form-label">{{ sm_t('Content') }} *</label>
                         <textarea name="content" class="form-control form-control-sm" rows="3" required>{{ $notice->content }}</textarea>
                     </div>
                     <div class="row">
                         <div class="col-md-6 mb-2">
-                            <label class="form-label">Publish Date *</label>
+                            <label class="form-label">{{ sm_t('Publish Date') }} *</label>
                             <input type="date" name="publish_date" class="form-control form-control-sm" value="{{ $notice->publish_date?->format('Y-m-d') }}" required>
                         </div>
                         <div class="col-md-6 mb-2">
@@ -86,24 +86,24 @@
                         <div class="col-md-6 mb-2">
                             <label class="form-label">{{ sm_t('Type') }}</label>
                             <select name="type" class="form-control form-control-sm">
-                                <option value="notice" {{ $notice->type == 'notice' ? 'selected' : '' }}>Notice</option>
-                                <option value="announcement" {{ $notice->type == 'announcement' ? 'selected' : '' }}>Announcement</option>
-                                <option value="news" {{ $notice->type == 'news' ? 'selected' : '' }}>News</option>
+                                <option value="notice" {{ $notice->type == 'notice' ? 'selected' : '' }}>{{ sm_t('Notice') }}</option>
+                                <option value="announcement" {{ $notice->type == 'announcement' ? 'selected' : '' }}>{{ sm_t('Announcement') }}</option>
+                                <option value="news" {{ $notice->type == 'news' ? 'selected' : '' }}>{{ sm_t('News') }}</option>
                             </select>
                         </div>
                         <div class="col-md-6 mb-2">
                             <label class="form-label">{{ sm_t('For') }}</label>
                             <select name="for" class="form-control form-control-sm">
-                                <option value="all" {{ $notice->for == 'all' ? 'selected' : '' }}>All</option>
-                                <option value="student" {{ $notice->for == 'student' ? 'selected' : '' }}>Students</option>
-                                <option value="teacher" {{ $notice->for == 'teacher' ? 'selected' : '' }}>Teachers</option>
-                                <option value="guardian" {{ $notice->for == 'guardian' ? 'selected' : '' }}>Guardians</option>
+                                <option value="all" {{ $notice->for == 'all' ? 'selected' : '' }}>{{ sm_t('All') }}</option>
+                                <option value="student" {{ $notice->for == 'student' ? 'selected' : '' }}>{{ sm_t('Students') }}</option>
+                                <option value="teacher" {{ $notice->for == 'teacher' ? 'selected' : '' }}>{{ sm_t('Teachers') }}</option>
+                                <option value="guardian" {{ $notice->for == 'guardian' ? 'selected' : '' }}>{{ sm_t('Guardians') }}</option>
                             </select>
                         </div>
                     </div>
                     <div class="mb-2 form-check">
                         <input type="checkbox" name="is_active" class="form-check-input" id="active{{ $notice->id }}" value="1" {{ $notice->is_active ? 'checked' : '' }}>
-                        <label class="form-check-label" for="active{{ $notice->id }}">Active</label>
+                        <label class="form-check-label" for="active{{ $notice->id }}">{{ sm_t('Active') }}</label>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -128,16 +128,16 @@
                 @csrf
                 <div class="modal-body">
                     <div class="mb-2">
-                        <label class="form-label">Title *</label>
+                        <label class="form-label">{{ sm_t('Title') }} *</label>
                         <input type="text" name="title" class="form-control form-control-sm" required>
                     </div>
                     <div class="mb-2">
-                        <label class="form-label">Content *</label>
+                        <label class="form-label">{{ sm_t('Content') }} *</label>
                         <textarea name="content" class="form-control form-control-sm" rows="3" required></textarea>
                     </div>
                     <div class="row">
                         <div class="col-md-6 mb-2">
-                            <label class="form-label">Publish Date *</label>
+                            <label class="form-label">{{ sm_t('Publish Date') }} *</label>
                             <input type="date" name="publish_date" class="form-control form-control-sm" value="{{ date('Y-m-d') }}" required>
                         </div>
                         <div class="col-md-6 mb-2">
@@ -165,7 +165,7 @@
                         </div>
                     </div>
                     <div class="border rounded p-2 mt-1">
-                        <div class="small fw-semibold mb-1">Also send now</div>
+                        <div class="small fw-semibold mb-1">{{ sm_t('Also send now') }}</div>
                         <div class="form-check form-check-inline">
                             <input class="form-check-input" type="checkbox" name="send_sms" value="1" id="noticeSms">
                             <label class="form-check-label small" for="noticeSms">{{ sm_t('SMS') }}</label>

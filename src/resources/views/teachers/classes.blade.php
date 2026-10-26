@@ -4,7 +4,7 @@
 
 @push('buttons')
 <button class="btn btn-encodex-create btn-sm" data-bs-toggle="modal" data-bs-target="#assignModal">
-    <i class="fas fa-plus"></i> Assign Class
+    <i class="fas fa-plus"></i> {{ sm_t('Assign Class') }}
 </button>
 @endpush
 
@@ -35,9 +35,9 @@
                                     <td>{{ $a->section?->name ?? '—' }}</td>
                                     <td>
                                         @if($a->is_class_teacher)
-                                        <span class="badge bg-success-subtle text-success">Yes</span>
+                                        <span class="badge bg-success-subtle text-success">{{ sm_t('Yes') }}</span>
                                         @else
-                                        <span class="badge bg-secondary-subtle text-secondary">No</span>
+                                        <span class="badge bg-secondary-subtle text-secondary">{{ sm_t('No') }}</span>
                                         @endif
                                     </td>
                                     <td>
@@ -49,7 +49,7 @@
                                 </tr>
                                 @empty
                                 <tr>
-                                    <td colspan="6" class="text-center">No assignments found</td>
+                                    <td colspan="6" class="text-center">{{ sm_t('No assignments found') }}</td>
                                 </tr>
                                 @endforelse
                             </tbody>

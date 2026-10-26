@@ -9,7 +9,7 @@
 ])
 
 @if($students->isEmpty())
-<p class="text-center">No data selected.</p>
+<p class="text-center">{{ sm_t('No data selected.') }}</p>
 @else
 <table>
     <thead>
@@ -39,7 +39,7 @@
             <td class="text-center">{{ $mark?->ca ?? '—' }}</td>
             <td class="text-center">{{ $mark?->total_mark ?? '—' }}</td>
             <td class="text-center">{{ $mark?->grade_name ?? '—' }}</td>
-            <td class="text-center">{{ $mark && $mark->is_absent ? 'Yes' : 'No' }}</td>
+            <td class="text-center">{{ sm_t($mark && $mark->is_absent ? 'Yes' : 'No') }}</td>
         </tr>
         @endforeach
     </tbody>

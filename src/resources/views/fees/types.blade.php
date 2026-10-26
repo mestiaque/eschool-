@@ -2,7 +2,7 @@
 @section('title', sm_t('Fee Types'))
 @push('buttons')
     <button class="btn btn-sm btn-encodex-create" data-bs-toggle="modal" data-bs-target="#feeTypeModal">
-        <i class="fas fa-plus"></i> Add Fee Type
+        <i class="fas fa-plus"></i> {{ sm_t('Add Fee Type') }}
     </button>
 @endpush
 
@@ -27,10 +27,10 @@
                 <tr>
                     <td class="text-muted small">{{ $i+1 }}</td>
                     <td class="fw-semibold">{{ $type->name }}</td>
-                    <td><span class="badge bg-info-subtle text-info">{{ ucfirst($type->type ?? 'other') }}</span></td>
+                    <td><span class="badge bg-info-subtle text-info">{{ sm_t(ucfirst($type->type ?? 'other')) }}</span></td>
                     <td class="text-end">{{ sm_money($type->amount ?? 0, 2) }}</td>
                     <td class="small text-muted">{{ $type->description ?? '—' }}</td>
-                    <td><span class="badge bg-{{ $bc = $type->is_active ? 'success' : 'secondary' }}-subtle text-{{ $bc }}">{{ $type->is_active ? 'Active' : 'Inactive' }}</span></td>
+                    <td><span class="badge bg-{{ $bc = $type->is_active ? 'success' : 'secondary' }}-subtle text-{{ $bc }}">{{ sm_t($type->is_active ? 'Active' : 'Inactive') }}</span></td>
                     <td class="text-center">
                         <button class="btn btn-sm btn-encodex-edit" onclick="editFeeType({{ $type->id }}, {{ json_encode($type) }})"><i class="fas fa-edit"></i></button>
                         <form method="POST" action="{{ route('fees.types.destroy', $type->id) }}" class="d-inline" onsubmit="return confirm('Delete this fee type?')">
@@ -40,7 +40,7 @@
                     </td>
                 </tr>
                 @empty
-                <tr><td colspan="7" class="text-center text-muted py-4">No fee types defined.</td></tr>
+                <tr><td colspan="7" class="text-center text-muted py-4">{{ sm_t('No fee types defined.') }}</td></tr>
                 @endforelse
             </tbody>
         </table>
@@ -95,7 +95,7 @@
                 </div>
                 <div class="modal-footer py-2">
                     <button type="button" class="btn btn-sm btn-encodex-cancel" data-bs-dismiss="modal">{{ sm_t('Cancel') }}</button>
-                    <button type="submit" class="btn btn-sm btn-encodex-save"><i class="fas fa-save me-1"></i>Save</button>
+                    <button type="submit" class="btn btn-sm btn-encodex-save"><i class="fas fa-save me-1"></i>{{ sm_t('Save') }}</button>
                 </div>
             </form>
         </div>

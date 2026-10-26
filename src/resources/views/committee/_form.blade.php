@@ -1,12 +1,12 @@
 <div class="modal-body">
     <div class="mb-2">
         <label class="form-label form-label-sm">{{ sm_t('Committee Name') }} <span class="text-danger">*</span></label>
-        <input type="text" name="name" class="form-control form-control-sm" required placeholder="e.g. পরিচালনা কমিটি ২০২৪">
+        <input type="text" name="name" class="form-control form-control-sm" required placeholder="{{ sm_t('e.g. পরিচালনা কমিটি ২০২৪') }}">
     </div>
     <div class="row g-2">
         <div class="col-md-6 mb-2">
             <label class="form-label form-label-sm">{{ sm_t('Academic Year') }}</label>
-            <input type="text" name="academic_year" class="form-control form-control-sm" placeholder="e.g. 2024">
+            <input type="text" name="academic_year" class="form-control form-control-sm" placeholder="{{ sm_t('e.g. 2024') }}">
         </div>
         <div class="col-md-6 mb-2">
             <label class="form-label form-label-sm">{{ sm_t('Formed Date') }}</label>

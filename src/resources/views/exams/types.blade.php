@@ -2,7 +2,7 @@
 @section('title', sm_t('Exam Types'))
 @push('buttons')
     <button class="btn btn-sm btn-encodex-create" data-bs-toggle="modal" data-bs-target="#typeModal" onclick="resetTypeForm()">
-        <i class="fas fa-plus"></i> Add Exam Type
+        <i class="fas fa-plus"></i> {{ sm_t('Add Exam Type') }}
     </button>
 @endpush
 
@@ -19,7 +19,7 @@
                 <tr>
                     <td class="text-center">{{ $i + 1 }}</td>
                     <td class="fw-semibold">{{ $type->name }}</td>
-                    <td><span class="badge bg-{{ $bc = $type->is_active ? 'success' : 'secondary' }}-subtle text-{{ $bc }}">{{ $type->is_active ? 'Active' : 'Inactive' }}</span></td>
+                    <td><span class="badge bg-{{ $bc = $type->is_active ? 'success' : 'secondary' }}-subtle text-{{ $bc }}">{{ sm_t($type->is_active ? 'Active' : 'Inactive') }}</span></td>
                     <td>
                         <button class="btn btn-sm btn-encodex-edit" onclick="editType({{ $type->id }}, '{{ addslashes($type->name) }}', {{ $type->is_active ? 1 : 0 }})">
                             <i class="fas fa-edit"></i>
@@ -31,7 +31,7 @@
                     </td>
                 </tr>
                 @empty
-                <tr><td colspan="4" class="text-center text-muted py-3">No exam types found.</td></tr>
+                <tr><td colspan="4" class="text-center text-muted py-3">{{ sm_t('No exam types found.') }}</td></tr>
                 @endforelse
             </tbody>
         </table>

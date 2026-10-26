@@ -3,7 +3,7 @@
 
 @push('buttons')
 <a href="{{ route('academic.class-tests') }}" class="btn btn-sm btn-encodex-list">
-    <i class="fas fa-arrow-left"></i> Back
+    <i class="fas fa-arrow-left"></i> {{ sm_t('Back') }}
 </a>
 @endpush
 
@@ -15,23 +15,23 @@
             <div class="card-body py-2">
                 <div class="row g-2">
                     <div class="col-md-3">
-                        <small class="text-muted d-block">Class</small>
+                        <small class="text-muted d-block">{{ sm_t('Class') }}</small>
                         <strong>{{ $test->classe->name ?? '-' }}</strong>
                     </div>
                     <div class="col-md-3">
-                        <small class="text-muted d-block">Subject</small>
+                        <small class="text-muted d-block">{{ sm_t('Subject') }}</small>
                         <strong>{{ $test->subject->name ?? '-' }}</strong>
                     </div>
                     <div class="col-md-2">
-                        <small class="text-muted d-block">Test Date</small>
+                        <small class="text-muted d-block">{{ sm_t('Test Date') }}</small>
                         <strong>{{ sm_date($test->test_date) }}</strong>
                     </div>
                     <div class="col-md-2">
-                        <small class="text-muted d-block">Total Marks</small>
+                        <small class="text-muted d-block">{{ sm_t('Total Marks') }}</small>
                         <strong>{{ $test->total_marks }}</strong>
                     </div>
                     <div class="col-md-2">
-                        <small class="text-muted d-block">Pass Marks</small>
+                        <small class="text-muted d-block">{{ sm_t('Pass Marks') }}</small>
                         <strong>{{ $test->pass_marks }}</strong>
                     </div>
                 </div>
@@ -49,19 +49,19 @@
                 @endphp
                 <div class="text-center">
                     <div class="fs-5 fw-bold text-success">{{ $passCount }}</div>
-                    <small class="text-muted">Pass</small>
+                    <small class="text-muted">{{ sm_t('Pass') }}</small>
                 </div>
                 <div class="text-center">
                     <div class="fs-5 fw-bold text-danger">{{ $failCount }}</div>
-                    <small class="text-muted">Fail</small>
+                    <small class="text-muted">{{ sm_t('Fail') }}</small>
                 </div>
                 <div class="text-center">
                     <div class="fs-5 fw-bold text-secondary">{{ $absentCount }}</div>
-                    <small class="text-muted">Absent</small>
+                    <small class="text-muted">{{ sm_t('Absent') }}</small>
                 </div>
                 <div class="text-center">
                     <div class="fs-5 fw-bold text-primary">{{ $students->count() }}</div>
-                    <small class="text-muted">Total</small>
+                    <small class="text-muted">{{ sm_t('Total') }}</small>
                 </div>
             </div>
         </div>
@@ -94,8 +94,8 @@
                         <td>
                             <select name="status[{{ $student->id }}]" class="form-select form-select-sm status-select"
                                     data-student="{{ $student->id }}">
-                                <option value="absent" {{ ($result?->status ?? 'absent') === 'absent' ? 'selected' : '' }}>Absent</option>
-                                <option value="present" {{ in_array($result?->status, ['pass', 'fail', 'present']) ? 'selected' : '' }}>Present</option>
+                                <option value="absent" {{ ($result?->status ?? 'absent') === 'absent' ? 'selected' : '' }}>{{ sm_t('Absent') }}</option>
+                                <option value="present" {{ in_array($result?->status, ['pass', 'fail', 'present']) ? 'selected' : '' }}>{{ sm_t('Present') }}</option>
                             </select>
                         </td>
                         <td>
@@ -126,11 +126,11 @@
                             <input type="text" name="remarks[{{ $student->id }}]"
                                    class="form-control form-control-sm"
                                    value="{{ $result?->remarks }}"
-                                   placeholder="Optional">
+                                   placeholder="{{ sm_t('Optional') }}">
                         </td>
                     </tr>
                     @empty
-                    <tr><td colspan="7" class="text-center text-muted py-3">No active students found for this class</td></tr>
+                    <tr><td colspan="7" class="text-center text-muted py-3">{{ sm_t('No active students found for this class') }}</td></tr>
                     @endforelse
                 </tbody>
             </table>
@@ -142,7 +142,7 @@
                 <button type="button" class="btn btn-sm btn-encodex-cancel" id="markAllAbsent">{{ sm_t('Mark All Absent') }}</button>
             </div>
             <button type="submit" class="btn btn-sm btn-encodex-save">
-                <i class="fas fa-save"></i> Save Marks
+                <i class="fas fa-save"></i> {{ sm_t('Save Marks') }}
             </button>
         </div>
         @endif

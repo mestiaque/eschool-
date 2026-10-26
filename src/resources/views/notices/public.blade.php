@@ -2,7 +2,7 @@
 @section('title', sm_t('Public Notices'))
 
 @push('buttons')
-<a href="{{ route('notices.index') }}" class="btn btn-sm btn-encodex-list"><i class="fas fa-arrow-left"></i> All Notices</a>
+<a href="{{ route('notices.index') }}" class="btn btn-sm btn-encodex-list"><i class="fas fa-arrow-left"></i> {{ sm_t('All Notices') }}</a>
 @endpush
 
 @section('content')
@@ -21,13 +21,13 @@
         <p class="card-text text-muted">{{ $notice->content }}</p>
         @if($notice->file)
         <a href="{{ asset('storage/'.$notice->file) }}" class="btn btn-sm btn-encodex-show" target="_blank">
-            <i class="fas fa-paperclip"></i> Attachment
+            <i class="fas fa-paperclip"></i> {{ sm_t('Attachment') }}
         </a>
         @endif
     </div>
 </div>
 @empty
-<div class="alert alert-info">No public notices available.</div>
+<div class="alert alert-info">{{ sm_t('No public notices available.') }}</div>
 @endforeach
 
 @if(method_exists($notices, 'links'))

@@ -3,7 +3,7 @@
 
 @push('buttons')
 <button class="btn btn-sm btn-encodex-create" data-bs-toggle="modal" data-bs-target="#teacherModal" onclick="resetTeacherForm()">
-    <i class="fas fa-plus"></i> Add Teacher
+    <i class="fas fa-plus"></i> {{ sm_t('Add Teacher') }}
 </button>
 @endpush
 
@@ -37,9 +37,9 @@
                     <td>{{ sm_money($teacher->salary, 2) }}</td>
                     <td>
                         @if($teacher->is_active)
-                        <span class="badge bg-success-subtle text-success">Active</span>
+                        <span class="badge bg-success-subtle text-success">{{ sm_t('Active') }}</span>
                         @else
-                        <span class="badge bg-danger-subtle text-danger">Inactive</span>
+                        <span class="badge bg-danger-subtle text-danger">{{ sm_t('Inactive') }}</span>
                         @endif
                     </td>
                     <td>
@@ -68,15 +68,15 @@
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-4 mb-2">
-                            <label class="form-label">First Name *</label>
+                            <label class="form-label">{{ sm_t('First Name') }} *</label>
                             <input type="text" id="tFirstName" name="first_name" class="form-control form-control-sm" required>
                         </div>
                         <div class="col-md-4 mb-2">
-                            <label class="form-label">Last Name *</label>
+                            <label class="form-label">{{ sm_t('Last Name') }} *</label>
                             <input type="text" id="tLastName" name="last_name" class="form-control form-control-sm" required>
                         </div>
                         <div class="col-md-4 mb-2">
-                            <label class="form-label">Gender *</label>
+                            <label class="form-label">{{ sm_t('Gender') }} *</label>
                             <select id="tGender" name="gender" class="form-control form-control-sm" required>
                                 <option value="">{{ sm_t('Select') }}</option>
                                 <option value="Male">{{ sm_t('Male') }}</option>
@@ -85,11 +85,11 @@
                             </select>
                         </div>
                         <div class="col-md-4 mb-2">
-                            <label class="form-label">Date of Birth *</label>
+                            <label class="form-label">{{ sm_t('Date of Birth') }} *</label>
                             <input type="date" id="tDob" name="date_of_birth" class="form-control form-control-sm" required>
                         </div>
                         <div class="col-md-4 mb-2">
-                            <label class="form-label">Religion *</label>
+                            <label class="form-label">{{ sm_t('Religion') }} *</label>
                             <select id="tReligion" name="religion" class="form-control form-control-sm" required>
                                 <option value="Islam">{{ sm_t('Islam') }}</option>
                                 <option value="Hinduism">{{ sm_t('Hinduism') }}</option>
@@ -98,11 +98,11 @@
                             </select>
                         </div>
                         <div class="col-md-4 mb-2">
-                            <label class="form-label">Phone *</label>
+                            <label class="form-label">{{ sm_t('Phone') }} *</label>
                             <input type="text" id="tPhone" name="phone" class="form-control form-control-sm" required>
                         </div>
                         <div class="col-md-6 mb-2">
-                            <label class="form-label">Email *</label>
+                            <label class="form-label">{{ sm_t('Email') }} *</label>
                             <input type="email" id="tEmail" name="email" class="form-control form-control-sm" required>
                         </div>
                         <div class="col-md-6 mb-2">
@@ -110,7 +110,7 @@
                             <input type="text" id="tNid" name="nid" class="form-control form-control-sm">
                         </div>
                         <div class="col-md-6 mb-2">
-                            <label class="form-label">Present Address *</label>
+                            <label class="form-label">{{ sm_t('Present Address') }} *</label>
                             <textarea id="tPresentAddress" name="present_address" class="form-control form-control-sm" rows="2" required></textarea>
                         </div>
                         <div class="col-md-6 mb-2">
@@ -118,7 +118,7 @@
                             <textarea id="tPermanentAddress" name="permanent_address" class="form-control form-control-sm" rows="2"></textarea>
                         </div>
                         <div class="col-md-4 mb-2">
-                            <label class="form-label">Joining Date *</label>
+                            <label class="form-label">{{ sm_t('Joining Date') }} *</label>
                             <input type="date" id="tJoiningDate" name="joining_date" class="form-control form-control-sm" required>
                         </div>
                         <div class="col-md-4 mb-2">

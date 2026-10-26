@@ -7,10 +7,10 @@ HERE="$(cd "$(dirname "$0")" && pwd)"
 HOST_APP="${SM_HOST_APP:-$(cd "$HERE/../../../app" && pwd)}"
 TMP="$(mktemp -d)"
 
-DB_DATABASE=school_test php "$HERE/urls.php" > "$TMP/urls.json"
+DB_DATABASE=school_test CACHE_STORE=array php "$HERE/urls.php" > "$TMP/urls.json"
 
 cd "$HOST_APP/public"
-DB_DATABASE=school_test APP_URL=http://127.0.0.1:8123 php -S 127.0.0.1:8123 \
+DB_DATABASE=school_test CACHE_STORE=array SESSION_DRIVER=file APP_URL=http://127.0.0.1:8123 php -S 127.0.0.1:8123 \
     ../vendor/laravel/framework/src/Illuminate/Foundation/resources/server.php > "$TMP/server.log" 2>&1 &
 SERVER=$!
 trap 'kill $SERVER 2>/dev/null; rm -rf "$TMP"' EXIT

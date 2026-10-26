@@ -2,7 +2,7 @@
 @section('title', sm_t('Student Attendance'))
 @push('buttons')
     <a href="{{ route('students.attendance.print', request()->query()) }}" target="_blank" class="btn btn-sm btn-encodex-print no-print">
-        <i class="fas fa-print"></i> Print
+        <i class="fas fa-print"></i> {{ sm_t('Print') }}
     </a>
 @endpush
 
@@ -132,10 +132,10 @@ td.day-col { padding: 2px; }
             </div>
             <div class="col-md">
                 <button type="submit" class="btn btn-sm btn-encodex-search">
-                    <i class="fas fa-search"></i> Load Sheet
+                    <i class="fas fa-search"></i> {{ sm_t('Load Sheet') }}
                 </button>
                 <a href="{{ route('students.attendance') }}" class="btn btn-sm btn-encodex-clear">
-                    <i class="fas fa-eraser"></i> Reset
+                    <i class="fas fa-eraser"></i> {{ sm_t('Reset') }}
                 </a>
             </div>
         </form>
@@ -144,12 +144,12 @@ td.day-col { padding: 2px; }
     @if(!request('class_id'))
     <div class="card-body no-print">
         <div class="alert alert-info mb-0">
-            <i class="fas fa-info-circle me-1"></i> Please select a class and month to load the attendance sheet.
+            <i class="fas fa-info-circle me-1"></i> {{ sm_t('Please select a class and month to load the attendance sheet.') }}
         </div>
     </div>
     @elseif($students->isEmpty())
     <div class="card-body">
-        <div class="alert alert-warning mb-0">No students found for the selected class/section.</div>
+        <div class="alert alert-warning mb-0">{{ sm_t('No students found for the selected class/section.') }}</div>
     </div>
     @else
     <div class="card-body p-1">
@@ -297,7 +297,7 @@ td.day-col { padding: 2px; }
                 </div>
                 <div class="mb-2">
                     <label class="form-label form-label-sm">{{ sm_t('Note') }}</label>
-                    <input type="text" id="editNote" class="form-control form-control-sm" placeholder="Optional note">
+                    <input type="text" id="editNote" class="form-control form-control-sm" placeholder="{{ sm_t('Optional note') }}">
                 </div>
             </div>
             <div class="modal-footer py-1">

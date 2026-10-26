@@ -3,7 +3,7 @@
 
 @push('buttons')
 <button class="btn btn-sm btn-encodex-create" data-bs-toggle="modal" data-bs-target="#vehicleModal">
-    <i class="fas fa-plus"></i> Add Vehicle
+    <i class="fas fa-plus"></i> {{ sm_t('Add Vehicle') }}
 </button>
 @endpush
 
@@ -28,15 +28,15 @@
                 <tr>
                     <td>{{ $vehicle->vehicle_number }}</td>
                     <td>{{ $vehicle->model ?? '-' }}</td>
-                    <td>{{ ucfirst($vehicle->type) }}</td>
+                    <td>{{ sm_t(ucfirst($vehicle->type)) }}</td>
                     <td>{{ $vehicle->capacity }}</td>
                     <td>{{ $vehicle->driver_name ?? '-' }}</td>
                     <td>{{ $vehicle->driver_phone ?? '-' }}</td>
                     <td>
                         @if($vehicle->is_active)
-                        <span class="badge bg-success-subtle text-success">Active</span>
+                        <span class="badge bg-success-subtle text-success">{{ sm_t('Active') }}</span>
                         @else
-                        <span class="badge bg-danger-subtle text-danger">Inactive</span>
+                        <span class="badge bg-danger-subtle text-danger">{{ sm_t('Inactive') }}</span>
                         @endif
                     </td>
                     <td>
@@ -63,7 +63,7 @@
                 @csrf
                 <div class="modal-body">
                     <div class="mb-2">
-                        <label class="form-label">Vehicle Number *</label>
+                        <label class="form-label">{{ sm_t('Vehicle Number') }} *</label>
                         <input type="text" name="vehicle_number" class="form-control form-control-sm" required>
                     </div>
                     <div class="mb-2">
@@ -72,7 +72,7 @@
                     </div>
                     <div class="row">
                         <div class="col-md-6 mb-2">
-                            <label class="form-label">Type *</label>
+                            <label class="form-label">{{ sm_t('Type') }} *</label>
                             <select name="type" class="form-control form-control-sm" required>
                                 <option value="bus">{{ sm_t('Bus') }}</option>
                                 <option value="van">{{ sm_t('Van') }}</option>
@@ -80,7 +80,7 @@
                             </select>
                         </div>
                         <div class="col-md-6 mb-2">
-                            <label class="form-label">Capacity *</label>
+                            <label class="form-label">{{ sm_t('Capacity') }} *</label>
                             <input type="number" name="capacity" class="form-control form-control-sm" min="1" required>
                         </div>
                     </div>

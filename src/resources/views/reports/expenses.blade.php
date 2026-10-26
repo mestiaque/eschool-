@@ -2,16 +2,16 @@
 @section('title', sm_t('Expense Report'))
 
 @push('buttons')
-<a href="{{ route('reports.expenses.print', request()->query()) }}" target="_blank" class="btn btn-sm btn-encodex-print"><i class="fas fa-print"></i> Print</a>
+<a href="{{ route('reports.expenses.print', request()->query()) }}" target="_blank" class="btn btn-sm btn-encodex-print"><i class="fas fa-print"></i> {{ sm_t('Print') }}</a>
 @endpush
 
 @section('content')
 <div class="row mb-3">
     <div class="col-md-6">
-        <div class="card text-white bg-danger"><div class="card-body py-2"><small>Total Expenses</small><h5 class="mb-0">{{ sm_money($expenses->sum('amount'), 2) }}</h5></div></div>
+        <div class="card text-white bg-danger"><div class="card-body py-2"><small>{{ sm_t('Total Expenses') }}</small><h5 class="mb-0">{{ sm_money($expenses->sum('amount'), 2) }}</h5></div></div>
     </div>
     <div class="col-md-6">
-        <div class="card text-white bg-secondary"><div class="card-body py-2"><small>Total Records</small><h5 class="mb-0">{{ $expenses->count() }}</h5></div></div>
+        <div class="card text-white bg-secondary"><div class="card-body py-2"><small>{{ sm_t('Total Records') }}</small><h5 class="mb-0">{{ $expenses->count() }}</h5></div></div>
     </div>
 </div>
 
@@ -44,7 +44,7 @@
                     <td>{{ sm_date($exp->date) }}</td>
                 </tr>
                 @empty
-                <tr><td colspan="5" class="text-center text-muted py-3">No expenses for the selected period</td></tr>
+                <tr><td colspan="5" class="text-center text-muted py-3">{{ sm_t('No expenses for the selected period') }}</td></tr>
                 @endforelse
             </tbody>
         </table>

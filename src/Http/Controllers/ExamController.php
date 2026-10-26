@@ -208,7 +208,7 @@ class ExamController extends Controller
                 ->where('subject_id', $request->subject_id)
                 ->first();
 
-            $students = Student::where('class_id', $request->class_id)
+            $students = Student::with('section')->where('class_id', $request->class_id)
                 ->when($subjectObj, fn ($q) => $q->takingSubject($subjectObj))
                 ->where('is_active', true)
                 ->orderBy('roll_number')
@@ -254,7 +254,7 @@ class ExamController extends Controller
                 ->where('subject_id', $request->subject_id)
                 ->first();
 
-            $students = Student::where('class_id', $request->class_id)
+            $students = Student::with('section')->where('class_id', $request->class_id)
                 ->when($subjectObj, fn ($q) => $q->takingSubject($subjectObj))
                 ->where('is_active', true)
                 ->orderBy('roll_number')

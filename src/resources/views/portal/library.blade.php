@@ -5,7 +5,7 @@
 @if($activeIssues->count())
 <div class="portal-card mb-3">
     <div class="p-3 border-bottom">
-        <h6 class="mb-0 fw-bold"><i class="fas fa-book-open text-info me-2"></i>Currently Issued Books</h6>
+        <h6 class="mb-0 fw-bold"><i class="fas fa-book-open text-info me-2"></i>{{ sm_t('Currently Issued Books') }}</h6>
     </div>
     <div class="table-responsive">
         <table class="table table-sm table-portal table-hover mb-0">
@@ -22,7 +22,7 @@
                         @if($issue->overdue_days > 0)
                         <span class="badge bg-danger-subtle text-danger">Overdue {{ $issue->overdue_days }}d</span>
                         @else
-                        <span class="badge bg-success-subtle text-success">On Time</span>
+                        <span class="badge bg-success-subtle text-success">{{ sm_t('On Time') }}</span>
                         @endif
                     </td>
                 </tr>
@@ -35,7 +35,7 @@
 
 <div class="portal-card">
     <div class="p-3 border-bottom">
-        <h6 class="mb-0 fw-bold"><i class="fas fa-history text-secondary me-2"></i>Issue History</h6>
+        <h6 class="mb-0 fw-bold"><i class="fas fa-history text-secondary me-2"></i>{{ sm_t('Issue History') }}</h6>
     </div>
     <div class="table-responsive">
         <table class="table table-sm table-portal table-hover mb-0">
@@ -51,23 +51,23 @@
                         @if($issue->fine_amount > 0)
                             <span class="{{ $issue->fine_paid ? 'text-muted' : 'text-danger fw-semibold' }}">
                                 {{ sm_money($issue->fine_amount,0) }}
-                                @if($issue->fine_paid)<span class="badge bg-success-subtle text-success ms-1" style="font-size:10px">Paid</span>@endif
+                                @if($issue->fine_paid)<span class="badge bg-success-subtle text-success ms-1" style="font-size:10px">{{ sm_t('Paid') }}</span>@endif
                             </span>
                         @else —
                         @endif
                     </td>
                     <td>
                         @if($issue->status === 'returned')
-                        <span class="badge bg-light-subtle text-dark border">Returned</span>
+                        <span class="badge bg-light-subtle text-dark border">{{ sm_t('Returned') }}</span>
                         @elseif($issue->status === 'lost')
-                        <span class="badge bg-danger-subtle text-danger">Lost</span>
+                        <span class="badge bg-danger-subtle text-danger">{{ sm_t('Lost') }}</span>
                         @else
-                        <span class="badge bg-success-subtle text-success">Active</span>
+                        <span class="badge bg-success-subtle text-success">{{ sm_t('Active') }}</span>
                         @endif
                     </td>
                 </tr>
                 @empty
-                <tr><td colspan="6" class="text-center text-muted py-4">No library history.</td></tr>
+                <tr><td colspan="6" class="text-center text-muted py-4">{{ sm_t('No library history.') }}</td></tr>
                 @endforelse
             </tbody>
         </table>

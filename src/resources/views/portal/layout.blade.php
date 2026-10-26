@@ -31,19 +31,19 @@
 <nav class="portal-navbar navbar navbar-expand-md">
     <div class="container-fluid px-3">
         <a class="navbar-brand" href="{{ route('portal.dashboard') }}">
-            <i class="fas fa-graduation-cap me-2"></i>Student Portal
+            <i class="fas fa-graduation-cap me-2"></i>{{ sm_t('Student Portal') }}
         </a>
         <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#portalNav">
             <i class="fas fa-bars text-white"></i>
         </button>
         <div class="collapse navbar-collapse" id="portalNav">
             <ul class="navbar-nav me-auto gap-1 mt-1 mt-md-0">
-                <li class="nav-item"><a class="nav-link @if(request()->routeIs('portal.dashboard')) active @endif" href="{{ route('portal.dashboard') }}"><i class="fas fa-home"></i><span>Home</span></a></li>
-                <li class="nav-item"><a class="nav-link @if(request()->routeIs('portal.fees')) active @endif" href="{{ route('portal.fees') }}"><i class="fas fa-money-bill-wave"></i><span>Fees</span></a></li>
-                <li class="nav-item"><a class="nav-link @if(request()->routeIs('portal.results')) active @endif" href="{{ route('portal.results') }}"><i class="fas fa-chart-bar"></i><span>Results</span></a></li>
-                <li class="nav-item"><a class="nav-link @if(request()->routeIs('portal.library')) active @endif" href="{{ route('portal.library') }}"><i class="fas fa-book"></i><span>Library</span></a></li>
-                <li class="nav-item"><a class="nav-link @if(request()->routeIs('portal.notices')) active @endif" href="{{ route('portal.notices') }}"><i class="fas fa-bell"></i><span>Notices</span></a></li>
-                <li class="nav-item"><a class="nav-link @if(request()->routeIs('portal.attendance')) active @endif" href="{{ route('portal.attendance') }}"><i class="fas fa-calendar-check"></i><span>Attendance</span></a></li>
+                <li class="nav-item"><a class="nav-link @if(request()->routeIs('portal.dashboard')) active @endif" href="{{ route('portal.dashboard') }}"><i class="fas fa-home"></i><span>{{ sm_t('Home') }}</span></a></li>
+                <li class="nav-item"><a class="nav-link @if(request()->routeIs('portal.fees')) active @endif" href="{{ route('portal.fees') }}"><i class="fas fa-money-bill-wave"></i><span>{{ sm_t('Fees') }}</span></a></li>
+                <li class="nav-item"><a class="nav-link @if(request()->routeIs('portal.results')) active @endif" href="{{ route('portal.results') }}"><i class="fas fa-chart-bar"></i><span>{{ sm_t('Results') }}</span></a></li>
+                <li class="nav-item"><a class="nav-link @if(request()->routeIs('portal.library')) active @endif" href="{{ route('portal.library') }}"><i class="fas fa-book"></i><span>{{ sm_t('Library') }}</span></a></li>
+                <li class="nav-item"><a class="nav-link @if(request()->routeIs('portal.notices')) active @endif" href="{{ route('portal.notices') }}"><i class="fas fa-bell"></i><span>{{ sm_t('Notices') }}</span></a></li>
+                <li class="nav-item"><a class="nav-link @if(request()->routeIs('portal.attendance')) active @endif" href="{{ route('portal.attendance') }}"><i class="fas fa-calendar-check"></i><span>{{ sm_t('Attendance') }}</span></a></li>
             </ul>
             <div class="d-flex align-items-center gap-2 mt-1 mt-md-0">
                 <span class="text-white-50 small">{{ $portalStudent->first_name ?? '' }}</span>

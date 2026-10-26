@@ -2,7 +2,7 @@
 @section('title', sm_t('Library Members'))
 
 @push('buttons')
-<button class="btn btn-sm btn-encodex-create" data-bs-toggle="modal" data-bs-target="#memberModal"><i class="fas fa-plus"></i> Add Member</button>
+<button class="btn btn-sm btn-encodex-create" data-bs-toggle="modal" data-bs-target="#memberModal"><i class="fas fa-plus"></i> {{ sm_t('Add Member') }}</button>
 @endpush
 
 @section('content')
@@ -36,7 +36,7 @@
                 @forelse($members as $i => $m)
                 <tr>
                     <td>{{ $i+1 }}</td>
-                    <td>{{ ucfirst($m->member_type) }}</td>
+                    <td>{{ sm_t(ucfirst($m->member_type)) }}</td>
                     <td>
                         @if($m->member_type === 'student')
                         {{ $m->student?->full_name }}
@@ -46,7 +46,7 @@
                     </td>
                     <td>{{ sm_date($m->membership_date) }}</td>
                     <td>{{ sm_date($m->expire_date) }}</td>
-                    <td><span class="badge bg-{{ $bc = $m->is_active ? 'success' : 'secondary' }}-subtle text-{{ $bc }}">{{ $m->is_active ? 'Active' : 'Expired' }}</span></td>
+                    <td><span class="badge bg-{{ $bc = $m->is_active ? 'success' : 'secondary' }}-subtle text-{{ $bc }}">{{ sm_t($m->is_active ? 'Active' : 'Expired') }}</span></td>
                     <td>
                         <form method="POST" action="{{ route('library.members.destroy', $m->id) }}" class="d-inline" onsubmit="return confirm('Remove member?')">
                             @csrf @method('DELETE')
@@ -55,7 +55,7 @@
                     </td>
                 </tr>
                 @empty
-                <tr><td colspan="7" class="text-center text-muted py-3">No library members</td></tr>
+                <tr><td colspan="7" class="text-center text-muted py-3">{{ sm_t('No library members') }}</td></tr>
                 @endforelse
             </tbody>
         </table>
@@ -71,18 +71,18 @@
                 <div class="modal-header"><h5 class="modal-title">{{ sm_t('Add Library Member') }}</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
                 <div class="modal-body">
                     <div class="mb-2">
-                        <label class="form-label">Member Type *</label>
+                        <label class="form-label">{{ sm_t('Member Type') }} *</label>
                         <select name="member_type" id="memberType" class="form-control form-control-sm" required onchange="toggleMember(this.value)">
                             <option value="student">{{ sm_t('Student') }}</option>
                             <option value="teacher">{{ sm_t('Teacher') }}</option>
                         </select>
                     </div>
                     <div class="mb-2" id="studentDiv">
-                        <label class="form-label">Student *</label>
+                        <label class="form-label">{{ sm_t('Student') }} *</label>
                         @include('school-management::partials.student-select', ['name' => 'student_id', 'placeholder' => 'Select Student'])
                     </div>
                     <div class="mb-2" id="teacherDiv" style="display:none">
-                        <label class="form-label">Teacher *</label>
+                        <label class="form-label">{{ sm_t('Teacher') }} *</label>
                         <select name="teacher_id" class="form-control form-control-sm">
                             <option value="">{{ sm_t('Select Teacher') }}</option>
                             @foreach($teachers as $t)<option value="{{ $t->id }}">{{ $t->full_name }}</option>@endforeach

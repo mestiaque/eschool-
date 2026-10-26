@@ -2,7 +2,7 @@
 @section('title', sm_t('Expense Report'))
 
 @push('buttons')
-<a href="{{ route('expenses.report.print', request()->query()) }}" target="_blank" class="btn btn-sm btn-encodex-print"><i class="fas fa-print"></i> Print</a>
+<a href="{{ route('expenses.report.print', request()->query()) }}" target="_blank" class="btn btn-sm btn-encodex-print"><i class="fas fa-print"></i> {{ sm_t('Print') }}</a>
 @endpush
 
 @section('content')
@@ -14,14 +14,14 @@
 
 <div class="row mb-3">
     <div class="col-md-4">
-        <div class="card text-white bg-success"><div class="card-body py-2"><small>Total Income</small><h5 class="mb-0">{{ sm_money($totalIncome, 2) }}</h5></div></div>
+        <div class="card text-white bg-success"><div class="card-body py-2"><small>{{ sm_t('Total Income') }}</small><h5 class="mb-0">{{ sm_money($totalIncome, 2) }}</h5></div></div>
     </div>
     <div class="col-md-4">
-        <div class="card text-white bg-danger"><div class="card-body py-2"><small>Total Expense</small><h5 class="mb-0">{{ sm_money($totalExpense, 2) }}</h5></div></div>
+        <div class="card text-white bg-danger"><div class="card-body py-2"><small>{{ sm_t('Total Expense') }}</small><h5 class="mb-0">{{ sm_money($totalExpense, 2) }}</h5></div></div>
     </div>
     <div class="col-md-4">
         <div class="card text-white bg-{{ ($totalIncome - $totalExpense) >= 0 ? 'primary' : 'warning' }}">
-            <div class="card-body py-2"><small>Net Balance</small><h5 class="mb-0">{{ sm_money($totalIncome - $totalExpense, 2) }}</h5></div>
+            <div class="card-body py-2"><small>{{ sm_t('Net Balance') }}</small><h5 class="mb-0">{{ sm_money($totalIncome - $totalExpense, 2) }}</h5></div>
         </div>
     </div>
 </div>
@@ -42,7 +42,7 @@
                             <td>{{ $exp->date?->format('d M') }}</td>
                         </tr>
                         @empty
-                        <tr><td colspan="4" class="text-center text-muted py-2">No expenses</td></tr>
+                        <tr><td colspan="4" class="text-center text-muted py-2">{{ sm_t('No expenses') }}</td></tr>
                         @endforelse
                     </tbody>
                 </table>
@@ -64,7 +64,7 @@
                             <td>{{ $inc->date?->format('d M') }}</td>
                         </tr>
                         @empty
-                        <tr><td colspan="4" class="text-center text-muted py-2">No income</td></tr>
+                        <tr><td colspan="4" class="text-center text-muted py-2">{{ sm_t('No income') }}</td></tr>
                         @endforelse
                     </tbody>
                 </table>

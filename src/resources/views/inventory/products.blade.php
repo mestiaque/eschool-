@@ -4,7 +4,7 @@
 
 @push('buttons')
 <button class="btn btn-encodex-create btn-sm" data-bs-toggle="modal" data-bs-target="#productModal">
-    <i class="fas fa-plus"></i> Add Product
+    <i class="fas fa-plus"></i> {{ sm_t('Add Product') }}
 </button>
 @endpush
 
@@ -40,15 +40,15 @@
                                         <td>{{ $product->quantity }}</td>
                                         <td>
                                             @if($product->is_active)
-                                                <span class="badge bg-success-subtle text-success">Active</span>
+                                                <span class="badge bg-success-subtle text-success">{{ sm_t('Active') }}</span>
                                             @else
-                                                <span class="badge bg-secondary-subtle text-secondary">Inactive</span>
+                                                <span class="badge bg-secondary-subtle text-secondary">{{ sm_t('Inactive') }}</span>
                                             @endif
                                         </td>
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="8" class="text-center">No products found</td>
+                                        <td colspan="8" class="text-center">{{ sm_t('No products found') }}</td>
                                     </tr>
                                 @endforelse
                             </tbody>
@@ -91,7 +91,7 @@
                     </div>
                     <div class="mb-2">
                         <label class="form-label">{{ sm_t('Unit') }}</label>
-                        <input type="text" name="unit" class="form-control form-control-sm" placeholder="pcs, kg, etc">
+                        <input type="text" name="unit" class="form-control form-control-sm" placeholder="{{ sm_t('pcs, kg, etc') }}">
                     </div>
                     <div class="mb-2">
                         <label class="form-label">{{ sm_t('Price') }}</label>

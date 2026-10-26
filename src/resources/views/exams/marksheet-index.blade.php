@@ -3,7 +3,7 @@
 
 @section('content')
 <div class="card shadow mx-auto" style="max-width:600px">
-    <div class="card-header py-2 fw-semibold"><i class="fas fa-file-alt me-1"></i> Find Student Marksheet</div>
+    <div class="card-header py-2 fw-semibold"><i class="fas fa-file-alt me-1"></i> {{ sm_t('Find Student Marksheet') }}</div>
     <div class="card-body">
         <form method="GET" class="glass-search-form row g-3">
             <div class="col-12">
@@ -38,17 +38,17 @@
                 </select>
             </div>
             <div class="col-12 d-flex gap-2">
-                <button type="submit" name="preview" value="1" class="btn btn-sm btn-encodex-search"><i class="fas fa-search me-1"></i> Preview</button>
+                <button type="submit" name="preview" value="1" class="btn btn-sm btn-encodex-search"><i class="fas fa-search me-1"></i> {{ sm_t('Preview') }}</button>
             </div>
             @elseif(request('class_id'))
-            <div class="col-12"><div class="alert alert-warning small py-2">No students found for this class.</div></div>
+            <div class="col-12"><div class="alert alert-warning small py-2">{{ sm_t('No students found for this class.') }}</div></div>
             @endif
         </form>
 
         @if(request('exam_id') && request('student_id') && request('preview'))
         <div class="mt-3 pt-3 border-top text-center">
             <a href="{{ route('exams.marksheet.view', [request('student_id'), request('exam_id')]) }}" target="_blank" class="btn btn-sm btn-encodex-show">
-                <i class="fas fa-external-link-alt me-1"></i> Open Marksheet (Print)
+                <i class="fas fa-external-link-alt me-1"></i> {{ sm_t('Open Marksheet (Print)') }}
             </a>
         </div>
         @endif

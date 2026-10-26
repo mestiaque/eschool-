@@ -35,7 +35,7 @@
         </tr>
         @empty
         <tr>
-            <td colspan="6" class="text-center">No members added yet</td>
+            <td colspan="6" class="text-center">{{ sm_t('No members added yet') }}</td>
         </tr>
         @endforelse
     </tbody>

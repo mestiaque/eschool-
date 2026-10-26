@@ -24,11 +24,11 @@
 ])
 
 <div class="info-row">
-    <span><strong>Name:</strong> {{ $student->first_name }} {{ $student->last_name }}</span>
-    <span><strong>Student ID:</strong> {{ $student->student_id }}</span>
-    <span><strong>Class:</strong> {{ $student->classe?->name }}</span>
-    @if($student->section)<span><strong>Section:</strong> {{ $student->section?->name }}</span>@endif
-    <span><strong>Roll No.:</strong> {{ $student->roll_number ?? '—' }}</span>
+    <span><strong>{{ sm_t('Name') }}:</strong> {{ $student->first_name }} {{ $student->last_name }}</span>
+    <span><strong>{{ sm_t('Student ID') }}:</strong> {{ $student->student_id }}</span>
+    <span><strong>{{ sm_t('Class') }}:</strong> {{ $student->classe?->name }}</span>
+    @if($student->section)<span><strong>{{ sm_t('Section') }}:</strong> {{ $student->section?->name }}</span>@endif
+    <span><strong>{{ sm_t('Roll No.') }}:</strong> {{ $student->roll_number ?? '—' }}</span>
 </div>
 
 <table>
@@ -52,7 +52,7 @@
             <td class="text-center">{{ $mark->grade_name ?? "—" }}</td>
             <td class="text-center small">
                 @php $pass = $scheduleMap[$mark->subject_id]?->pass_mark ?? 0; @endphp
-                @if($mark->marks_obtained >= $pass) Pass @else <span style="color:red">Fail</span> @endif
+                @if($mark->marks_obtained >= $pass) Pass @else <span style="color:red">{{ sm_t('Fail') }}</span> @endif
             </td>
         </tr>
         @endforeach
@@ -62,25 +62,25 @@
 @if($result)
 <div class="summary-row">
     <div class="summary-box">
-        <div style="font-size:11px;color:#555">Total Obtained</div>
+        <div style="font-size:11px;color:#555">{{ sm_t('Total Obtained') }}</div>
         <div class="val">{{ $result->obtained_mark }}</div>
         <div style="font-size:11px">out of {{ $result->total_mark }}</div>
     </div>
     <div class="summary-box">
-        <div style="font-size:11px;color:#555">Percentage</div>
+        <div style="font-size:11px;color:#555">{{ sm_t('Percentage') }}</div>
         <div class="val">{{ $result->total_mark > 0 ? round(($result->obtained_mark/$result->total_mark)*100,1) : 0 }}%</div>
     </div>
     <div class="summary-box">
-        <div style="font-size:11px;color:#555">GPA</div>
+        <div style="font-size:11px;color:#555">{{ sm_t('GPA') }}</div>
         <div class="val">{{ $result->gpa }}</div>
     </div>
     <div class="summary-box">
-        <div style="font-size:11px;color:#555">Grade</div>
+        <div style="font-size:11px;color:#555">{{ sm_t('Grade') }}</div>
         <div class="val">{{ $result->grade }}</div>
     </div>
     @if($result->position)
     <div class="summary-box">
-        <div style="font-size:11px;color:#555">Position</div>
+        <div style="font-size:11px;color:#555">{{ sm_t('Position') }}</div>
         <div class="val">{{ $result->position }}</div>
     </div>
     @endif
@@ -89,13 +89,13 @@
 
 <div class="print-footer">
     <div class="signature-box">
-        <div class="signature-line">Class Teacher</div>
+        <div class="signature-line">{{ sm_t('Class Teacher') }}</div>
     </div>
     <div class="signature-box">
-        <div class="signature-line">Exam Controller</div>
+        <div class="signature-line">{{ sm_t('Exam Controller') }}</div>
     </div>
     <div class="signature-box">
-        <div class="signature-line">Principal</div>
+        <div class="signature-line">{{ sm_t('Principal') }}</div>
     </div>
 </div>
 

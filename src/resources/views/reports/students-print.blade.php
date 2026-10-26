@@ -34,11 +34,11 @@
             <td>{{ $student->roll_number ?? '-' }}</td>
             <td>{{ $student->phone }}</td>
             <td>{{ $student->gender }}</td>
-            <td>{{ $student->is_active ? 'Active' : 'Inactive' }}</td>
+            <td>{{ sm_t($student->is_active ? 'Active' : 'Inactive') }}</td>
         </tr>
         @empty
         <tr>
-            <td colspan="8" class="text-center">No students found</td>
+            <td colspan="8" class="text-center">{{ sm_t('No students found') }}</td>
         </tr>
         @endforelse
     </tbody>

@@ -93,14 +93,14 @@
     {{-- Heading strip --}}
     <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3">
         <div>
-            <div class="fw-semibold" style="font-size:1.05rem;color:var(--ink)">School overview</div>
+            <div class="fw-semibold" style="font-size:1.05rem;color:var(--ink)">{{ sm_t('School overview') }}</div>
             <div class="small" style="color:var(--muted)">
                 {{ now()->format('l, d F Y') }}
                 @if($academicYear) · Academic year <strong style="color:var(--ink-2)">{{ $academicYear->name }}</strong>@endif
             </div>
         </div>
         <div class="small" style="color:var(--ink-2)">
-            Collected today: <strong style="color:var(--ink)">{{ $tk($todayFee) }}</strong>
+            {{ sm_t('Collected today') }}: <strong style="color:var(--ink)">{{ $tk($todayFee) }}</strong>
         </div>
     </div>
 
@@ -108,14 +108,14 @@
     <div class="row g-3 mb-3">
         <div class="col-6 col-md-4 col-xl-2">
             <div class="dash-card kpi">
-                <div class="kpi-top"><span class="kpi-label">Students</span><span class="kpi-icon bg-primary-subtle text-primary"><i class="fas fa-user-graduate"></i></span></div>
+                <div class="kpi-top"><span class="kpi-label">{{ sm_t('Students') }}</span><span class="kpi-icon bg-primary-subtle text-primary"><i class="fas fa-user-graduate"></i></span></div>
                 <div class="kpi-value">{{ number_format($students) }}</div>
                 <div class="kpi-sub">{{ $newAdmissions }} admitted in {{ now()->year }} · {{ $classes }} classes</div>
             </div>
         </div>
         <div class="col-6 col-md-4 col-xl-2">
             <div class="dash-card kpi">
-                <div class="kpi-top"><span class="kpi-label">Teachers & staff</span><span class="kpi-icon bg-info-subtle text-info"><i class="fas fa-chalkboard-teacher"></i></span></div>
+                <div class="kpi-top"><span class="kpi-label">{{ sm_t('Teachers & staff') }}</span><span class="kpi-icon bg-info-subtle text-info"><i class="fas fa-chalkboard-teacher"></i></span></div>
                 <div class="kpi-value">{{ number_format($teachers + $staffCount) }}</div>
                 <div class="kpi-sub">{{ $teachers }} teachers · {{ $staffCount }} staff</div>
             </div>
@@ -135,7 +135,7 @@
         </div>
         <div class="col-6 col-md-4 col-xl-2">
             <div class="dash-card kpi">
-                <div class="kpi-top"><span class="kpi-label">Fees this month</span><span class="kpi-icon bg-primary-subtle text-primary"><i class="fas fa-hand-holding-usd"></i></span></div>
+                <div class="kpi-top"><span class="kpi-label">{{ sm_t('Fees this month') }}</span><span class="kpi-icon bg-primary-subtle text-primary"><i class="fas fa-hand-holding-usd"></i></span></div>
                 <div class="kpi-value">{{ $tk($feeThisMonth) }}</div>
                 <div class="kpi-sub">
                     @if($feeDelta !== null)
@@ -148,7 +148,7 @@
         </div>
         <div class="col-6 col-md-4 col-xl-2">
             <div class="dash-card kpi">
-                <div class="kpi-top"><span class="kpi-label">Outstanding dues</span><span class="kpi-icon bg-danger-subtle text-danger"><i class="fas fa-file-invoice-dollar"></i></span></div>
+                <div class="kpi-top"><span class="kpi-label">{{ sm_t('Outstanding dues') }}</span><span class="kpi-icon bg-danger-subtle text-danger"><i class="fas fa-file-invoice-dollar"></i></span></div>
                 <div class="kpi-value">{{ $tk($totalDueFee) }}</div>
                 <div class="kpi-sub">{{ $studentsWithDues }} student{{ $studentsWithDues == 1 ? '' : 's' }} with dues · {{ $feeSummary['overdue'] }} overdue</div>
             </div>
@@ -157,7 +157,7 @@
             <div class="dash-card kpi">
                 <div class="kpi-top"><span class="kpi-label">Net {{ now()->year }}</span><span class="kpi-icon bg-secondary-subtle text-secondary"><i class="fas fa-balance-scale"></i></span></div>
                 <div class="kpi-value">{{ $net < 0 ? '−' : '' }}{{ $tk(abs($net)) }}</div>
-                <div class="kpi-sub"><span class="{{ $net >= 0 ? 'delta-up' : 'delta-down' }}">{{ $net >= 0 ? 'Surplus' : 'Deficit' }}</span> · income {{ $tk($yearIncome) }}</div>
+                <div class="kpi-sub"><span class="{{ $net >= 0 ? 'delta-up' : 'delta-down' }}">{{ sm_t($net >= 0 ? 'Surplus' : 'Deficit') }}</span> · income {{ $tk($yearIncome) }}</div>
             </div>
         </div>
     </div>
@@ -172,8 +172,8 @@
                 </div>
                 <div class="dash-card-body">
                     <div class="legend mb-2">
-                        <span><span class="sw" style="background:var(--series-1)"></span>Income <strong>{{ $tk($yearIncome) }}</strong></span>
-                        <span><span class="sw" style="background:var(--series-2)"></span>Expense <strong>{{ $tk($yearExpense) }}</strong></span>
+                        <span><span class="sw" style="background:var(--series-1)"></span>{{ sm_t('Income') }} <strong>{{ $tk($yearIncome) }}</strong></span>
+                        <span><span class="sw" style="background:var(--series-2)"></span>{{ sm_t('Expense') }} <strong>{{ $tk($yearExpense) }}</strong></span>
                     </div>
                     <div class="chart-box"><canvas id="financeChart" aria-label="Monthly income and expense"></canvas></div>
                     <div class="chart-table"></div>
@@ -184,21 +184,21 @@
             <div class="dash-card">
                 <div class="dash-card-head">
                     <div><h6>{{ sm_t('Fee collection') }}</h6><div class="sub">{{ $academicYear?->name ?? 'All years' }} · {{ number_format($feeSummary['invoices']) }} invoices</div></div>
-                    @if($can('fees.collection'))<a href="{{ route('fees.collection') }}" class="small text-decoration-none">Open</a>@endif
+                    @if($can('fees.collection'))<a href="{{ route('fees.collection') }}" class="small text-decoration-none">{{ sm_t('Open') }}</a>@endif
                 </div>
                 <div class="dash-card-body">
                     <div class="d-flex align-items-baseline justify-content-between mb-2">
                         <div class="kpi-value" style="font-size:1.6rem;font-weight:650;color:var(--ink)">{{ $feeSummary['rate'] !== null ? $feeSummary['rate'] . '%' : '—' }}</div>
-                        <div class="small" style="color:var(--muted)">collected of billed</div>
+                        <div class="small" style="color:var(--muted)">{{ sm_t('collected of billed') }}</div>
                     </div>
                     <div class="meter mb-3" role="img" aria-label="{{ $feeSummary['rate'] ?? 0 }} percent of billed fees collected">
                         <span style="width: {{ min(100, $feeSummary['rate'] ?? 0) }}%"></span>
                     </div>
-                    <div class="stat-row"><span class="k">Billed</span><span class="v">{{ $tk($feeSummary['billed']) }}</span></div>
-                    <div class="stat-row"><span class="k"><span class="sw-inline" style="background:var(--series-1)"></span>Collected</span><span class="v">{{ $tk($feeSummary['collected']) }}</span></div>
-                    <div class="stat-row"><span class="k"><span class="sw-inline" style="background:var(--track)"></span>Due</span><span class="v">{{ $tk($feeSummary['due']) }}</span></div>
-                    <div class="stat-row"><span class="k">Overdue invoices</span><span class="v">{{ $feeSummary['overdue'] }}</span></div>
-                    <div class="stat-row"><span class="k">Collected today</span><span class="v">{{ $tk($todayFee) }}</span></div>
+                    <div class="stat-row"><span class="k">{{ sm_t('Billed') }}</span><span class="v">{{ $tk($feeSummary['billed']) }}</span></div>
+                    <div class="stat-row"><span class="k"><span class="sw-inline" style="background:var(--series-1)"></span>{{ sm_t('Collected') }}</span><span class="v">{{ $tk($feeSummary['collected']) }}</span></div>
+                    <div class="stat-row"><span class="k"><span class="sw-inline" style="background:var(--track)"></span>{{ sm_t('Due') }}</span><span class="v">{{ $tk($feeSummary['due']) }}</span></div>
+                    <div class="stat-row"><span class="k">{{ sm_t('Overdue invoices') }}</span><span class="v">{{ $feeSummary['overdue'] }}</span></div>
+                    <div class="stat-row"><span class="k">{{ sm_t('Collected today') }}</span><span class="v">{{ $tk($todayFee) }}</span></div>
                 </div>
             </div>
         </div>
@@ -217,14 +217,14 @@
                         <div class="chart-box"><canvas id="attendanceChart" aria-label="Daily attendance rate"></canvas></div>
                         <div class="chart-table"></div>
                     @else
-                        <div class="empty"><i class="fas fa-user-check d-block mb-2"></i>No attendance recorded yet</div>
+                        <div class="empty"><i class="fas fa-user-check d-block mb-2"></i>{{ sm_t('No attendance recorded yet') }}</div>
                     @endif
                 </div>
             </div>
         </div>
         <div class="col-lg-4">
             <div class="dash-card">
-                <div class="dash-card-head"><div><h6>{{ sm_t('Needs attention') }}</h6><div class="sub">Items waiting for action</div></div></div>
+                <div class="dash-card-head"><div><h6>{{ sm_t('Needs attention') }}</h6><div class="sub">{{ sm_t('Items waiting for action') }}</div></div></div>
                 <div class="dash-card-body pt-1">
                     @php $open = $pending->filter(fn($p) => $p['count'] > 0); @endphp
                     @forelse($open as $item)
@@ -246,14 +246,14 @@
         <div class="col-lg-6">
             <div class="dash-card" data-chart-card="enrolment">
                 <div class="dash-card-head">
-                    <div><h6>{{ sm_t('Enrolment by class') }}</h6><div class="sub">Active students</div></div>
+                    <div><h6>{{ sm_t('Enrolment by class') }}</h6><div class="sub">{{ sm_t('Active students') }}</div></div>
                     <button type="button" class="btn-view" data-toggle-table>{{ sm_t('Table') }}</button>
                 </div>
                 <div class="dash-card-body">
                     <div class="legend mb-2">
-                        <span><span class="sw" style="background:var(--series-1)"></span>Male <strong>{{ array_sum($enrolment['male']) }}</strong></span>
-                        <span><span class="sw" style="background:var(--series-2)"></span>Female <strong>{{ array_sum($enrolment['female']) }}</strong></span>
-                        @if(array_sum($enrolment['other']))<span><span class="sw" style="background:var(--muted)"></span>Other <strong>{{ array_sum($enrolment['other']) }}</strong></span>@endif
+                        <span><span class="sw" style="background:var(--series-1)"></span>{{ sm_t('Male') }} <strong>{{ array_sum($enrolment['male']) }}</strong></span>
+                        <span><span class="sw" style="background:var(--series-2)"></span>{{ sm_t('Female') }} <strong>{{ array_sum($enrolment['female']) }}</strong></span>
+                        @if(array_sum($enrolment['other']))<span><span class="sw" style="background:var(--muted)"></span>{{ sm_t('Other') }} <strong>{{ array_sum($enrolment['other']) }}</strong></span>@endif
                     </div>
                     <div class="chart-box"><canvas id="enrolmentChart" aria-label="Students per class by gender"></canvas></div>
                     <div class="chart-table"></div>
@@ -268,11 +268,11 @@
                 </div>
                 <div class="dash-card-body">
                     @if(count($spending['labels']))
-                        <div class="legend mb-2"><span>Total <strong>{{ $tk(array_sum($spending['values'])) }}</strong></span></div>
+                        <div class="legend mb-2"><span>{{ sm_t('Total') }} <strong>{{ $tk(array_sum($spending['values'])) }}</strong></span></div>
                         <div class="chart-box"><canvas id="spendingChart" aria-label="Spending by category"></canvas></div>
                         <div class="chart-table"></div>
                     @else
-                        <div class="empty"><i class="fas fa-receipt d-block mb-2"></i>No expenses recorded this year</div>
+                        <div class="empty"><i class="fas fa-receipt d-block mb-2"></i>{{ sm_t('No expenses recorded this year') }}</div>
                     @endif
                 </div>
             </div>
@@ -290,15 +290,15 @@
                 <div class="dash-card-body">
                     @if($examSummary)
                         <div class="row g-2 mb-2">
-                            <div class="col-4"><div class="mini-stat"><div class="t">Students</div><div class="n">{{ $examSummary['total'] }}</div></div></div>
-                            <div class="col-4"><div class="mini-stat"><div class="t">Pass rate</div><div class="n">{{ $examSummary['passRate'] }}%</div></div></div>
-                            <div class="col-4"><div class="mini-stat"><div class="t">Avg GPA</div><div class="n">{{ number_format($examSummary['avgGpa'], 2) }}</div></div></div>
+                            <div class="col-4"><div class="mini-stat"><div class="t">{{ sm_t('Students') }}</div><div class="n">{{ $examSummary['total'] }}</div></div></div>
+                            <div class="col-4"><div class="mini-stat"><div class="t">{{ sm_t('Pass rate') }}</div><div class="n">{{ $examSummary['passRate'] }}%</div></div></div>
+                            <div class="col-4"><div class="mini-stat"><div class="t">{{ sm_t('Avg GPA') }}</div><div class="n">{{ number_format($examSummary['avgGpa'], 2) }}</div></div></div>
                         </div>
                         <div class="chart-box sm"><canvas id="gradesChart" aria-label="Students per grade"></canvas></div>
                         <div class="chart-table"></div>
                     @else
                         <div class="empty"><i class="fas fa-poll d-block mb-2"></i>No results generated yet
-                            @if($can('exams.results'))<div class="mt-2"><a href="{{ route('exams.results') }}" class="small">Go to results</a></div>@endif
+                            @if($can('exams.results'))<div class="mt-2"><a href="{{ route('exams.results') }}" class="small">{{ sm_t('Go to results') }}</a></div>@endif
                         </div>
                     @endif
                 </div>
@@ -306,7 +306,7 @@
         </div>
         <div class="col-lg-4">
             <div class="dash-card">
-                <div class="dash-card-head"><div><h6>{{ sm_t('Coming up') }}</h6><div class="sub">Exams, events and holidays</div></div></div>
+                <div class="dash-card-head"><div><h6>{{ sm_t('Coming up') }}</h6><div class="sub">{{ sm_t('Exams, events and holidays') }}</div></div></div>
                 <div class="dash-card-body pt-1">
                     @forelse($upcoming as $u)
                         <a href="{{ $u['route'] }}" class="list-row">
@@ -320,7 +320,7 @@
                             </span>
                         </a>
                     @empty
-                        <div class="empty"><i class="fas fa-calendar d-block mb-2"></i>Nothing scheduled</div>
+                        <div class="empty"><i class="fas fa-calendar d-block mb-2"></i>{{ sm_t('Nothing scheduled') }}</div>
                     @endforelse
                 </div>
             </div>
@@ -328,8 +328,8 @@
         <div class="col-lg-4">
             <div class="dash-card">
                 <div class="dash-card-head">
-                    <div><h6>{{ sm_t('Notices') }}</h6><div class="sub">Currently published</div></div>
-                    @if($can('notices.index'))<a href="{{ route('notices.index') }}" class="small text-decoration-none">View all</a>@endif
+                    <div><h6>{{ sm_t('Notices') }}</h6><div class="sub">{{ sm_t('Currently published') }}</div></div>
+                    @if($can('notices.index'))<a href="{{ route('notices.index') }}" class="small text-decoration-none">{{ sm_t('View all') }}</a>@endif
                 </div>
                 <div class="dash-card-body pt-1">
                     @forelse($notices as $notice)
@@ -341,7 +341,7 @@
                             </span>
                         </div>
                     @empty
-                        <div class="empty"><i class="fas fa-bullhorn d-block mb-2"></i>No active notices</div>
+                        <div class="empty"><i class="fas fa-bullhorn d-block mb-2"></i>{{ sm_t('No active notices') }}</div>
                     @endforelse
                 </div>
             </div>
@@ -354,7 +354,7 @@
             <div class="dash-card">
                 <div class="dash-card-head">
                     <div><h6>{{ sm_t('Recent fee payments') }}</h6><div class="sub">Latest {{ $recentPayments->count() }}</div></div>
-                    @if($can('fees.payment-history'))<a href="{{ route('fees.payment-history') }}" class="small text-decoration-none">Payment history</a>@endif
+                    @if($can('fees.payment-history'))<a href="{{ route('fees.payment-history') }}" class="small text-decoration-none">{{ sm_t('Payment history') }}</a>@endif
                 </div>
                 <div class="dash-card-body pt-1">
                     @if($recentPayments->count())
@@ -374,45 +374,45 @@
                         </table>
                     </div>
                     @else
-                        <div class="empty"><i class="fas fa-receipt d-block mb-2"></i>No payments yet</div>
+                        <div class="empty"><i class="fas fa-receipt d-block mb-2"></i>{{ sm_t('No payments yet') }}</div>
                     @endif
                 </div>
             </div>
         </div>
         <div class="col-lg-5">
             <div class="dash-card">
-                <div class="dash-card-head"><div><h6>{{ sm_t('Operations') }}</h6><div class="sub">Across modules</div></div></div>
+                <div class="dash-card-head"><div><h6>{{ sm_t('Operations') }}</h6><div class="sub">{{ sm_t('Across modules') }}</div></div></div>
                 <div class="dash-card-body">
                     <div class="row g-2">
                         <div class="col-6"><div class="mini-stat">
-                            <div class="t"><i class="fas fa-book-open"></i>Library</div>
-                            <div class="n">{{ number_format($modules['library']['books']) }} <span class="s">titles</span></div>
+                            <div class="t"><i class="fas fa-book-open"></i>{{ sm_t('Library') }}</div>
+                            <div class="n">{{ number_format($modules['library']['books']) }} <span class="s">{{ sm_t('titles') }}</span></div>
                             <div class="s">{{ $modules['library']['issued'] }} issued · {{ $modules['library']['available'] }} of {{ $modules['library']['copies'] }} copies available</div>
                         </div></div>
                         <div class="col-6"><div class="mini-stat">
-                            <div class="t"><i class="fas fa-bus"></i>Transport</div>
-                            <div class="n">{{ $modules['transport']['routes'] }} <span class="s">routes</span></div>
+                            <div class="t"><i class="fas fa-bus"></i>{{ sm_t('Transport') }}</div>
+                            <div class="n">{{ $modules['transport']['routes'] }} <span class="s">{{ sm_t('routes') }}</span></div>
                             <div class="s">{{ $modules['transport']['vehicles'] }} active vehicles</div>
                         </div></div>
                         <div class="col-6"><div class="mini-stat">
-                            <div class="t"><i class="fas fa-boxes"></i>Inventory</div>
-                            <div class="n">{{ $modules['inventory']['products'] }} <span class="s">items</span></div>
+                            <div class="t"><i class="fas fa-boxes"></i>{{ sm_t('Inventory') }}</div>
+                            <div class="n">{{ $modules['inventory']['products'] }} <span class="s">{{ sm_t('items') }}</span></div>
                             <div class="s">Stock value {{ $tk($modules['inventory']['value']) }}</div>
                         </div></div>
                         <div class="col-6"><div class="mini-stat">
-                            <div class="t"><i class="fas fa-user-tie"></i>Teacher attendance</div>
+                            <div class="t"><i class="fas fa-user-tie"></i>{{ sm_t('Teacher attendance') }}</div>
                             <div class="n">{{ $modules['teacherAttendance']['marked'] ? $modules['teacherAttendance']['present'] . '/' . $modules['teacherAttendance']['marked'] : '—' }}</div>
                             <div class="s">{{ $modules['teacherAttendance']['marked'] ? 'present today' : 'Not taken today' }}</div>
                         </div></div>
                         <div class="col-6"><div class="mini-stat">
-                            <div class="t"><i class="fas fa-layer-group"></i>Academic</div>
-                            <div class="n">{{ $classes }} <span class="s">classes</span></div>
+                            <div class="t"><i class="fas fa-layer-group"></i>{{ sm_t('Academic') }}</div>
+                            <div class="n">{{ $classes }} <span class="s">{{ sm_t('classes') }}</span></div>
                             <div class="s">{{ $sections }} sections</div>
                         </div></div>
                         <div class="col-6"><div class="mini-stat">
-                            <div class="t"><i class="fas fa-users"></i>Student : teacher</div>
+                            <div class="t"><i class="fas fa-users"></i>{{ sm_t('Student : teacher') }}</div>
                             <div class="n">{{ $teachers ? round($students / $teachers, 1) : '—' }}<span class="s"> : 1</span></div>
-                            <div class="s">active students per teacher</div>
+                            <div class="s">{{ sm_t('active students per teacher') }}</div>
                         </div></div>
                     </div>
                 </div>
@@ -438,7 +438,7 @@
     ])->filter(fn($l) => $can($l[0]));
     @endphp
     @if($quickLinks->count())
-    <div class="section-title">Quick access</div>
+    <div class="section-title">{{ sm_t('Quick access') }}</div>
     <div class="row g-2">
         @foreach($quickLinks as [$route, $icon, $label])
         <div class="col-6 col-md-3 col-xl-2">

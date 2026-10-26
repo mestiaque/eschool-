@@ -2,7 +2,7 @@
 @section('title', sm_t('Sections'))
 @push('buttons')
     <button class="btn btn-sm btn-encodex-create" data-bs-toggle="modal" data-bs-target="#sectionModal" onclick="resetForm()">
-        <i class="fas fa-plus"></i> Add Section
+        <i class="fas fa-plus"></i> {{ sm_t('Add Section') }}
     </button>
 @endpush
 @section('content')
@@ -63,9 +63,9 @@
                         <td>{{ $section->teacher_id }}</td>
                         <td class="text-center">
                             @if($section->is_active)
-                            <span class="badge bg-success-subtle text-success">Active</span>
+                            <span class="badge bg-success-subtle text-success">{{ sm_t('Active') }}</span>
                             @else
-                            <span class="badge bg-danger-subtle text-danger">Inactive</span>
+                            <span class="badge bg-danger-subtle text-danger">{{ sm_t('Inactive') }}</span>
                             @endif
                         </td>
                         <td class="text-center">
@@ -87,7 +87,7 @@
         </div>
         @if($sections->isEmpty())
         <div class="text-center py-3 text-muted">
-            No sections found
+            {{ sm_t('No sections found') }}
         </div>
         @endif
         <div class="mt-2">{{ $sections->links('pagination::bootstrap-5') }}</div>
@@ -100,7 +100,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">
-                    <span id="modalTitle">Add Section</span>
+                    <span id="modalTitle">{{ sm_t('Add Section') }}</span>
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
@@ -110,7 +110,7 @@
                 <input type="hidden" id="methodField" name="_method" value="POST">
                 <div class="modal-body">
                     <div class="mb-2">
-                        <label class="form-label">Class *</label>
+                        <label class="form-label">{{ sm_t('Class') }} *</label>
                         <select id="classField" name="class_id" class="form-control form-control-sm" required>
                             <option value="">{{ sm_t('Select Class') }}</option>
                             @foreach($classes as $class)
@@ -119,7 +119,7 @@
                         </select>
                     </div>
                     <div class="mb-2">
-                        <label class="form-label">Section Name *</label>
+                        <label class="form-label">{{ sm_t('Section Name') }} *</label>
                         <input type="text" id="nameField" name="name" class="form-control form-control-sm" required>
                     </div>
                     <div class="mb-2">
@@ -149,7 +149,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">
-                        <span id="modalTitle">Edit Section</span>
+                        <span id="modalTitle">{{ sm_t('Edit Section') }}</span>
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
@@ -160,7 +160,7 @@
                     <input type="hidden" id="methodField" name="_method" value="PUT">
                     <div class="modal-body">
                         <div class="mb-2">
-                            <label class="form-label">Class *</label>
+                            <label class="form-label">{{ sm_t('Class') }} *</label>
                             <select id="classField" name="class_id" class="form-control form-control-sm" required>
                                 <option value="">{{ sm_t('Select Class') }}</option>
                                 @foreach($classes as $class)
@@ -169,7 +169,7 @@
                             </select>
                         </div>
                         <div class="mb-2">
-                            <label class="form-label">Section Name *</label>
+                            <label class="form-label">{{ sm_t('Section Name') }} *</label>
                             <input type="text" id="nameField" name="name" class="form-control form-control-sm" value="{{ $section->name ?? '' }}" required>
                         </div>
                         <div class="mb-2">

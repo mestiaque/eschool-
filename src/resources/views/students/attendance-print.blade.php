@@ -41,7 +41,7 @@ table.attendance-print-table td.col-absent {
 ])
 
 @if($students->isEmpty())
-<p class="text-center">No data selected</p>
+<p class="text-center">{{ sm_t('No data selected') }}</p>
 @else
 <table class="attendance-print-table">
     <thead>

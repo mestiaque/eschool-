@@ -1,14 +1,14 @@
 @extends('me::master')
 @section('title', sm_t('Income'))
 @push('buttons')
-<button class="btn btn-sm btn-encodex-create" data-bs-toggle="modal" data-bs-target="#incomeModal"><i class="fas fa-plus"></i> Add Income</button>
+<button class="btn btn-sm btn-encodex-create" data-bs-toggle="modal" data-bs-target="#incomeModal"><i class="fas fa-plus"></i> {{ sm_t('Add Income') }}</button>
 @endpush
 
 @section('content')
 
 <div class="row mb-3">
     <div class="col-md-4">
-        <div class="card text-white bg-success"><div class="card-body py-2"><small>Total Income</small><h5 class="mb-0">{{ sm_money($incomes->sum('amount'), 2) }}</h5></div></div>
+        <div class="card text-white bg-success"><div class="card-body py-2"><small>{{ sm_t('Total Income') }}</small><h5 class="mb-0">{{ sm_money($incomes->sum('amount'), 2) }}</h5></div></div>
     </div>
 </div>
 
@@ -44,7 +44,7 @@
                     </td>
                 </tr>
                 @empty
-                <tr><td colspan="6" class="text-center text-muted py-3">No income records</td></tr>
+                <tr><td colspan="6" class="text-center text-muted py-3">{{ sm_t('No income records') }}</td></tr>
                 @endforelse
             </tbody>
         </table>
@@ -67,8 +67,8 @@
                         </select>
                     </div>
                     <div class="row g-2 mb-2">
-                        <div class="col"><label class="form-label">Amount *</label><input type="number" name="amount" id="incAmount" class="form-control form-control-sm" step="0.01" required></div>
-                        <div class="col"><label class="form-label">Date *</label><input type="date" name="date" id="incDate" class="form-control form-control-sm" value="{{ date('Y-m-d') }}" required></div>
+                        <div class="col"><label class="form-label">{{ sm_t('Amount') }} *</label><input type="number" name="amount" id="incAmount" class="form-control form-control-sm" step="0.01" required></div>
+                        <div class="col"><label class="form-label">{{ sm_t('Date') }} *</label><input type="date" name="date" id="incDate" class="form-control form-control-sm" value="{{ date('Y-m-d') }}" required></div>
                     </div>
                     <div class="mb-2"><label class="form-label">{{ sm_t('Description') }}</label><textarea name="description" id="incDescription" class="form-control form-control-sm" rows="2"></textarea></div>
                 </div>

@@ -2,7 +2,7 @@
 @section('title', sm_t('Non-Teaching Staff'))
 @push('buttons')
     <button class="btn btn-sm btn-encodex-create" data-bs-toggle="modal" data-bs-target="#staffModal">
-        <i class="fas fa-plus"></i> Add Staff
+        <i class="fas fa-plus"></i> {{ sm_t('Add Staff') }}
     </button>
 @endpush
 
@@ -13,7 +13,7 @@
     <div class="card-body py-2 border-bottom">
         <form method="GET" class="glass-search-form row g-2 align-items-end">
             <div class="col-md-4">
-                <input type="text" name="search" class="form-control form-control-sm" placeholder="Name / ID / Phone" value="{{ request('search') }}">
+                <input type="text" name="search" class="form-control form-control-sm" placeholder="{{ sm_t('Name / ID / Phone') }}" value="{{ request('search') }}">
             </div>
             <div class="col-md-3">
                 <select name="designation" class="form-control form-control-sm">
@@ -31,8 +31,8 @@
                 </select>
             </div>
             <div class="col-md-3">
-                <button type="submit" class="btn btn-sm btn-encodex-search me-1"><i class="fas fa-search"></i> Search</button>
-                <a href="{{ route('staff.index') }}" class="btn btn-sm btn-encodex-cancel">Reset</a>
+                <button type="submit" class="btn btn-sm btn-encodex-search me-1"><i class="fas fa-search"></i> {{ sm_t('Search') }}</button>
+                <a href="{{ route('staff.index') }}" class="btn btn-sm btn-encodex-cancel">{{ sm_t('Reset') }}</a>
             </div>
         </form>
     </div>
@@ -78,7 +78,7 @@
                     <td class="text-end">{{ number_format($staff->salary, 0) }}</td>
                     <td class="text-center">
                         <span class="badge bg-{{ $bc = $staff->is_active ? 'success' : 'secondary' }}-subtle text-{{ $bc }}">
-                            {{ $staff->is_active ? 'Active' : 'Inactive' }}
+                            {{ sm_t($staff->is_active ? 'Active' : 'Inactive') }}
                         </span>
                     </td>
                     <td class="text-center">
@@ -94,7 +94,7 @@
                     </td>
                 </tr>
                 @empty
-                <tr><td colspan="10" class="text-center text-muted py-3">No staff members found</td></tr>
+                <tr><td colspan="10" class="text-center text-muted py-3">{{ sm_t('No staff members found') }}</td></tr>
                 @endforelse
             </tbody>
         </table>

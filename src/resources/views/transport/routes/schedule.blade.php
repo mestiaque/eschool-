@@ -2,10 +2,10 @@
 @section('title', sm_t('Bus Schedule Chart'))
 @push('buttons')
     <a href="{{ route('transport.routes') }}" class="btn btn-sm btn-encodex-list no-print">
-        <i class="fas fa-arrow-left"></i> Routes
+        <i class="fas fa-arrow-left"></i> {{ sm_t('Routes') }}
     </a>
     <a href="{{ route('transport.schedule.print') }}" target="_blank" class="btn btn-sm btn-encodex-print no-print">
-        <i class="fas fa-print"></i> Print
+        <i class="fas fa-print"></i> {{ sm_t('Print') }}
     </a>
 @endpush
 
@@ -53,7 +53,7 @@ $dirColors = [
             </div>
             <div class="col-md-3">
                 <button class="btn btn-sm btn-encodex-clear" onclick="resetFilter()">
-                    <i class="fas fa-times"></i> Reset
+                    <i class="fas fa-times"></i> {{ sm_t('Reset') }}
                 </button>
             </div>
         </div>
@@ -67,7 +67,7 @@ $dirColors = [
         {{ $dv }}
     </span>
     @endforeach
-    <span class="ms-auto text-muted small">Sorted by departure time</span>
+    <span class="ms-auto text-muted small">{{ sm_t('Sorted by departure time') }}</span>
 </div>
 
 {{-- ── Timeline Chart ── --}}
@@ -153,7 +153,7 @@ $dirColors = [
                         <td>{{ optional($sched->vehicle)->driver_name ?? '—' }}</td>
                         <td>
                             @if(empty($sched->days))
-                                <span class="text-muted small">Every day</span>
+                                <span class="text-muted small">{{ sm_t('Every day') }}</span>
                             @else
                                 <span class="small">
                                     @foreach($sched->days as $d){{ $allDays[$d] ?? $d }}{{ !$loop->last ? ', ' : '' }}@endforeach
@@ -224,7 +224,7 @@ $dirColors = [
 @if($routes->where(fn($r) => $r->schedules->isNotEmpty())->isEmpty())
 <div class="alert alert-info">
     <i class="fas fa-info-circle me-1"></i>
-    No schedules found. Go to <a href="{{ route('transport.routes') }}">Transport Routes</a> and add schedules for each route.
+    No schedules found. Go to <a href="{{ route('transport.routes') }}">{{ sm_t('Transport Routes') }}</a> and add schedules for each route.
 </div>
 @endif
 

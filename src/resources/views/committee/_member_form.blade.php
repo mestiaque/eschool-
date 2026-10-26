@@ -15,7 +15,7 @@
         </div>
         <div class="col-md-3 mb-2">
             <label class="form-label form-label-sm">{{ sm_t('Serial / Order') }}</label>
-            <input type="number" name="serial" class="form-control form-control-sm" min="1" placeholder="Auto">
+            <input type="number" name="serial" class="form-control form-control-sm" min="1" placeholder="{{ sm_t('Auto') }}">
         </div>
 
         <div class="col-md-4 mb-2">
@@ -28,12 +28,12 @@
         </div>
         <div class="col-md-4 mb-2">
             <label class="form-label form-label-sm">{{ sm_t('Profession') }}</label>
-            <input type="text" name="profession" class="form-control form-control-sm" placeholder="e.g. Teacher, Businessman">
+            <input type="text" name="profession" class="form-control form-control-sm" placeholder="{{ sm_t('e.g. Teacher, Businessman') }}">
         </div>
 
         <div class="col-md-8 mb-2">
             <label class="form-label form-label-sm">{{ sm_t('Address') }}</label>
-            <textarea name="address" class="form-control form-control-sm" rows="2" placeholder="Full address"></textarea>
+            <textarea name="address" class="form-control form-control-sm" rows="2" placeholder="{{ sm_t('Full address') }}"></textarea>
         </div>
         <div class="col-md-4 mb-2">
             <label class="form-label form-label-sm">{{ sm_t('Photo') }}</label>

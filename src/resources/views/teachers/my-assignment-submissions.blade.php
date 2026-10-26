@@ -3,7 +3,7 @@
 
 @push('buttons')
 <a href="{{ route('my.assignments') }}" class="btn btn-sm btn-encodex-list">
-    <i class="fas fa-arrow-left"></i> Back
+    <i class="fas fa-arrow-left"></i> {{ sm_t('Back') }}
 </a>
 @endpush
 
@@ -15,25 +15,25 @@
             <div class="card-body py-2">
                 <div class="row g-2">
                     <div class="col-md-3">
-                        <small class="text-muted d-block">Class</small>
+                        <small class="text-muted d-block">{{ sm_t('Class') }}</small>
                         <strong>{{ $assignment->classe->name ?? '-' }}</strong>
                     </div>
                     <div class="col-md-3">
-                        <small class="text-muted d-block">Subject</small>
+                        <small class="text-muted d-block">{{ sm_t('Subject') }}</small>
                         <strong>{{ $assignment->subject->name ?? '-' }}</strong>
                     </div>
                     <div class="col-md-2">
-                        <small class="text-muted d-block">Due Date</small>
+                        <small class="text-muted d-block">{{ sm_t('Due Date') }}</small>
                         <strong>{{ sm_date($assignment->due_date) }}</strong>
                     </div>
                     <div class="col-md-2">
-                        <small class="text-muted d-block">Total Marks</small>
+                        <small class="text-muted d-block">{{ sm_t('Total Marks') }}</small>
                         <strong>{{ $assignment->total_marks }}</strong>
                     </div>
                     <div class="col-md-2">
-                        <small class="text-muted d-block">Status</small>
+                        <small class="text-muted d-block">{{ sm_t('Status') }}</small>
                         @php $statusColors = ['active'=>'success','closed'=>'secondary','cancelled'=>'danger']; @endphp
-                        <span class="badge bg-{{ $bc = $statusColors[$assignment->status] ?? 'secondary' }}-subtle text-{{ $bc }}">{{ ucfirst($assignment->status) }}</span>
+                        <span class="badge bg-{{ $bc = $statusColors[$assignment->status] ?? 'secondary' }}-subtle text-{{ $bc }}">{{ sm_t(ucfirst($assignment->status)) }}</span>
                     </div>
                 </div>
             </div>
@@ -49,19 +49,19 @@
                 @endphp
                 <div class="text-center">
                     <div class="fs-5 fw-bold text-success">{{ $submittedCount }}</div>
-                    <small class="text-muted">Submitted</small>
+                    <small class="text-muted">{{ sm_t('Submitted') }}</small>
                 </div>
                 <div class="text-center">
                     <div class="fs-5 fw-bold text-warning">{{ $lateCount }}</div>
-                    <small class="text-muted">Late</small>
+                    <small class="text-muted">{{ sm_t('Late') }}</small>
                 </div>
                 <div class="text-center">
                     <div class="fs-5 fw-bold text-danger">{{ $notSubmittedCount }}</div>
-                    <small class="text-muted">Not Submitted</small>
+                    <small class="text-muted">{{ sm_t('Not Submitted') }}</small>
                 </div>
                 <div class="text-center">
                     <div class="fs-5 fw-bold text-primary">{{ $students->count() }}</div>
-                    <small class="text-muted">Total</small>
+                    <small class="text-muted">{{ sm_t('Total') }}</small>
                 </div>
             </div>
         </div>
@@ -138,11 +138,11 @@
                             <input type="text" name="remarks[{{ $student->id }}]"
                                    class="form-control form-control-sm"
                                    value="{{ $sub?->remarks }}"
-                                   placeholder="Optional">
+                                   placeholder="{{ sm_t('Optional') }}">
                         </td>
                     </tr>
                     @empty
-                    <tr><td colspan="8" class="text-center text-muted py-3">No active students found for this class</td></tr>
+                    <tr><td colspan="8" class="text-center text-muted py-3">{{ sm_t('No active students found for this class') }}</td></tr>
                     @endforelse
                 </tbody>
             </table>
@@ -154,7 +154,7 @@
                 <button type="button" class="btn btn-sm btn-encodex-cancel" id="markAllNotSubmitted">{{ sm_t('Mark All Not Submitted') }}</button>
             </div>
             <button type="submit" class="btn btn-sm btn-encodex-save">
-                <i class="fas fa-save"></i> Save Submissions
+                <i class="fas fa-save"></i> {{ sm_t('Save Submissions') }}
             </button>
         </div>
         @endif

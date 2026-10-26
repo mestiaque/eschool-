@@ -62,7 +62,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="7" class="text-center">No routes found</td>
+                                        <td colspan="7" class="text-center">{{ sm_t('No routes found') }}</td>
                                     </tr>
                                 @endforelse
                             </tbody>

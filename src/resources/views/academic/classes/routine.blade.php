@@ -2,10 +2,10 @@
 @section('title', 'Class Routine - ' . $class->name)
 @push('buttons')
     <a href="{{ route('academic.classes') }}" class="btn btn-sm btn-encodex-list">
-        <i class="fas fa-arrow-left"></i> Back
+        <i class="fas fa-arrow-left"></i> {{ sm_t('Back') }}
     </a>
     <a href="{{ route('academic.classes.routine.print', array_filter(['id' => $class->id, 'title' => $selectedTitle])) }}" target="_blank" class="btn btn-sm btn-encodex-print no-print">
-        <i class="fas fa-print"></i> Print
+        <i class="fas fa-print"></i> {{ sm_t('Print') }}
     </a>
 @endpush
 

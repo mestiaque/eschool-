@@ -2,7 +2,7 @@
     <div class="row g-2">
         <div class="col-md-3 mb-2">
             <label class="form-label form-label-sm">{{ sm_t('Staff ID') }}</label>
-            <input type="text" name="staff_id" class="form-control form-control-sm" placeholder="Auto if blank">
+            <input type="text" name="staff_id" class="form-control form-control-sm" placeholder="{{ sm_t('Auto if blank') }}">
         </div>
         <div class="col-md-4 mb-2">
             <label class="form-label form-label-sm">{{ sm_t('First Name') }} <span class="text-danger">*</span></label>
@@ -101,7 +101,7 @@
         </div>
         <div class="col-md-4 mb-2">
             <label class="form-label form-label-sm">{{ sm_t('Relationship') }}</label>
-            <input type="text" name="relationship" class="form-control form-control-sm" placeholder="e.g. Spouse">
+            <input type="text" name="relationship" class="form-control form-control-sm" placeholder="{{ sm_t('e.g. Spouse') }}">
         </div>
 
         <div class="col-md-8 mb-2">

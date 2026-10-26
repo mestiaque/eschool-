@@ -2,10 +2,10 @@
 @section('title', $room->name . ' - Schedule')
 @push('buttons')
     <a href="{{ route('academic.rooms') }}" class="btn btn-sm btn-encodex-list no-print">
-        <i class="fas fa-arrow-left"></i> All Rooms
+        <i class="fas fa-arrow-left"></i> {{ sm_t('All Rooms') }}
     </a>
     <a href="{{ route('academic.rooms.schedule.print', $room->id) }}" target="_blank" class="btn btn-sm btn-encodex-print no-print">
-        <i class="fas fa-print"></i> Print
+        <i class="fas fa-print"></i> {{ sm_t('Print') }}
     </a>
 @endpush
 
@@ -54,7 +54,7 @@
             @endif
             <div class="col-auto">
                 <span class="badge {{ $room->is_active ? 'bg-success-subtle text-success' : 'bg-secondary-subtle text-secondary' }}">
-                    {{ $room->is_active ? 'Active' : 'Inactive' }}
+                    {{ sm_t($room->is_active ? 'Active' : 'Inactive') }}
                 </span>
             </div>
         </div>
@@ -76,7 +76,7 @@
             <div class="card-body p-2">
                 @if($daySchedule->isEmpty())
                     <div class="slot-free text-center py-2">
-                        <i class="fas fa-calendar-times me-1"></i> No classes scheduled
+                        <i class="fas fa-calendar-times me-1"></i> {{ sm_t('No classes scheduled') }}
                     </div>
                 @else
                     @foreach($daySchedule as $routine)

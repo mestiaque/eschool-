@@ -38,13 +38,13 @@
         </tr>
         @empty
         <tr>
-            <td colspan="5" class="text-center">No expenses for the selected period</td>
+            <td colspan="5" class="text-center">{{ sm_t('No expenses for the selected period') }}</td>
         </tr>
         @endforelse
     </tbody>
     <tfoot>
         <tr class="grandtotal-row">
-            <td colspan="3" class="text-right">Total</td>
+            <td colspan="3" class="text-right">{{ sm_t('Total') }}</td>
             <td>{{ sm_money($expenses->sum('amount'), 2) }}</td>
             <td colspan="2"></td>
         </tr>

@@ -2,7 +2,7 @@
 @section('title', sm_t('Class Tests'))
 @push('buttons')
     <button class="btn btn-sm btn-encodex-create" data-bs-toggle="modal" data-bs-target="#classTestModal">
-        <i class="fas fa-plus"></i> Add Class Test
+        <i class="fas fa-plus"></i> {{ sm_t('Add Class Test') }}
     </button>
 @endpush
 
@@ -38,8 +38,8 @@
                 </select>
             </div>
             <div class="col-md">
-                <button type="submit" class="btn btn-sm btn-encodex-search"><i class="fas fa-search"></i> Filter</button>
-                <a href="{{ route('academic.class-tests') }}" class="btn btn-sm btn-encodex-clear"><i class="fas fa-eraser"></i> Reset</a>
+                <button type="submit" class="btn btn-sm btn-encodex-search"><i class="fas fa-search"></i> {{ sm_t('Filter') }}</button>
+                <a href="{{ route('academic.class-tests') }}" class="btn btn-sm btn-encodex-clear"><i class="fas fa-eraser"></i> {{ sm_t('Reset') }}</a>
             </div>
         </form>
     </div>
@@ -72,7 +72,7 @@
                     <td class="text-center">{{ $test->pass_marks }}</td>
                     <td class="text-center">{{ $test->duration ?? '—' }}</td>
                     <td class="text-center">
-                        <span class="badge bg-{{ $bc = $statusColors[$test->status] ?? 'secondary' }}-subtle text-{{ $bc }}">{{ ucfirst($test->status) }}</span>
+                        <span class="badge bg-{{ $bc = $statusColors[$test->status] ?? 'secondary' }}-subtle text-{{ $bc }}">{{ sm_t(ucfirst($test->status)) }}</span>
                     </td>
                     <td class="text-center">
                         <a href="{{ route('academic.class-tests.marks', $test->id) }}" class="btn btn-sm btn-encodex-show" title="Enter Marks">
@@ -89,7 +89,7 @@
                     </td>
                 </tr>
                 @empty
-                <tr><td colspan="10" class="text-center text-muted py-4">No class tests found</td></tr>
+                <tr><td colspan="10" class="text-center text-muted py-4">{{ sm_t('No class tests found') }}</td></tr>
                 @endforelse
             </tbody>
         </table>
@@ -111,11 +111,11 @@
                 <div class="modal-body">
                     <div class="row g-2">
                         <div class="col-md-12 mb-2">
-                            <label class="form-label">Title *</label>
+                            <label class="form-label">{{ sm_t('Title') }} *</label>
                             <input type="text" name="title" id="ct_title" class="form-control form-control-sm" required>
                         </div>
                         <div class="col-md-6 mb-2">
-                            <label class="form-label">Class *</label>
+                            <label class="form-label">{{ sm_t('Class') }} *</label>
                             <select name="class_id" id="ct_class_id" class="form-control form-control-sm" required>
                                 <option value="">{{ sm_t('Select Class') }}</option>
                                 @foreach($classes as $class)
@@ -124,7 +124,7 @@
                             </select>
                         </div>
                         <div class="col-md-6 mb-2">
-                            <label class="form-label">Subject *</label>
+                            <label class="form-label">{{ sm_t('Subject') }} *</label>
                             <select name="subject_id" id="ct_subject_id" class="form-control form-control-sm" required>
                                 <option value="">{{ sm_t('Select Subject') }}</option>
                                 @foreach($subjects as $subject)
@@ -133,20 +133,20 @@
                             </select>
                         </div>
                         <div class="col-md-4 mb-2">
-                            <label class="form-label">Test Date *</label>
+                            <label class="form-label">{{ sm_t('Test Date') }} *</label>
                             <input type="date" name="test_date" id="ct_test_date" class="form-control form-control-sm" required>
                         </div>
                         <div class="col-md-4 mb-2">
-                            <label class="form-label">Total Marks *</label>
+                            <label class="form-label">{{ sm_t('Total Marks') }} *</label>
                             <input type="number" name="total_marks" id="ct_total_marks" class="form-control form-control-sm" value="100" required>
                         </div>
                         <div class="col-md-4 mb-2">
-                            <label class="form-label">Pass Marks *</label>
+                            <label class="form-label">{{ sm_t('Pass Marks') }} *</label>
                             <input type="number" name="pass_marks" id="ct_pass_marks" class="form-control form-control-sm" value="33" required>
                         </div>
                         <div class="col-md-4 mb-2">
                             <label class="form-label">{{ sm_t('Duration') }}</label>
-                            <input type="text" name="duration" id="ct_duration" class="form-control form-control-sm" placeholder="e.g. 30 min">
+                            <input type="text" name="duration" id="ct_duration" class="form-control form-control-sm" placeholder="{{ sm_t('e.g. 30 min') }}">
                         </div>
                         <div class="col-md-4 mb-2">
                             <label class="form-label">{{ sm_t('Status') }}</label>

@@ -2,7 +2,7 @@
 @section('title', sm_t('Teacher Profile'))
 
 @push('buttons')
-<a href="{{ route('teachers.index') }}" class="btn btn-sm btn-encodex-list"><i class="fas fa-arrow-left"></i> Back</a>
+<a href="{{ route('teachers.index') }}" class="btn btn-sm btn-encodex-list"><i class="fas fa-arrow-left"></i> {{ sm_t('Back') }}</a>
 @endpush
 
 @section('content')
@@ -20,21 +20,21 @@
                 @endif
                 <h5 class="mb-0">{{ $teacher->full_name }}</h5>
                 <p class="text-muted small">{{ $teacher->teacher_id }}</p>
-                <span class="badge bg-{{ $bc = $teacher->is_active ? 'success' : 'danger' }}-subtle text-{{ $bc }}">{{ $teacher->is_active ? 'Active' : 'Inactive' }}</span>
+                <span class="badge bg-{{ $bc = $teacher->is_active ? 'success' : 'danger' }}-subtle text-{{ $bc }}">{{ sm_t($teacher->is_active ? 'Active' : 'Inactive') }}</span>
             </div>
             <ul class="list-group list-group-flush">
-                <li class="list-group-item d-flex justify-content-between"><span class="text-muted">Designation</span><strong>{{ $teacher->designation ?? '-' }}</strong></li>
-                <li class="list-group-item d-flex justify-content-between"><span class="text-muted">Department</span><strong>{{ $teacher->department ?? '-' }}</strong></li>
-                <li class="list-group-item d-flex justify-content-between"><span class="text-muted">Gender</span><strong>{{ $teacher->gender }}</strong></li>
-                <li class="list-group-item d-flex justify-content-between"><span class="text-muted">DOB</span><strong>{{ sm_date($teacher->date_of_birth) }}</strong></li>
-                <li class="list-group-item d-flex justify-content-between"><span class="text-muted">Blood</span><strong>{{ $teacher->blood_group ?? '-' }}</strong></li>
-                <li class="list-group-item d-flex justify-content-between"><span class="text-muted">Phone</span><strong>{{ $teacher->phone }}</strong></li>
-                <li class="list-group-item d-flex justify-content-between"><span class="text-muted">Email</span><strong>{{ $teacher->email ?? '-' }}</strong></li>
-                <li class="list-group-item d-flex justify-content-between"><span class="text-muted">Join Date</span><strong>{{ sm_date($teacher->joining_date) }}</strong></li>
-                <li class="list-group-item d-flex justify-content-between"><span class="text-muted">Basic Salary</span><strong>{{ sm_money($teacher->salary ?? 0,2) }}</strong></li>
+                <li class="list-group-item d-flex justify-content-between"><span class="text-muted">{{ sm_t('Designation') }}</span><strong>{{ $teacher->designation ?? '-' }}</strong></li>
+                <li class="list-group-item d-flex justify-content-between"><span class="text-muted">{{ sm_t('Department') }}</span><strong>{{ $teacher->department ?? '-' }}</strong></li>
+                <li class="list-group-item d-flex justify-content-between"><span class="text-muted">{{ sm_t('Gender') }}</span><strong>{{ $teacher->gender }}</strong></li>
+                <li class="list-group-item d-flex justify-content-between"><span class="text-muted">{{ sm_t('DOB') }}</span><strong>{{ sm_date($teacher->date_of_birth) }}</strong></li>
+                <li class="list-group-item d-flex justify-content-between"><span class="text-muted">{{ sm_t('Blood') }}</span><strong>{{ $teacher->blood_group ?? '-' }}</strong></li>
+                <li class="list-group-item d-flex justify-content-between"><span class="text-muted">{{ sm_t('Phone') }}</span><strong>{{ $teacher->phone }}</strong></li>
+                <li class="list-group-item d-flex justify-content-between"><span class="text-muted">{{ sm_t('Email') }}</span><strong>{{ $teacher->email ?? '-' }}</strong></li>
+                <li class="list-group-item d-flex justify-content-between"><span class="text-muted">{{ sm_t('Join Date') }}</span><strong>{{ sm_date($teacher->joining_date) }}</strong></li>
+                <li class="list-group-item d-flex justify-content-between"><span class="text-muted">{{ sm_t('Basic Salary') }}</span><strong>{{ sm_money($teacher->salary ?? 0,2) }}</strong></li>
             </ul>
             <div class="card-footer">
-                <button class="btn btn-sm btn-encodex-edit w-100" data-bs-toggle="modal" data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</button>
+                <button class="btn btn-sm btn-encodex-edit w-100" data-bs-toggle="modal" data-bs-target="#editModal"><i class="fas fa-edit"></i> {{ sm_t('Edit') }}</button>
             </div>
         </div>
 
@@ -49,7 +49,7 @@
                 <p class="small text-muted">This teacher can sign in and use "My Classes" to take attendance for their assigned classes.</p>
                 <form method="POST" action="{{ route('teachers.unlink-user', $teacher->id) }}" onsubmit="return confirm('Unlink this login account from the teacher?')">
                     @csrf @method('DELETE')
-                    <button type="submit" class="btn btn-sm btn-encodex-cancel w-100"><i class="fas fa-unlink"></i> Unlink Login</button>
+                    <button type="submit" class="btn btn-sm btn-encodex-cancel w-100"><i class="fas fa-unlink"></i> {{ sm_t('Unlink Login') }}</button>
                 </form>
                 @else
                 <p class="small text-muted">No login account linked yet — this teacher can't sign in to take attendance for their classes.</p>
@@ -63,7 +63,7 @@
                             @endforeach
                         </select>
                     </div>
-                    <button type="submit" class="btn btn-sm btn-encodex-save w-100"><i class="fas fa-link"></i> Link Login</button>
+                    <button type="submit" class="btn btn-sm btn-encodex-save w-100"><i class="fas fa-link"></i> {{ sm_t('Link Login') }}</button>
                 </form>
                 <p class="small text-muted mt-2 mb-0">Don't have a user account for this teacher yet? Create one first from Users &amp; Roles &gt; All Users, then come back here to link it.</p>
                 @endif
@@ -81,7 +81,7 @@
                         @forelse($teacher->teacherSubjects ?? [] as $ts)
                         <tr><td>{{ $ts->classe?->name }}</td><td>{{ $ts->subject?->name }}</td></tr>
                         @empty
-                        <tr><td colspan="2" class="text-center text-muted py-2">No subjects assigned</td></tr>
+                        <tr><td colspan="2" class="text-center text-muted py-2">{{ sm_t('No subjects assigned') }}</td></tr>
                         @endforelse
                     </tbody>
                 </table>
@@ -99,10 +99,10 @@
                             <td>{{ sm_date($att->date) }}</td>
                             <td>{{ sm_time($att->in_time) }}</td>
                             <td>{{ sm_time($att->out_time) }}</td>
-                            <td><span class="badge bg-{{ $bc = ['present'=>'success','absent'=>'danger','late'=>'warning','excused'=>'info'][$att->status] ?? 'secondary' }}-subtle text-{{ $bc }}">{{ ucfirst($att->status) }}</span></td>
+                            <td><span class="badge bg-{{ $bc = ['present'=>'success','absent'=>'danger','late'=>'warning','excused'=>'info'][$att->status] ?? 'secondary' }}-subtle text-{{ $bc }}">{{ sm_t(ucfirst($att->status)) }}</span></td>
                         </tr>
                         @empty
-                        <tr><td colspan="4" class="text-center text-muted py-2">No attendance records</td></tr>
+                        <tr><td colspan="4" class="text-center text-muted py-2">{{ sm_t('No attendance records') }}</td></tr>
                         @endforelse
                     </tbody>
                 </table>
@@ -113,8 +113,8 @@
             <div class="card-header"><h6 class="mb-0">{{ sm_t('Address') }}</h6></div>
             <div class="card-body">
                 <div class="row">
-                    <div class="col-md-6"><small class="text-muted">Present</small><p>{{ $teacher->present_address ?? '-' }}</p></div>
-                    <div class="col-md-6"><small class="text-muted">Permanent</small><p>{{ $teacher->permanent_address ?? '-' }}</p></div>
+                    <div class="col-md-6"><small class="text-muted">{{ sm_t('Present') }}</small><p>{{ $teacher->present_address ?? '-' }}</p></div>
+                    <div class="col-md-6"><small class="text-muted">{{ sm_t('Permanent') }}</small><p>{{ $teacher->permanent_address ?? '-' }}</p></div>
                 </div>
             </div>
         </div>

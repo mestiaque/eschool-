@@ -2,7 +2,7 @@
 @section('title', sm_t('Grade Setup'))
 @push('buttons')
     <button class="btn btn-sm btn-encodex-create" data-bs-toggle="modal" data-bs-target="#gradeModal" onclick="resetGradeForm()">
-        <i class="fas fa-plus"></i> Add Grade
+        <i class="fas fa-plus"></i> {{ sm_t('Add Grade') }}
     </button>
 @endpush
 
@@ -42,7 +42,7 @@
                     </td>
                 </tr>
                 @empty
-                <tr><td colspan="7" class="text-center text-muted py-3">No grades found. Add grades to enable auto-grading in marks entry.</td></tr>
+                <tr><td colspan="7" class="text-center text-muted py-3">{{ sm_t('No grades found. Add grades to enable auto-grading in marks entry.') }}</td></tr>
                 @endforelse
             </tbody>
         </table>
@@ -61,7 +61,7 @@
                     <div class="row g-2">
                         <div class="col-md-6 mb-2">
                             <label class="form-label form-label-sm">{{ sm_t('Grade Name') }} <span class="text-danger">*</span></label>
-                            <input type="text" name="name" id="gradeName" class="form-control form-control-sm" placeholder="e.g. A+" required>
+                            <input type="text" name="name" id="gradeName" class="form-control form-control-sm" placeholder="{{ sm_t('e.g. A+') }}" required>
                         </div>
                         <div class="col-md-6 mb-2">
                             <label class="form-label form-label-sm">{{ sm_t('Grade Point') }} <span class="text-danger">*</span></label>

@@ -84,7 +84,7 @@
 
 <div class="routine-doc-title">Class Routine{{ $selectedTitle ? ' — ' . $selectedTitle : '' }}</div>
 <div class="routine-doc-subtitle">
-    Class: <strong>{{ $class->name }}</strong>
+    {{ sm_t('Class') }}: <strong>{{ $class->name }}</strong>
     @if($academicYear) &nbsp;—&nbsp; Session: {{ $academicYear->name }} @endif
 </div>
 
@@ -146,7 +146,7 @@
 @endforeach
 
 <div class="sig-row">
-    <div class="sig-box">Head Teacher / Principal</div>
+    <div class="sig-box">{{ sm_t('Head Teacher / Principal') }}</div>
 </div>
 
 @endsection

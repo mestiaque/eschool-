@@ -4,7 +4,7 @@
 
 @push('buttons')
 <button class="btn btn-encodex-create btn-sm" data-bs-toggle="modal" data-bs-target="#supplierModal">
-    <i class="fas fa-plus"></i> Add Supplier
+    <i class="fas fa-plus"></i> {{ sm_t('Add Supplier') }}
 </button>
 @endpush
 
@@ -38,15 +38,15 @@
                                         <td>{{ $supplier->balance }}</td>
                                         <td>
                                             @if($supplier->is_active)
-                                                <span class="badge bg-success-subtle text-success">Active</span>
+                                                <span class="badge bg-success-subtle text-success">{{ sm_t('Active') }}</span>
                                             @else
-                                                <span class="badge bg-secondary-subtle text-secondary">Inactive</span>
+                                                <span class="badge bg-secondary-subtle text-secondary">{{ sm_t('Inactive') }}</span>
                                             @endif
                                         </td>
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="7" class="text-center">No suppliers found</td>
+                                        <td colspan="7" class="text-center">{{ sm_t('No suppliers found') }}</td>
                                     </tr>
                                 @endforelse
                             </tbody>

@@ -42,27 +42,27 @@
                     <td>{{ $period->room->name ?? '—' }}</td>
                     <td class="text-center">
                         @if($period->has_class_test)
-                        <span class="badge bg-warning-subtle text-warning">Scheduled</span>
+                        <span class="badge bg-warning-subtle text-warning">{{ sm_t('Scheduled') }}</span>
                         @else
                         <span class="text-muted">—</span>
                         @endif
                     </td>
                     <td class="text-center">
                         @if($period->has_assignment_due)
-                        <span class="badge bg-info-subtle text-info">Due Today</span>
+                        <span class="badge bg-info-subtle text-info">{{ sm_t('Due Today') }}</span>
                         @else
                         <span class="text-muted">—</span>
                         @endif
                     </td>
                     <td>
                         <a href="{{ route('my.attendance', ['classId' => $period->class_id, 'section_id' => $period->section_id, 'date' => $date]) }}" class="btn btn-sm btn-encodex-show">
-                            <i class="fas fa-user-check"></i> Take Attendance
+                            <i class="fas fa-user-check"></i> {{ sm_t('Take Attendance') }}
                         </a>
                     </td>
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="8" class="text-center text-muted py-3">No classes scheduled for this day.</td>
+                    <td colspan="8" class="text-center text-muted py-3">{{ sm_t('No classes scheduled for this day.') }}</td>
                 </tr>
                 @endforelse
             </tbody>

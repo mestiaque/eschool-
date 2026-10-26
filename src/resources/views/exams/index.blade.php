@@ -2,7 +2,7 @@
 @section('title', sm_t('Exams'))
 @push('buttons')
     <button class="btn btn-sm btn-encodex-create" data-bs-toggle="modal" data-bs-target="#examModal" onclick="resetExamForm()">
-        <i class="fas fa-plus"></i> Add Exam
+        <i class="fas fa-plus"></i> {{ sm_t('Add Exam') }}
     </button>
 @endpush
 
@@ -31,8 +31,8 @@
                     <td><span class="badge bg-info-subtle text-info">{{ $exam->examType->name ?? '—' }}</span></td>
                     <td class="small">{{ $exam->start_date ? sm_date($exam->start_date) : '—' }}</td>
                     <td class="small">{{ $exam->end_date ? sm_date($exam->end_date) : '—' }}</td>
-                    <td><span class="badge bg-{{ $bc = $exam->is_published ? 'success' : 'warning' }}-subtle text-{{ $bc }}">{{ $exam->is_published ? 'Published' : 'Draft' }}</span></td>
-                    <td><span class="badge bg-{{ $bc = $exam->is_active ? 'success' : 'secondary' }}-subtle text-{{ $bc }}">{{ $exam->is_active ? 'Active' : 'Inactive' }}</span></td>
+                    <td><span class="badge bg-{{ $bc = $exam->is_published ? 'success' : 'warning' }}-subtle text-{{ $bc }}">{{ sm_t($exam->is_published ? 'Published' : 'Draft') }}</span></td>
+                    <td><span class="badge bg-{{ $bc = $exam->is_active ? 'success' : 'secondary' }}-subtle text-{{ $bc }}">{{ sm_t($exam->is_active ? 'Active' : 'Inactive') }}</span></td>
                     <td>
                         <a href="{{ route('exams.schedule') }}?exam_id={{ $exam->id }}" class="btn btn-sm btn-encodex-show" title="Schedule"><i class="fas fa-calendar-alt"></i></a>
                         <a href="{{ route('exams.marks') }}?exam_id={{ $exam->id }}" class="btn btn-sm btn-encodex-show" title="Marks"><i class="fas fa-pencil-alt"></i></a>
@@ -44,7 +44,7 @@
                     </td>
                 </tr>
                 @empty
-                <tr><td colspan="8" class="text-center text-muted py-3">No exams found.</td></tr>
+                <tr><td colspan="8" class="text-center text-muted py-3">{{ sm_t('No exams found.') }}</td></tr>
                 @endforelse
             </tbody>
         </table>

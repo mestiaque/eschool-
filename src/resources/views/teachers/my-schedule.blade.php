@@ -32,7 +32,7 @@
                     </div>
                 </div>
                 @empty
-                <div class="px-3 py-3 text-center text-muted small">No classes</div>
+                <div class="px-3 py-3 text-center text-muted small">{{ sm_t('No classes') }}</div>
                 @endforelse
             </div>
         </div>

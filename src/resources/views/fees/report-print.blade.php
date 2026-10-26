@@ -37,17 +37,17 @@
             <td>{{ sm_money($c->paid_amount, 2) }}</td>
             <td>{{ sm_money($c->due_amount, 2) }}</td>
             <td>{{ sm_date($c->payment_date) ?? '-' }}</td>
-            <td>{{ ucfirst($c->status) }}</td>
+            <td>{{ sm_t(ucfirst($c->status)) }}</td>
         </tr>
         @empty
         <tr>
-            <td colspan="9" class="text-center">No records for the selected period</td>
+            <td colspan="9" class="text-center">{{ sm_t('No records for the selected period') }}</td>
         </tr>
         @endforelse
     </tbody>
     <tfoot>
         <tr class="grandtotal-row">
-            <td colspan="4" class="text-right">Total</td>
+            <td colspan="4" class="text-right">{{ sm_t('Total') }}</td>
             <td>{{ sm_money($collections->sum('amount'), 2) }}</td>
             <td>{{ sm_money($total, 2) }}</td>
             <td>{{ sm_money($collections->sum('due_amount'), 2) }}</td>

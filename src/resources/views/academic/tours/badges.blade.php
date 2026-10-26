@@ -195,7 +195,7 @@
         {{-- Header --}}
         <div class="badge-header">
             <div class="school-name">{{ $schoolName }}</div>
-            <div class="tour-label">School Tour Participant</div>
+            <div class="tour-label">{{ sm_t('School Tour Participant') }}</div>
             <div class="tour-title">{{ $tour->title }}</div>
         </div>
 
@@ -214,27 +214,27 @@
 
             <div class="info-grid">
                 <div class="info-row">
-                    <span class="info-label">Class</span>
+                    <span class="info-label">{{ sm_t('Class') }}</span>
                     <span class="info-value">{{ $student?->classe?->name ?? '—' }}</span>
                 </div>
                 <div class="info-row">
-                    <span class="info-label">Section</span>
+                    <span class="info-label">{{ sm_t('Section') }}</span>
                     <span class="info-value">{{ $student?->section?->name ?? '—' }}</span>
                 </div>
                 <div class="info-row">
-                    <span class="info-label">Roll No</span>
+                    <span class="info-label">{{ sm_t('Roll No') }}</span>
                     <span class="info-value">{{ $student?->roll_number ?? '—' }}</span>
                 </div>
                 <div class="info-row">
-                    <span class="info-label">Payment</span>
+                    <span class="info-label">{{ sm_t('Payment') }}</span>
                     <span class="info-value" style="color:{{ $reg->payment_status === 'paid' ? '#28a745' : ($reg->payment_status === 'partial' ? '#fd7e14' : '#dc3545') }}">
-                        {{ ucfirst($reg->payment_status) }}
+                        {{ sm_t(ucfirst($reg->payment_status)) }}
                     </span>
                 </div>
             </div>
         </div>
 
-        <div class="badge-type-strip">Participant</div>
+        <div class="badge-type-strip">{{ sm_t('Participant') }}</div>
 
         <div class="badge-footer">
             <div class="destination">&#9992; {{ $tour->destination }}</div>
@@ -244,7 +244,7 @@
         </div>
     </div>
     @empty
-    <div style="text-align:center;color:#888;padding:40px;width:100%;">No students registered for this tour.</div>
+    <div style="text-align:center;color:#888;padding:40px;width:100%;">{{ sm_t('No students registered for this tour.') }}</div>
     @endforelse
 </div>
 

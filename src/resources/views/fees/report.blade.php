@@ -2,19 +2,19 @@
 @section('title', sm_t('Fee Collection Report'))
 
 @push('buttons')
-<a href="{{ route('fees.report.print', request()->query()) }}" target="_blank" class="btn btn-sm btn-encodex-print"><i class="fas fa-print"></i> Print</a>
+<a href="{{ route('fees.report.print', request()->query()) }}" target="_blank" class="btn btn-sm btn-encodex-print"><i class="fas fa-print"></i> {{ sm_t('Print') }}</a>
 @endpush
 
 @section('content')
 <div class="row mb-3">
     <div class="col-md-4">
-        <div class="card text-white bg-success"><div class="card-body py-2"><small>Total Collected</small><h5 class="mb-0">{{ sm_money($collections->sum('paid_amount'), 2) }}</h5></div></div>
+        <div class="card text-white bg-success"><div class="card-body py-2"><small>{{ sm_t('Total Collected') }}</small><h5 class="mb-0">{{ sm_money($collections->sum('paid_amount'), 2) }}</h5></div></div>
     </div>
     <div class="col-md-4">
-        <div class="card text-white bg-danger"><div class="card-body py-2"><small>Total Due</small><h5 class="mb-0">{{ sm_money($collections->sum('due_amount'), 2) }}</h5></div></div>
+        <div class="card text-white bg-danger"><div class="card-body py-2"><small>{{ sm_t('Total Due') }}</small><h5 class="mb-0">{{ sm_money($collections->sum('due_amount'), 2) }}</h5></div></div>
     </div>
     <div class="col-md-4">
-        <div class="card text-white bg-primary"><div class="card-body py-2"><small>Total Invoiced</small><h5 class="mb-0">{{ sm_money($collections->sum('amount'), 2) }}</h5></div></div>
+        <div class="card text-white bg-primary"><div class="card-body py-2"><small>{{ sm_t('Total Invoiced') }}</small><h5 class="mb-0">{{ sm_money($collections->sum('amount'), 2) }}</h5></div></div>
     </div>
 </div>
 
@@ -48,10 +48,10 @@
                     <td>{{ sm_money($c->paid_amount, 2) }}</td>
                     <td>{{ sm_money($c->due_amount, 2) }}</td>
                     <td>{{ sm_date($c->payment_date) ?? '-' }}</td>
-                    <td><span class="badge bg-{{ $bc = ['paid'=>'success','partial'=>'warning','unpaid'=>'danger'][$c->status] ?? 'secondary' }}-subtle text-{{ $bc }}">{{ ucfirst($c->status) }}</span></td>
+                    <td><span class="badge bg-{{ $bc = ['paid'=>'success','partial'=>'warning','unpaid'=>'danger'][$c->status] ?? 'secondary' }}-subtle text-{{ $bc }}">{{ sm_t(ucfirst($c->status)) }}</span></td>
                 </tr>
                 @empty
-                <tr><td colspan="9" class="text-center text-muted py-3">No records for the selected period</td></tr>
+                <tr><td colspan="9" class="text-center text-muted py-3">{{ sm_t('No records for the selected period') }}</td></tr>
                 @endforelse
             </tbody>
         </table>

@@ -4,7 +4,7 @@
 
 @push('buttons')
 <button class="btn btn-encodex-create btn-sm" data-bs-toggle="modal" data-bs-target="#transferModal">
-    <i class="fas fa-plus"></i> New Transfer
+    <i class="fas fa-plus"></i> {{ sm_t('New Transfer') }}
 </button>
 @endpush
 
@@ -37,7 +37,7 @@
                                         <td>{{ sm_date($transfer->transfer_date) }}</td>
                                         <td>
                                             <span class="badge bg-{{ $bc = ['approved' => 'success', 'rejected' => 'danger'][$transfer->status] ?? 'warning' }}-subtle text-{{ $bc }}">
-                                                {{ ucfirst($transfer->status) }}
+                                                {{ sm_t(ucfirst($transfer->status)) }}
                                             </span>
                                         </td>
                                         <td>
@@ -55,7 +55,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="7" class="text-center">No transfers found</td>
+                                        <td colspan="7" class="text-center">{{ sm_t('No transfers found') }}</td>
                                     </tr>
                                 @endforelse
                             </tbody>

@@ -2,13 +2,13 @@
 @section('title', $committee->name)
 @push('buttons')
     <a href="{{ route('committee.index') }}" class="btn btn-sm btn-encodex-list">
-        <i class="fas fa-arrow-left"></i> All Committees
+        <i class="fas fa-arrow-left"></i> {{ sm_t('All Committees') }}
     </a>
     <button class="btn btn-sm btn-encodex-create" data-bs-toggle="modal" data-bs-target="#addMemberModal">
-        <i class="fas fa-user-plus"></i> Add Member
+        <i class="fas fa-user-plus"></i> {{ sm_t('Add Member') }}
     </button>
     <a href="{{ route('committee.show.print', $committee->id) }}" target="_blank" class="btn btn-sm btn-encodex-print no-print">
-        <i class="fas fa-print"></i> Print
+        <i class="fas fa-print"></i> {{ sm_t('Print') }}
     </a>
 @endpush
 
@@ -30,9 +30,9 @@
             </div>
             <div class="col-md-5 text-end">
                 <span class="badge bg-{{ $bc = $committee->is_active ? 'success' : 'secondary' }}-subtle text-{{ $bc }} me-2">
-                    {{ $committee->is_active ? 'Active' : 'Inactive' }}
+                    {{ sm_t($committee->is_active ? 'Active' : 'Inactive') }}
                 </span>
-                <strong>{{ $committee->members->count() }}</strong> Members
+                <strong>{{ $committee->members->count() }}</strong> {{ sm_t('Members') }}
             </div>
         </div>
     </div>
@@ -41,8 +41,8 @@
 {{-- Members Table --}}
 <div class="card shadow">
     <div class="card-header d-flex justify-content-between align-items-center py-2">
-        <h6 class="mb-0"><i class="fas fa-users me-1"></i> Committee Members</h6>
-        <small class="text-muted">Drag rows to reorder</small>
+        <h6 class="mb-0"><i class="fas fa-users me-1"></i> {{ sm_t('Committee Members') }}</h6>
+        <small class="text-muted">{{ sm_t('Drag rows to reorder') }}</small>
     </div>
     <div class="card-body p-0">
         <table class="table table-bordered table-sm table-encodex mb-0" id="membersTable">
@@ -101,7 +101,7 @@
                     </td>
                 </tr>
                 @empty
-                <tr><td colspan="9" class="text-center text-muted py-3">No members added yet</td></tr>
+                <tr><td colspan="9" class="text-center text-muted py-3">{{ sm_t('No members added yet') }}</td></tr>
                 @endforelse
             </tbody>
         </table>

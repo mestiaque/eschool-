@@ -41,7 +41,7 @@
         @empty
         <tr>
             <td>{{ $day }}</td>
-            <td colspan="4" class="text-center">No classes scheduled</td>
+            <td colspan="4" class="text-center">{{ sm_t('No classes scheduled') }}</td>
         </tr>
         @endforelse
         @endforeach

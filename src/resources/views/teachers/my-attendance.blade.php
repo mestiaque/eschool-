@@ -3,7 +3,7 @@
 
 @push('buttons')
 <a href="{{ route('my.classes') }}" class="btn btn-sm btn-encodex-list">
-    <i class="fas fa-arrow-left"></i> My Classes
+    <i class="fas fa-arrow-left"></i> {{ sm_t('My Classes') }}
 </a>
 @endpush
 
@@ -52,14 +52,14 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="6" class="text-center text-muted py-3">No students found in this class/section.</td>
+                        <td colspan="6" class="text-center text-muted py-3">{{ sm_t('No students found in this class/section.') }}</td>
                     </tr>
                     @endforelse
                 </tbody>
             </table>
             @if($students->isNotEmpty())
             <div class="p-2 border-top">
-                <button type="submit" class="btn btn-sm btn-encodex-save"><i class="fas fa-save me-1"></i>Save Attendance</button>
+                <button type="submit" class="btn btn-sm btn-encodex-save"><i class="fas fa-save me-1"></i>{{ sm_t('Save Attendance') }}</button>
             </div>
             @endif
         </form>

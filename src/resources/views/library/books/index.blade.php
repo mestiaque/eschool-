@@ -2,29 +2,29 @@
 @section('title', sm_t('Library Books'))
 @push('buttons')
     <button class="btn btn-sm btn-encodex" data-bs-toggle="modal" data-bs-target="#settingsModal">
-        <i class="fas fa-cog"></i> Fine Settings
+        <i class="fas fa-cog"></i> {{ sm_t('Fine Settings') }}
     </button>
     <a href="{{ route('library.availability') }}" class="btn btn-sm btn-encodex-list">
-        <i class="fas fa-th"></i> Availability
+        <i class="fas fa-th"></i> {{ sm_t('Availability') }}
     </a>
     <button class="btn btn-sm btn-encodex-create" data-bs-toggle="modal" data-bs-target="#bookModal">
-        <i class="fas fa-plus"></i> Add Book
+        <i class="fas fa-plus"></i> {{ sm_t('Add Book') }}
     </button>
 @endpush
 
 @section('content')
 
 <div class="alert alert-light border py-2 mb-3 d-flex gap-4 flex-wrap small align-items-center">
-    <span><i class="fas fa-coins me-1 text-warning"></i>Fine: <strong>@if($settings->fine_type==='per_day') {{ sm_currency() }}{{ $settings->fine_per_day }}/day @else Fixed {{ sm_currency() }}{{ $settings->fixed_fine }} @endif</strong></span>
-    <span><i class="fas fa-calendar me-1 text-info"></i>Max loan: <strong>{{ $settings->max_issue_days }} days</strong></span>
-    <span><i class="fas fa-book me-1 text-success"></i>Max/member: <strong>{{ $settings->max_books_per_member }}</strong></span>
+    <span><i class="fas fa-coins me-1 text-warning"></i>{{ sm_t('Fine') }}: <strong>@if($settings->fine_type==='per_day') {{ sm_currency() }}{{ $settings->fine_per_day }}/day @else Fixed {{ sm_currency() }}{{ $settings->fixed_fine }} @endif</strong></span>
+    <span><i class="fas fa-calendar me-1 text-info"></i>{{ sm_t('Max loan') }}: <strong>{{ $settings->max_issue_days }} days</strong></span>
+    <span><i class="fas fa-book me-1 text-success"></i>{{ sm_t('Max/member') }}: <strong>{{ $settings->max_books_per_member }}</strong></span>
     <a href="{{ route('library.issues') }}" class="ms-auto small"><i class="fas fa-hand-holding me-1"></i>Issue / Return →</a>
 </div>
 
 <div class="card shadow">
     <div class="card-body py-2 border-bottom">
         <form method="GET" class="glass-search-form row g-2 align-items-end">
-            <div class="col-md-5"><input type="text" name="search" class="form-control form-control-sm" placeholder="Title / Author / Book ID / ISBN" value="{{ request('search') }}"></div>
+            <div class="col-md-5"><input type="text" name="search" class="form-control form-control-sm" placeholder="{{ sm_t('Title / Author / Book ID / ISBN') }}" value="{{ request('search') }}"></div>
             <div class="col-md-3">
                 <select name="type" class="form-control form-control-sm">
                     <option value="">{{ sm_t('All Types') }}</option>
@@ -34,8 +34,8 @@
                 </select>
             </div>
             <div class="col-md-4">
-                <button type="submit" class="btn btn-sm btn-encodex-search me-1"><i class="fas fa-search"></i> Search</button>
-                <a href="{{ route('library.books') }}" class="btn btn-sm btn-encodex-cancel">Reset</a>
+                <button type="submit" class="btn btn-sm btn-encodex-search me-1"><i class="fas fa-search"></i> {{ sm_t('Search') }}</button>
+                <a href="{{ route('library.books') }}" class="btn btn-sm btn-encodex-cancel">{{ sm_t('Reset') }}</a>
             </div>
         </form>
     </div>
@@ -48,9 +48,9 @@
                     <th>{{ sm_t('Author') }}</th>
                     <th>{{ sm_t('Type') }}</th>
                     <th>{{ sm_t('Total') }}</th>
-                    <th><span class="text-success">Available</span></th>
-                    <th><span class="text-warning">Issued</span></th>
-                    <th><span class="text-danger">Lost</span></th>
+                    <th><span class="text-success">{{ sm_t('Available') }}</span></th>
+                    <th><span class="text-warning">{{ sm_t('Issued') }}</span></th>
+                    <th><span class="text-danger">{{ sm_t('Lost') }}</span></th>
                     <th>{{ sm_t('Rack') }}</th>
                     <th>{{ sm_t('Action') }}</th>
                 </tr>
@@ -64,7 +64,7 @@
                         @if($book->isbn)<br><small class="text-muted">ISBN: {{ $book->isbn }}</small>@endif
                     </td>
                     <td class="small">{{ $book->author ?? '—' }}</td>
-                    <td class="text-center"><span class="badge bg-info-subtle text-info">{{ ucfirst($book->type ?? 'text') }}</span></td>
+                    <td class="text-center"><span class="badge bg-info-subtle text-info">{{ sm_t(ucfirst($book->type ?? 'text')) }}</span></td>
                     <td class="text-center fw-bold">{{ $book->copies_count }}</td>
                     <td class="text-center"><span class="badge bg-success-subtle text-success">{{ $book->available_count }}</span></td>
                     <td class="text-center"><span class="badge bg-warning-subtle text-warning">{{ $book->issued_count }}</span></td>
@@ -80,7 +80,7 @@
                     </td>
                 </tr>
                 @empty
-                <tr><td colspan="10" class="text-center text-muted py-4">No books found.</td></tr>
+                <tr><td colspan="10" class="text-center text-muted py-4">{{ sm_t('No books found.') }}</td></tr>
                 @endforelse
             </tbody>
         </table>
@@ -139,7 +139,7 @@
                 @csrf @method('PUT')
                 <div class="modal-body">
                     <div class="row g-2">
-                        <div class="col-md-8 mb-2"><label class="form-label form-label-sm">Title *</label><input type="text" name="title" class="form-control form-control-sm" required></div>
+                        <div class="col-md-8 mb-2"><label class="form-label form-label-sm">{{ sm_t('Title') }} *</label><input type="text" name="title" class="form-control form-control-sm" required></div>
                         <div class="col-md-4 mb-2"><label class="form-label form-label-sm">{{ sm_t('ISBN') }}</label><input type="text" name="isbn" class="form-control form-control-sm"></div>
                         <div class="col-md-4 mb-2"><label class="form-label form-label-sm">{{ sm_t('Author') }}</label><input type="text" name="author" class="form-control form-control-sm"></div>
                         <div class="col-md-4 mb-2"><label class="form-label form-label-sm">{{ sm_t('Publisher') }}</label><input type="text" name="publisher" class="form-control form-control-sm"></div>
@@ -164,15 +164,15 @@
 <div class="modal fade" id="purchaseModal" tabindex="-1">
     <div class="modal-dialog glass-card">
         <div class="modal-content">
-            <div class="modal-header py-2"><h6 class="modal-title"><i class="fas fa-cart-plus me-1"></i> Add Purchase / New Copies</h6><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+            <div class="modal-header py-2"><h6 class="modal-title"><i class="fas fa-cart-plus me-1"></i> {{ sm_t('Add Purchase / New Copies') }}</h6><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
             <form method="POST" action="{{ route('library.purchase.store') }}">
                 @csrf
                 <input type="hidden" name="book_id" id="purchaseBookId">
                 <div class="modal-body">
                     <div class="alert alert-info py-2 small mb-3" id="purchaseBookTitle"></div>
                     <div class="row g-2">
-                        <div class="col-md-6 mb-2"><label class="form-label form-label-sm">New Copies *</label><input type="number" name="copies_count" class="form-control form-control-sm" required min="1" value="1"></div>
-                        <div class="col-md-6 mb-2"><label class="form-label form-label-sm">Purchase Date *</label><input type="date" name="purchase_date" class="form-control form-control-sm" required value="{{ date('Y-m-d') }}"></div>
+                        <div class="col-md-6 mb-2"><label class="form-label form-label-sm">{{ sm_t('New Copies') }} *</label><input type="number" name="copies_count" class="form-control form-control-sm" required min="1" value="1"></div>
+                        <div class="col-md-6 mb-2"><label class="form-label form-label-sm">{{ sm_t('Purchase Date') }} *</label><input type="date" name="purchase_date" class="form-control form-control-sm" required value="{{ date('Y-m-d') }}"></div>
                         <div class="col-md-6 mb-2"><label class="form-label form-label-sm">Unit Price ({{ sm_currency() }})</label><input type="number" name="unit_price" class="form-control form-control-sm" step="0.01" min="0"></div>
                         <div class="col-md-6 mb-2"><label class="form-label form-label-sm">{{ sm_t('Vendor') }}</label><input type="text" name="vendor" class="form-control form-control-sm"></div>
                         <div class="col-md-6 mb-2"><label class="form-label form-label-sm">{{ sm_t('Invoice No') }}</label><input type="text" name="invoice_no" class="form-control form-control-sm"></div>
@@ -192,7 +192,7 @@
 <div class="modal fade" id="settingsModal" tabindex="-1">
     <div class="modal-dialog glass-card">
         <div class="modal-content">
-            <div class="modal-header py-2"><h6 class="modal-title"><i class="fas fa-cog me-1"></i> Library Fine Settings</h6><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+            <div class="modal-header py-2"><h6 class="modal-title"><i class="fas fa-cog me-1"></i> {{ sm_t('Library Fine Settings') }}</h6><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
             <form method="POST" action="{{ route('library.settings.update') }}">
                 @csrf
                 <div class="modal-body">

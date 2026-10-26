@@ -4,7 +4,7 @@
 
 @push('buttons')
 <button class="btn btn-encodex-create btn-sm" data-bs-toggle="modal" data-bs-target="#documentModal">
-    <i class="fas fa-plus"></i> Upload Document
+    <i class="fas fa-plus"></i> {{ sm_t('Upload Document') }}
 </button>
 @endpush
 
@@ -64,7 +64,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="6" class="text-center">No documents found</td>
+                                        <td colspan="6" class="text-center">{{ sm_t('No documents found') }}</td>
                                     </tr>
                                 @endforelse
                             </tbody>

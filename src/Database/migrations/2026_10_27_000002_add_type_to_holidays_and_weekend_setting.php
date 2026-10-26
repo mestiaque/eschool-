@@ -23,7 +23,7 @@ return new class extends Migration
                 'key' => 'weekend_days', 'value' => $saturdayClasses ? '5' : '5,6', 'type' => 'text',
                 'created_at' => now(), 'updated_at' => now(),
             ]);
-            \Illuminate\Support\Facades\Cache::forget('school-management.settings');
+            \Illuminate\Support\Facades\Cache::forget(\ME\SchoolManagement\Models\SchoolSetting::cacheKey());
         }
     }
 

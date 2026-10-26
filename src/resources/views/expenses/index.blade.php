@@ -3,7 +3,7 @@
 
 @push('buttons')
 <button class="btn btn-sm btn-encodex-create" data-bs-toggle="modal" data-bs-target="#expenseModal">
-    <i class="fas fa-plus"></i> Add Expense
+    <i class="fas fa-plus"></i> {{ sm_t('Add Expense') }}
 </button>
 @endpush
 
@@ -82,7 +82,7 @@
                 <input type="hidden" name="_method" id="expenseMethod" value="POST">
                 <div class="modal-body">
                     <div class="mb-2">
-                        <label class="form-label">Category *</label>
+                        <label class="form-label">{{ sm_t('Category') }} *</label>
                         <select name="expense_category_id" id="expCategory" class="form-control form-control-sm" required>
                             <option value="">{{ sm_t('Select') }}</option>
                             @foreach($categories as $cat)
@@ -91,11 +91,11 @@
                         </select>
                     </div>
                     <div class="mb-2">
-                        <label class="form-label">Amount *</label>
+                        <label class="form-label">{{ sm_t('Amount') }} *</label>
                         <input type="number" name="amount" id="expAmount" class="form-control form-control-sm" step="0.01" required>
                     </div>
                     <div class="mb-2">
-                        <label class="form-label">Date *</label>
+                        <label class="form-label">{{ sm_t('Date') }} *</label>
                         <input type="date" name="date" id="expDate" class="form-control form-control-sm" value="{{ date('Y-m-d') }}" required>
                     </div>
                     <div class="mb-2">

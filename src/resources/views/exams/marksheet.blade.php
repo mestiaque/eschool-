@@ -10,18 +10,18 @@
 
 <div class="info-row">
     <div class="info-block">
-        <p><strong>Student:</strong> {{ $student->first_name }} {{ $student->last_name }}</p>
-        <p><strong>Student ID:</strong> {{ $student->student_id ?? '—' }}</p>
-        <p><strong>Class:</strong> {{ $student->classe?->name ?? '—' }}{{ $student->section ? ' / ' . $student->section->name : '' }}</p>
-        <p><strong>Roll:</strong> {{ $student->roll_number ?? 'N/A' }}</p>
+        <p><strong>{{ sm_t('Student') }}:</strong> {{ $student->first_name }} {{ $student->last_name }}</p>
+        <p><strong>{{ sm_t('Student ID') }}:</strong> {{ $student->student_id ?? '—' }}</p>
+        <p><strong>{{ sm_t('Class') }}:</strong> {{ $student->classe?->name ?? '—' }}{{ $student->section ? ' / ' . $student->section->name : '' }}</p>
+        <p><strong>{{ sm_t('Roll') }}:</strong> {{ $student->roll_number ?? 'N/A' }}</p>
     </div>
     <div class="info-block" style="text-align:right">
-        <p><strong>Exam:</strong> {{ $exam->name }}</p>
-        <p><strong>Period:</strong>
+        <p><strong>{{ sm_t('Exam') }}:</strong> {{ $exam->name }}</p>
+        <p><strong>{{ sm_t('Period') }}:</strong>
             {{ $exam->start_date ? sm_date($exam->start_date) : '' }}
             {{ $exam->end_date   ? ' – ' . sm_date($exam->end_date) : '' }}
         </p>
-        <p><strong>Printed:</strong> {{ sm_date(now()) }}</p>
+        <p><strong>{{ sm_t('Printed') }}:</strong> {{ sm_date(now()) }}</p>
     </div>
 </div>
 
@@ -58,7 +58,7 @@
             <td class="num">{{ $full > 0 ? $full : '—' }}</td>
             <td class="num">{{ $pass > 0 ? $pass : '—' }}</td>
             @if($mark->is_absent)
-            <td class="ab" colspan="5">ABSENT</td>
+            <td class="ab" colspan="5">{{ sm_t('ABSENT') }}</td>
             @else
             <td class="num">{{ $mark->written   > 0 ? $mark->written   : '—' }}</td>
             <td class="num">{{ $mark->mcq        > 0 ? $mark->mcq       : '—' }}</td>
@@ -78,7 +78,7 @@
     </tbody>
     <tfoot>
         <tr class="grandtotal-row">
-            <td colspan="7" class="text-right">Total</td>
+            <td colspan="7" class="text-right">{{ sm_t('Total') }}</td>
             <td class="num">{{ number_format($totalObtained, 0) }}{{ $totalPossible > 0 ? '/' . number_format($totalPossible, 0) : '' }}</td>
             <td class="num">{{ $result?->grade ?? '—' }}</td>
             <td class="num">{{ $result?->gpa ? number_format($result->gpa, 2) : '—' }}</td>
@@ -90,37 +90,37 @@
 <div class="summary">
     <div class="summary-box">
         <div class="val">{{ $result?->gpa ? number_format($result->gpa, 2) : '—' }}</div>
-        <div class="lbl">GPA</div>
+        <div class="lbl">{{ sm_t('GPA') }}</div>
     </div>
     <div class="summary-box">
         <div class="val">{{ $result?->grade ?? '—' }}</div>
-        <div class="lbl">Grade</div>
+        <div class="lbl">{{ sm_t('Grade') }}</div>
     </div>
     <div class="summary-box">
         <div class="val">{{ $result?->position ? '#' . $result->position : '—' }}</div>
-        <div class="lbl">Position</div>
+        <div class="lbl">{{ sm_t('Position') }}</div>
     </div>
     <div class="summary-box">
         <div class="val">{{ $totalPossible > 0 ? round(($totalObtained / $totalPossible) * 100, 1) . '%' : '—' }}</div>
-        <div class="lbl">Percentage</div>
+        <div class="lbl">{{ sm_t('Percentage') }}</div>
     </div>
     <div class="summary-box">
         <div class="val" style="color:{{ ($result && !$hasAbsent && $result->grade !== 'F') ? 'green' : 'red' }}">
-            {{ ($result && !$hasAbsent && $result->grade !== 'F') ? 'Pass' : 'Fail' }}
+            {{ sm_t(($result && !$hasAbsent && $result->grade !== 'F') ? 'Pass' : 'Fail') }}
         </div>
-        <div class="lbl">Result</div>
+        <div class="lbl">{{ sm_t('Result') }}</div>
     </div>
 </div>
 
 <div class="print-footer">
     <div class="signature-box">
-        <div class="signature-line">Class Teacher</div>
+        <div class="signature-line">{{ sm_t('Class Teacher') }}</div>
     </div>
     <div class="signature-box">
-        <div class="signature-line">Headmaster / Principal</div>
+        <div class="signature-line">{{ sm_t('Headmaster / Principal') }}</div>
     </div>
     <div class="signature-box">
-        <div class="signature-line">Guardian's Signature</div>
+        <div class="signature-line">{{ sm_t('Guardian\'s Signature') }}</div>
     </div>
 </div>
 

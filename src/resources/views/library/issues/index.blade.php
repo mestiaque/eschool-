@@ -1,9 +1,9 @@
 @extends('me::master')
 @section('title', sm_t('Issue / Return Books'))
 @push('buttons')
-    <a href="{{ route('library.books') }}" class="btn btn-sm btn-encodex-list"><i class="fas fa-book me-1"></i>Books</a>
+    <a href="{{ route('library.books') }}" class="btn btn-sm btn-encodex-list"><i class="fas fa-book me-1"></i>{{ sm_t('Books') }}</a>
     <button class="btn btn-sm btn-encodex-create" data-bs-toggle="modal" data-bs-target="#issueModal">
-        <i class="fas fa-plus"></i> Issue Book
+        <i class="fas fa-plus"></i> {{ sm_t('Issue Book') }}
     </button>
 @endpush
 
@@ -12,7 +12,7 @@
 <div class="card shadow">
     <div class="card-body py-2 border-bottom">
         <form method="GET" class="glass-search-form row g-2 align-items-end">
-            <div class="col-md-4"><input type="text" name="search" class="form-control form-control-sm" placeholder="Book title / ID / Copy ID / Member" value="{{ request('search') }}"></div>
+            <div class="col-md-4"><input type="text" name="search" class="form-control form-control-sm" placeholder="{{ sm_t('Book title / ID / Copy ID / Member') }}" value="{{ request('search') }}"></div>
             <div class="col-md-2">
                 <select name="status" class="form-control form-control-sm">
                     <option value="">{{ sm_t('All Status') }}</option>
@@ -30,8 +30,8 @@
                 </select>
             </div>
             <div class="col-md-4">
-                <button type="submit" class="btn btn-sm btn-encodex-search me-1"><i class="fas fa-search"></i> Search</button>
-                <a href="{{ route('library.issues') }}" class="btn btn-sm btn-encodex-cancel">Reset</a>
+                <button type="submit" class="btn btn-sm btn-encodex-search me-1"><i class="fas fa-search"></i> {{ sm_t('Search') }}</button>
+                <a href="{{ route('library.issues') }}" class="btn btn-sm btn-encodex-cancel">{{ sm_t('Reset') }}</a>
             </div>
         </form>
     </div>
@@ -64,17 +64,17 @@
                         <br><small class="text-muted">{{ optional($issue->book)->book_id }}</small>
                     </td>
                     <td class="small">{{ $issue->member_name }}</td>
-                    <td><span class="badge bg-secondary-subtle text-secondary">{{ ucfirst($issue->member_type) }}</span></td>
+                    <td><span class="badge bg-secondary-subtle text-secondary">{{ sm_t(ucfirst($issue->member_type)) }}</span></td>
                     <td class="small">{{ sm_date($issue->issue_date) }}</td>
                     <td class="small {{ $overdue > 0 ? 'text-danger fw-bold' : '' }}">{{ sm_date($issue->due_date) }}</td>
                     <td class="small">{{ $issue->return_date ? sm_date($issue->return_date) : '—' }}</td>
                     <td>
                         @if($issue->is_lost)
-                            <span class="badge bg-danger-subtle text-danger">Lost</span>
+                            <span class="badge bg-danger-subtle text-danger">{{ sm_t('Lost') }}</span>
                         @elseif($issue->status==='returned')
-                            <span class="badge bg-success-subtle text-success">Returned</span>
+                            <span class="badge bg-success-subtle text-success">{{ sm_t('Returned') }}</span>
                         @else
-                            <span class="badge bg-warning-subtle text-warning">Issued</span>
+                            <span class="badge bg-warning-subtle text-warning">{{ sm_t('Issued') }}</span>
                             @if($overdue > 0)<br><span class="badge bg-danger-subtle text-danger mt-1">{{ $overdue }}d overdue</span>@endif
                         @endif
                     </td>
@@ -91,11 +91,11 @@
                     </td>
                     <td>
                         @if($issue->fine_status==='paid')
-                            <span class="badge bg-success-subtle text-success">Paid</span>
+                            <span class="badge bg-success-subtle text-success">{{ sm_t('Paid') }}</span>
                         @elseif($issue->fine_status==='waived')
-                            <span class="badge bg-info-subtle text-info">Waived</span>
+                            <span class="badge bg-info-subtle text-info">{{ sm_t('Waived') }}</span>
                         @elseif($issue->fine_status==='pending')
-                            <span class="badge bg-danger-subtle text-danger">Pending</span>
+                            <span class="badge bg-danger-subtle text-danger">{{ sm_t('Pending') }}</span>
                         @else
                             <span class="text-muted small">—</span>
                         @endif
@@ -103,22 +103,22 @@
                     <td class="text-center" style="min-width:100px">
                         @if($issue->status==='issued')
                             <button class="btn btn-sm btn-encodex-edit mb-1" onclick="openReturnModal({{ $issue->id }}, '{{ optional($issue->copy)->copy_id }}', '{{ addslashes($issue->member_name) }}', {{ number_format($issue->calculated_fine,2,'.','') }})">
-                                <i class="fas fa-undo-alt"></i> Return
+                                <i class="fas fa-undo-alt"></i> {{ sm_t('Return') }}
                             </button>
                         @endif
                         @if($issue->fine_status==='pending' && $issue->fine_balance > 0)
                             <button class="btn btn-sm btn-encodex-payment mb-1" onclick="openPayFineModal({{ $issue->id }}, {{ number_format($issue->fine_balance,2,'.','') }}, '{{ addslashes($issue->member_name) }}')">
-                                <i class="fas fa-coins"></i> Pay
+                                <i class="fas fa-coins"></i> {{ sm_t('Pay') }}
                             </button>
                             <form method="POST" action="{{ route('library.issues.waive-fine', $issue->id) }}" class="d-inline" onsubmit="return confirm('Waive fine for {{ addslashes($issue->member_name) }}?')">
                                 @csrf
-                                <button type="submit" class="btn btn-sm btn-encodex-clear mb-1"><i class="fas fa-eraser"></i> Waive</button>
+                                <button type="submit" class="btn btn-sm btn-encodex-clear mb-1"><i class="fas fa-eraser"></i> {{ sm_t('Waive') }}</button>
                             </form>
                         @endif
                     </td>
                 </tr>
                 @empty
-                <tr><td colspan="12" class="text-center text-muted py-4">No records found.</td></tr>
+                <tr><td colspan="12" class="text-center text-muted py-4">{{ sm_t('No records found.') }}</td></tr>
                 @endforelse
             </tbody>
         </table>
@@ -130,7 +130,7 @@
 <div class="modal fade" id="issueModal" tabindex="-1">
     <div class="modal-dialog modal-lg glass-card">
         <div class="modal-content">
-            <div class="modal-header py-2"><h6 class="modal-title"><i class="fas fa-hand-holding-book me-1"></i>Issue Book</h6><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+            <div class="modal-header py-2"><h6 class="modal-title"><i class="fas fa-hand-holding-book me-1"></i>{{ sm_t('Issue Book') }}</h6><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
             <form method="POST" action="{{ route('library.issues.store') }}">
                 @csrf
                 <div class="modal-body">
@@ -189,7 +189,7 @@
 <div class="modal fade" id="returnModal" tabindex="-1">
     <div class="modal-dialog glass-card">
         <div class="modal-content">
-            <div class="modal-header py-2"><h6 class="modal-title"><i class="fas fa-undo-alt me-1"></i>Return Book</h6><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+            <div class="modal-header py-2"><h6 class="modal-title"><i class="fas fa-undo-alt me-1"></i>{{ sm_t('Return Book') }}</h6><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
             <form method="POST" id="returnForm">
                 @csrf
                 <div class="modal-body">
@@ -216,7 +216,7 @@
 <div class="modal fade" id="payFineModal" tabindex="-1">
     <div class="modal-dialog glass-card">
         <div class="modal-content">
-            <div class="modal-header py-2"><h6 class="modal-title"><i class="fas fa-coins me-1"></i>Pay Fine</h6><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+            <div class="modal-header py-2"><h6 class="modal-title"><i class="fas fa-coins me-1"></i>{{ sm_t('Pay Fine') }}</h6><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
             <form method="POST" id="payFineForm">
                 @csrf
                 <div class="modal-body">

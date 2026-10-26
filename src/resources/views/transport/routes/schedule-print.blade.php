@@ -37,13 +37,13 @@
         </tr>
         @empty
         <tr>
-            <td colspan="8" class="text-center">No schedules</td>
+            <td colspan="8" class="text-center">{{ sm_t('No schedules') }}</td>
         </tr>
         @endforelse
     </tbody>
 </table>
 @empty
-<p class="text-center">No active routes found.</p>
+<p class="text-center">{{ sm_t('No active routes found.') }}</p>
 @endforelse
 
 @endsection

@@ -2,7 +2,7 @@
 @section('title', sm_t('Managing Committee'))
 @push('buttons')
     <button class="btn btn-sm btn-encodex-create" data-bs-toggle="modal" data-bs-target="#committeeModal">
-        <i class="fas fa-plus"></i> New Committee
+        <i class="fas fa-plus"></i> {{ sm_t('New Committee') }}
     </button>
 @endpush
 
@@ -44,7 +44,7 @@
                     </td>
                     <td class="text-center">
                         <span class="badge bg-{{ $bc = $committee->is_active ? 'success' : 'secondary' }}-subtle text-{{ $bc }}">
-                            {{ $committee->is_active ? 'Active' : 'Inactive' }}
+                            {{ sm_t($committee->is_active ? 'Active' : 'Inactive') }}
                         </span>
                     </td>
                     <td class="text-center">
@@ -63,7 +63,7 @@
                     </td>
                 </tr>
                 @empty
-                <tr><td colspan="8" class="text-center text-muted py-3">No committees found</td></tr>
+                <tr><td colspan="8" class="text-center text-muted py-3">{{ sm_t('No committees found') }}</td></tr>
                 @endforelse
             </tbody>
         </table>

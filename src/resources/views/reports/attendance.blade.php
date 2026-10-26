@@ -18,10 +18,10 @@
                             </select>
                         </div>
                         <div class="col-md-3">
-                            <input type="number" name="month" class="form-control form-control-sm" placeholder="Month (1-12)" min="1" max="12" value="{{ request('month') }}">
+                            <input type="number" name="month" class="form-control form-control-sm" placeholder="{{ sm_t('Month (1-12)') }}" min="1" max="12" value="{{ request('month') }}">
                         </div>
                         <div class="col-md-3">
-                            <input type="number" name="year" class="form-control form-control-sm" placeholder="Year" value="{{ request('year', date('Y')) }}">
+                            <input type="number" name="year" class="form-control form-control-sm" placeholder="{{ sm_t('Year') }}" value="{{ request('year', date('Y')) }}">
                         </div>
                         <div class="col-md-2">
                             <button type="submit" class="btn btn-encodex-search btn-sm w-100">{{ sm_t('Filter') }}</button>
