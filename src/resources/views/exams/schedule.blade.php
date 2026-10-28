@@ -1,6 +1,11 @@
 @extends('me::master')
 @section('title', sm_t('Exam Schedule'))
 @push('buttons')
+    @if(request('exam_id') && request('class_id'))
+    <a href="{{ route('exams.admit-cards', request()->only('exam_id', 'class_id')) }}" target="_blank" class="btn btn-sm btn-encodex-print">
+        <i class="fas fa-id-badge"></i> {{ sm_t('Admit Cards') }}
+    </a>
+    @endif
     <button class="btn btn-sm btn-encodex-create" data-bs-toggle="modal" data-bs-target="#scheduleModal" onclick="resetScheduleForm()">
         <i class="fas fa-plus"></i> {{ sm_t('Add Schedule') }}
     </button>
@@ -59,7 +64,7 @@
                     <td class="small">{{ sm_time($schedule->start_time) }} – {{ sm_time($schedule->end_time) }}</td>
                     <td class="small">{{ $schedule->room ?? '—' }}</td>
                     <td class="text-center">{{ $schedule->full_mark }}</td>
-                    <td class="text-center">{{ $schedule->pass_mark }}</td>
+                    <td class="text-center">{{ $schedule->pass_mark }}@if($schedule->written_full !== null || $schedule->mcq_full !== null || $schedule->practical_full !== null)<div class="small text-muted">@foreach(\ME\SchoolManagement\Models\ExamSchedule::PARTS as $part => $label)@if($schedule->{$part . '_full'} !== null){{ sm_t($label) }} {{ (float) $schedule->{$part . '_pass'} }}/{{ (float) $schedule->{$part . '_full'} }} @endif @endforeach</div>@endif</td>
                     <td>
                         <button class="btn btn-sm btn-encodex-edit" onclick="editSchedule({{ $schedule->id }}, {{ json_encode($schedule) }})">
                             <i class="fas fa-edit"></i>
@@ -136,6 +141,19 @@
                             <label class="form-label form-label-sm">{{ sm_t('Pass Mark') }} <span class="text-danger">*</span></label>
                             <input type="number" name="pass_mark" id="schedPassMark" class="form-control form-control-sm" min="0" required>
                         </div>
+                        <div class="col-12 mt-1">
+                            <div class="small fw-semibold">{{ sm_t('Separate pass marks (optional)') }}</div>
+                            <div class="small text-muted mb-1">{{ sm_t('Fill these when CQ, MCQ or practical must each be passed on its own, as in board exams (usually 33% of each part).') }}</div>
+                        </div>
+                        @foreach(\ME\SchoolManagement\Models\ExamSchedule::PARTS as $part => $label)
+                        <div class="col-md-4 mb-2">
+                            <label class="form-label form-label-sm">{{ sm_t($label) }}</label>
+                            <div class="input-group input-group-sm">
+                                <input type="number" name="{{ $part }}_full" id="sched_{{ $part }}_full" class="form-control" min="0" step="0.5" placeholder="{{ sm_t('Full') }}">
+                                <input type="number" name="{{ $part }}_pass" id="sched_{{ $part }}_pass" class="form-control" min="0" step="0.5" placeholder="{{ sm_t('Pass') }}">
+                            </div>
+                        </div>
+                        @endforeach
                     </div>
                 </div>
                 <div class="modal-footer py-1">
@@ -167,7 +185,8 @@ function resetScheduleForm() {
     document.getElementById('scheduleModalTitle').textContent = 'Add Schedule';
     document.getElementById('scheduleForm').action = '{{ route('exams.schedule.store') }}';
     document.getElementById('scheduleMethodField').innerHTML = '';
-    ['schedExamId','schedClassId','schedDate','schedRoom','schedStartTime','schedEndTime','schedFullMark','schedPassMark']
+    ['schedExamId','schedClassId','schedDate','schedRoom','schedStartTime','schedEndTime','schedFullMark','schedPassMark',
+     'sched_written_full','sched_written_pass','sched_mcq_full','sched_mcq_pass','sched_practical_full','sched_practical_pass']
         .forEach(id => document.getElementById(id).value = '');
     document.getElementById('schedSubjectId').innerHTML = '<option value="">{{ sm_t('Select Class First') }}</option>';
 }
@@ -183,6 +202,10 @@ function editSchedule(id, s) {
     document.getElementById('schedEndTime').value   = s.end_time   ?? '';
     document.getElementById('schedFullMark').value  = s.full_mark  ?? '';
     document.getElementById('schedPassMark').value  = s.pass_mark  ?? '';
+    ['written','mcq','practical'].forEach(p => {
+        document.getElementById('sched_' + p + '_full').value = s[p + '_full'] ?? '';
+        document.getElementById('sched_' + p + '_pass').value = s[p + '_pass'] ?? '';
+    });
     // Load class then select subject
     const classSel = document.getElementById('schedClassId');
     classSel.value = s.class_id ?? '';

@@ -271,6 +271,16 @@ class ExpenseController extends Controller
         return view('school-management::expenses.staff-salary', compact('payments', 'teachers', 'staff'));
     }
 
+    /** Pay slip for one salary payment (employee copy + office copy). */
+    public function salarySlip($id)
+    {
+        $payment = \ME\SchoolManagement\Models\SalaryPayment::with(['teacher', 'staffMember'])->findOrFail($id);
+        // The Teachers → Salary route only opens teacher slips.
+        abort_if(request()->routeIs('teachers.salary.slip') && $payment->staff_type !== 'teacher', 404);
+        $person = $payment->staff_type === 'teacher' ? $payment->teacher : $payment->staffMember;
+        return view('school-management::expenses.salary-slip', compact('payment', 'person'));
+    }
+
     public function staffSalaryStore(Request $request)
     {
         $request->validate([

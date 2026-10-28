@@ -110,38 +110,50 @@ class ExamController extends Controller
 
     public function scheduleStore(Request $request)
     {
-        $request->validate([
-            'exam_id'    => 'required|exists:exams,id',
-            'class_id'   => 'required|exists:classes,id',
-            'subject_id' => 'required|exists:subjects,id',
-            'date'       => 'required|date',
-            'start_time' => 'required',
-            'end_time'   => 'required',
-            'full_mark'  => 'required|numeric|min:1',
-            'pass_mark'  => 'required|numeric|min:0|lte:full_mark',
-        ]);
-        ExamSchedule::create($request->only(
-            'exam_id','class_id','subject_id','date','start_time','end_time','room','full_mark','pass_mark'
-        ));
+        ExamSchedule::create($this->validateSchedule($request));
         return back()->with('success', 'Schedule added.');
     }
 
     public function scheduleUpdate(Request $request, $id)
     {
-        $request->validate([
+        ExamSchedule::findOrFail($id)->update($this->validateSchedule($request));
+        return back()->with('success', 'Schedule updated.');
+    }
+
+    /** Schedule fields; CQ / MCQ / practical full and pass marks are optional and must fit the subject. */
+    private function validateSchedule(Request $request): array
+    {
+        $rules = [
             'exam_id'    => 'required|exists:exams,id',
             'class_id'   => 'required|exists:classes,id',
             'subject_id' => 'required|exists:subjects,id',
             'date'       => 'required|date',
             'start_time' => 'required',
             'end_time'   => 'required',
+            'room'       => 'nullable|string|max:255',
             'full_mark'  => 'required|numeric|min:1',
             'pass_mark'  => 'required|numeric|min:0|lte:full_mark',
-        ]);
-        ExamSchedule::findOrFail($id)->update($request->only(
-            'exam_id','class_id','subject_id','date','start_time','end_time','room','full_mark','pass_mark'
-        ));
-        return back()->with('success', 'Schedule updated.');
+        ];
+        foreach (array_keys(ExamSchedule::PARTS) as $part) {
+            $rules["{$part}_full"] = 'nullable|numeric|min:0|lte:full_mark';
+            $rules["{$part}_pass"] = "nullable|numeric|min:0|required_with:{$part}_full";
+        }
+        $data = $request->validate($rules);
+
+        $partsTotal = 0;
+        foreach (array_keys(ExamSchedule::PARTS) as $part) {
+            $full = $data["{$part}_full"] ?? null;
+            $pass = $data["{$part}_pass"] ?? null;
+            if ($full === null || $full === '') { $data["{$part}_full"] = $data["{$part}_pass"] = null; continue; }
+            if ((float) $pass > (float) $full) {
+                throw \Illuminate\Validation\ValidationException::withMessages(["{$part}_pass" => sm_t('A part\'s pass mark cannot be more than its full mark.')]);
+            }
+            $partsTotal += (float) $full;
+        }
+        if ($partsTotal > (float) $data['full_mark']) {
+            throw \Illuminate\Validation\ValidationException::withMessages(['written_full' => sm_t('CQ + MCQ + practical full marks add up to more than the subject\'s full mark.')]);
+        }
+        return $data;
     }
 
     public function scheduleDestroy($id)
@@ -300,12 +312,22 @@ class ExamController extends Controller
         $classStudentIds = Student::where('class_id', $request->class_id)
             ->takingSubject(Subject::findOrFail($request->subject_id))->pluck('id')->flip();
 
+        $schedule = ExamSchedule::where('exam_id', $request->exam_id)->where('class_id', $request->class_id)
+            ->where('subject_id', $request->subject_id)->first();
+
         // Validate every row first so a bad row doesn't leave a half-saved sheet.
         foreach ($request->student_ids as $studentId) {
             $total = (float) ($request->written[$studentId] ?? 0) + (float) ($request->mcq[$studentId] ?? 0)
                    + (float) ($request->practical[$studentId] ?? 0) + (float) ($request->ca[$studentId] ?? 0);
             if ($total > $fullMark) {
                 return back()->withInput()->with('error', "Total marks ($total) exceed the full mark ($fullMark) for student #$studentId.");
+            }
+            foreach (array_keys(ExamSchedule::PARTS) as $part) {
+                $partFull = $schedule?->{"{$part}_full"};
+                $given = (float) ($request->{$part}[$studentId] ?? 0);
+                if ($partFull !== null && $given > (float) $partFull) {
+                    return back()->withInput()->with('error', "Marks ($given) exceed the " . ExamSchedule::PARTS[$part] . " full mark ($partFull) for student #$studentId.");
+                }
             }
         }
 
@@ -319,7 +341,8 @@ class ExamController extends Controller
             $total     = $isAbsent ? 0 : ($written + $mcq + $practical + $ca);
 
             // Grade on the percentage, and a subject below its pass mark is an F.
-            $grade = ResultSheet::gradeFor($total, $fullMark, $passMark, $isAbsent);
+            $failedParts = ResultSheet::failedParts($schedule, compact('written', 'mcq', 'practical'));
+            $grade = ResultSheet::gradeFor($total, $fullMark, $passMark, $isAbsent || $failedParts);
 
             StudentMark::updateOrCreate(
                 [
@@ -421,6 +444,22 @@ class ExamController extends Controller
         $sorted->groupBy('section_id')->each(fn ($group) => $this->rank($group->values(), 'section_position'));
 
         return back()->with('success', 'Result generated for ' . $studentIds->count() . ' students.');
+    }
+
+    /** Admit cards for an exam: one per student of a class (or section / one student), with the class's exam routine. */
+    public function admitCards(Request $request)
+    {
+        $request->validate(['exam_id' => 'required|exists:exams,id', 'class_id' => 'required|exists:classes,id',
+            'section_id' => 'nullable|integer', 'student_id' => 'nullable|integer']);
+        $exam = Exam::with('academicYear', 'examType')->findOrFail($request->exam_id);
+        $students = Student::with('classe', 'section')->where('class_id', $request->class_id)->where('is_active', true)
+            ->when($request->section_id, fn ($q) => $q->where('section_id', $request->section_id))
+            ->when($request->student_id, fn ($q) => $q->whereKey($request->student_id))
+            ->get()->sortBy(fn ($s) => [$s->section->name ?? '', (int) $s->roll_number])->values();
+        $schedules = ExamSchedule::with('subject')->where('exam_id', $exam->id)->where('class_id', $request->class_id)
+            ->orderBy('date')->orderBy('start_time')->get();
+
+        return view('school-management::exams.admit-cards', compact('exam', 'students', 'schedules'));
     }
 
     /** Class result (tabulation) sheet. */

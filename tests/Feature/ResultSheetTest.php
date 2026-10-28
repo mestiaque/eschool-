@@ -143,4 +143,29 @@ class ResultSheetTest extends TestCase
         $all = $this->get(route('exams.marksheet.class', ['exam_id' => $this->exam->id, 'class_id' => $this->class->id]))->assertOk()->getContent();
         $this->assertSame(2, substr_count($all, 'class="ms-page"'));
     }
+
+    public function test_failing_mcq_alone_fails_the_subject_when_parts_have_pass_marks(): void
+    {
+        $base = ['exam_id' => $this->exam->id, 'class_id' => $this->class->id, 'subject_id' => $this->subjects['bangla']->id,
+            'date' => '2026-03-01', 'start_time' => '10:00', 'end_time' => '13:00', 'full_mark' => 100, 'pass_mark' => 33];
+        // MCQ pass mark above its full mark is refused.
+        $this->post('/exams/schedule', $base + ['written_full' => 70, 'written_pass' => 23, 'mcq_full' => 30, 'mcq_pass' => 40])
+            ->assertSessionHasErrors('mcq_pass');
+        $this->post('/exams/schedule', $base + ['written_full' => 70, 'written_pass' => 23, 'mcq_full' => 30, 'mcq_pass' => 10])
+            ->assertSessionHasNoErrors();
+
+        $st = $this->student('Parts', 1);
+        $this->post('/exams/marks', ['exam_id' => $this->exam->id, 'class_id' => $this->class->id, 'subject_id' => $this->subjects['bangla']->id,
+            'student_ids' => [$st->id], 'written' => [$st->id => 60], 'mcq' => [$st->id => 5]])->assertSessionHas('success');
+        $mark = StudentMark::where(['exam_id' => $this->exam->id, 'student_id' => $st->id])->firstOrFail();
+        $this->assertEquals(65, (float) $mark->total_mark);
+        $this->assertEquals(0, (float) $mark->grade_point); // 65 total, but MCQ 5 < 10
+
+        // Above a part's own full mark is refused.
+        $this->post('/exams/marks', ['exam_id' => $this->exam->id, 'class_id' => $this->class->id, 'subject_id' => $this->subjects['bangla']->id,
+            'student_ids' => [$st->id], 'written' => [$st->id => 50], 'mcq' => [$st->id => 35]])->assertSessionHas('error');
+
+        $html = $this->get(route('exams.marksheet.view', [$st->id, $this->exam->id]))->getContent();
+        $this->assertMatchesRegularExpression('/<td class="fail">5<\/td>/', $html);
+    }
 }

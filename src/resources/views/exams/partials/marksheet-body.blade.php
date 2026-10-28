@@ -83,7 +83,7 @@
                     @if($parts->isNotEmpty())<td colspan="{{ $parts->count() }}" class="{{ $row['status'] }}">{{ $m ? sm_t('Absent') : '—' }}</td>@endif
                     <td class="{{ $row['status'] }}">{{ $m ? 'AB' : '—' }}</td>
                 @else
-                    @foreach($parts as $col => $label)<td>{{ (float) $m->$col > 0 ? (float) $m->$col : '—' }}</td>@endforeach
+                    @foreach($parts as $col => $label)<td class="{{ in_array($col, $row['failedParts']) ? 'fail' : '' }}">{{ (float) $m->$col > 0 ? (float) $m->$col : '—' }}</td>@endforeach
                     <td class="{{ $row['status'] === 'fail' ? 'fail' : '' }}"><strong>{{ (float) $m->total_mark }}</strong></td>
                 @endif
                 <td class="{{ in_array($row['status'], ['fail', 'absent']) ? 'fail' : '' }}">{{ $m ? ($m->grade_name ?? GradeScale::fail()['name']) : '—' }}</td>

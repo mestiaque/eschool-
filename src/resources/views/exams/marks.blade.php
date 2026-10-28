@@ -76,8 +76,13 @@
             {{ $examObj?->name }} &mdash; {{ $subjectObj?->name }}
             <span class="badge bg-secondary-subtle text-secondary ms-2">{{ $students->count() }} students</span>
             @if($schedule)
-            <span class="badge bg-light-subtle text-dark border ms-1">Full: {{ $schedule->full_mark }}</span>
-            <span class="badge bg-light-subtle text-dark border ms-1">Pass: {{ $schedule->pass_mark }}</span>
+            <span class="badge bg-light-subtle text-dark border ms-1">{{ sm_t('Full Mark') }}: {{ (float) $schedule->full_mark }}</span>
+            <span class="badge bg-light-subtle text-dark border ms-1">{{ sm_t('Pass Mark') }}: {{ (float) $schedule->pass_mark }}</span>
+            @foreach(\ME\SchoolManagement\Models\ExamSchedule::PARTS as $part => $label)
+                @if($schedule->{$part . '_full'} !== null)
+                <span class="badge bg-info-subtle text-info border ms-1">{{ sm_t($label) }}: {{ (float) $schedule->{$part . '_full'} }} / {{ sm_t('Pass') }} {{ (float) $schedule->{$part . '_pass'} }}</span>
+                @endif
+            @endforeach
             @endif
         </h6>
         <div class="no-print">
@@ -129,6 +134,7 @@
                             <input type="number" name="written[{{ $student->id }}]"
                                 class="form-control form-control-sm text-center mark-input"
                                 data-student="{{ $student->id }}"
+                                @if($schedule?->written_full !== null) max="{{ (float) $schedule->written_full }}" data-pass="{{ (float) $schedule->written_pass }}" @endif
                                 value="{{ $mark?->written ?? '' }}"
                                 min="0" step="0.5" placeholder="0">
                         </td>
@@ -136,6 +142,7 @@
                             <input type="number" name="mcq[{{ $student->id }}]"
                                 class="form-control form-control-sm text-center mark-input"
                                 data-student="{{ $student->id }}"
+                                @if($schedule?->mcq_full !== null) max="{{ (float) $schedule->mcq_full }}" data-pass="{{ (float) $schedule->mcq_pass }}" @endif
                                 value="{{ $mark?->mcq ?? '' }}"
                                 min="0" step="0.5" placeholder="0">
                         </td>
@@ -143,6 +150,7 @@
                             <input type="number" name="practical[{{ $student->id }}]"
                                 class="form-control form-control-sm text-center mark-input"
                                 data-student="{{ $student->id }}"
+                                @if($schedule?->practical_full !== null) max="{{ (float) $schedule->practical_full }}" data-pass="{{ (float) $schedule->practical_pass }}" @endif
                                 value="{{ $mark?->practical ?? '' }}"
                                 min="0" step="0.5" placeholder="0">
                         </td>
@@ -222,6 +230,11 @@ document.querySelectorAll('.mark-input').forEach(input => {
         const total   = written + mcq + prac + ca;
         const el = document.getElementById('total-' + sid);
         if (el) el.textContent = total > 0 ? total.toFixed(1).replace('.0','') : '—';
+        // A part below its own pass mark (CQ / MCQ / practical) fails the subject.
+        if (this.dataset.pass !== undefined) {
+            const below = this.value !== '' && parseFloat(this.value) < parseFloat(this.dataset.pass);
+            this.classList.toggle('is-invalid', below);
+        }
     });
 });
 

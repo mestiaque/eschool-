@@ -211,6 +211,7 @@ Route::middleware(['web', 'auth', LocaleMiddleware::class, 'activityLog', School
 
         Route::get('/salary', [TeacherController::class, 'salaryIndex'])->name('teachers.salary');
         Route::post('/salary', [TeacherController::class, 'salaryStore'])->name('teachers.salary.store');
+        Route::get('/salary/{id}/slip', [ExpenseController::class, 'salarySlip'])->name('teachers.salary.slip');
 
         Route::put('/{id}/link-user', [UserController::class, 'teacherLinkUser'])->name('teachers.link-user');
         Route::delete('/{id}/link-user', [UserController::class, 'teacherUnlinkUser'])->name('teachers.unlink-user');
@@ -313,6 +314,7 @@ Route::middleware(['web', 'auth', LocaleMiddleware::class, 'activityLog', School
         Route::post('/results/generate', [ExamController::class, 'generateResult'])->name('exams.results.generate');
         Route::post('/results/publish', [ExamController::class, 'publishResult'])->name('exams.results.publish');
         Route::get('/results/print', [ExamController::class, 'resultSheetPrint'])->name('exams.results.print');
+        Route::get('/admit-cards', [ExamController::class, 'admitCards'])->name('exams.admit-cards');
         Route::get('/marksheet/class', [ExamController::class, 'marksheetClassPrint'])->name('exams.marksheet.class');
 
         Route::get('/marksheet/{student_id}/{exam_id}', [ExamController::class, 'marksheet'])->name('exams.marksheet.view');
@@ -499,6 +501,7 @@ Route::middleware(['web', 'auth', LocaleMiddleware::class, 'activityLog', School
     // Expense additional routes
     Route::get('/expenses/staff-salary', [ExpenseController::class, 'staffSalaryIndex'])->name('expenses.staff-salary');
     Route::post('/expenses/staff-salary', [ExpenseController::class, 'staffSalaryStore'])->name('expenses.staff-salary.store');
+    Route::get('/expenses/staff-salary/{id}/slip', [ExpenseController::class, 'salarySlip'])->name('expenses.staff-salary.slip');
     Route::get('/expenses/profit-loss', [ExpenseController::class, 'profitLossIndex'])->name('expenses.profit-loss');
 
     // Reports additional

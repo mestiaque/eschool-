@@ -58,6 +58,7 @@
                             <th class="text-end">{{ sm_t('Deduction') }}</th>
                             <th class="text-end">{{ sm_t('Net') }}</th>
                             <th>{{ sm_t('Payment date') }}</th>
+                            <th>{{ sm_t('Slip') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -66,15 +67,16 @@
                             <td>{{ $payment->id }}</td>
                             <td>{{ $payment->payee_name }}</td>
                             <td><span class="badge bg-{{ $bc = $payment->staff_type === 'teacher' ? 'info' : 'secondary' }}-subtle text-{{ $bc }}">{{ sm_t(ucfirst($payment->staff_type)) }}</span></td>
-                            <td>{{ $payment->month_name }} {{ $payment->year }}</td>
+                            <td>{{ sm_t($payment->month_name) }} {{ $payment->year }}</td>
                             <td class="text-end">{{ sm_money($payment->basic_salary, 2) }}</td>
                             <td class="text-end">{{ sm_money($payment->allowance, 2) }}</td>
                             <td class="text-end">{{ sm_money($payment->deduction, 2) }}</td>
                             <td class="text-end fw-semibold">{{ sm_money($payment->net_salary, 2) }}</td>
                             <td>{{ sm_date($payment->payment_date) }}</td>
+                            <td><a href="{{ route('expenses.staff-salary.slip', $payment->id) }}" target="_blank" class="btn btn-sm btn-encodex-print"><i class="fas fa-print"></i></a></td>
                         </tr>
                         @empty
-                        <tr><td colspan="9" class="text-center">{{ sm_t('No payments found') }}</td></tr>
+                        <tr><td colspan="10" class="text-center">{{ sm_t('No payments found') }}</td></tr>
                         @endforelse
                     </tbody>
                 </table>

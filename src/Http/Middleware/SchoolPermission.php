@@ -140,6 +140,7 @@ class SchoolPermission
         'exams.results.publish'           => 'exam_result.publish',
         'exams.marksheet.view'            => 'exam_marksheet.print',
         'exams.marksheet.class'           => 'exam_marksheet.print',
+        'exams.admit-cards'               => 'exam_schedule.view',
         'fees.receipt'                    => 'fee_collection.print',
         'library.purchase.store'          => 'library_book.create',
         'library.settings.update'         => 'library_book.edit',

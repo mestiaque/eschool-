@@ -29,10 +29,30 @@ class ResultSheet
         return [$full, (float) ($subject->pass_mark ?? round($full * 0.33, 2))];
     }
 
-    /** Grade for a subject total; absent or below the pass mark is the fail grade. */
-    public static function gradeFor(float $total, float $fullMark, float $passMark, bool $absent): array
+    /**
+     * Parts (CQ / MCQ / practical) below their own pass mark, for a schedule
+     * that sets them; a subject is failed when any part is, as on board exams.
+     *
+     * @param array<string, float|null> $marks part => marks
+     * @return string[]
+     */
+    public static function failedParts(?ExamSchedule $schedule, array $marks): array
     {
-        return ($absent || $total < $passMark || $fullMark <= 0)
+        if (!$schedule) return [];
+        $failed = [];
+        foreach (array_keys(ExamSchedule::PARTS) as $part) {
+            $pass = $schedule->{"{$part}_pass"};
+            if ($schedule->{"{$part}_full"} !== null && $pass !== null && (float) ($marks[$part] ?? 0) < (float) $pass) {
+                $failed[] = $part;
+            }
+        }
+        return $failed;
+    }
+
+    /** Grade for a subject total; absent, a failed part or below the pass mark is the fail grade. */
+    public static function gradeFor(float $total, float $fullMark, float $passMark, bool $failed): array
+    {
+        return ($failed || $total < $passMark || $fullMark <= 0)
             ? GradeScale::fail()
             : GradeScale::forPercent($total / $fullMark * 100);
     }
@@ -45,7 +65,8 @@ class ResultSheet
         StudentMark::where('exam_id', $examId)->where('class_id', $classId)->get()
             ->each(function ($mark) use ($examId, $classId, $schedules, $subjects) {
                 [$full, $pass] = self::subjectMarks($examId, $classId, $mark->subject_id, $schedules, $subjects->get($mark->subject_id));
-                $grade = self::gradeFor((float) $mark->total_mark, $full, $pass, (bool) $mark->is_absent);
+                $failed = $mark->is_absent || self::failedParts($schedules->get($mark->subject_id), $mark->only('written', 'mcq', 'practical'));
+                $grade = self::gradeFor((float) $mark->total_mark, $full, $pass, (bool) $failed);
                 if ($mark->grade_id != $grade['id'] || (float) $mark->grade_point !== (float) $grade['point']) {
                     $mark->update(['grade_id' => $grade['id'], 'grade_point' => $grade['point']]);
                 }
@@ -82,6 +103,8 @@ class ResultSheet
             $mark = $marks->get($subject->id);
             $status = !$mark ? 'missing' : ($mark->is_absent ? 'absent' : ((float) $mark->grade_point > 0 ? 'pass' : 'fail'));
             $rows[] = [
+                'failedParts' => $mark && !$mark->is_absent ? self::failedParts($schedules->get($subject->id), $mark->only('written', 'mcq', 'practical')) : [],
+                'schedule' => $schedules->get($subject->id),
                 'subject'  => $subject,
                 'optional' => $subject->id == $student->optional_subject_id,
                 'full'     => $full,

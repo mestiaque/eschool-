@@ -36,6 +36,7 @@
                     <th>{{ sm_t('Deduction') }}</th>
                     <th>{{ sm_t('Net Salary') }}</th>
                     <th>{{ sm_t('Payment Date') }}</th>
+                    <th>{{ sm_t('Slip') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -43,15 +44,16 @@
                 <tr>
                     <td>{{ $i+1 }}</td>
                     <td>{{ $sal->teacher?->full_name }}</td>
-                    <td>{{ date('F', mktime(0,0,0,(int)$sal->month,1)) }} {{ $sal->year }}</td>
+                    <td>{{ sm_t($sal->month_name) }} {{ $sal->year }}</td>
                     <td>{{ sm_money($sal->basic_salary, 2) }}</td>
                     <td>{{ sm_money($sal->allowance, 2) }}</td>
                     <td>{{ sm_money($sal->deduction, 2) }}</td>
                     <td><strong>{{ sm_money($sal->net_salary, 2) }}</strong></td>
                     <td>{{ sm_date($sal->payment_date) }}</td>
+                    <td><a href="{{ route('teachers.salary.slip', $sal->id) }}" target="_blank" class="btn btn-sm btn-encodex-print"><i class="fas fa-print"></i></a></td>
                 </tr>
                 @empty
-                <tr><td colspan="8" class="text-center text-muted py-3">{{ sm_t('No salary records') }}</td></tr>
+                <tr><td colspan="9" class="text-center text-muted py-3">{{ sm_t('No salary records') }}</td></tr>
                 @endforelse
             </tbody>
         </table>
