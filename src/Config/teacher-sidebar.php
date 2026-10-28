@@ -55,6 +55,14 @@ return [
         'sl'         => 50,
     ],
     [
+        'title'      => 'My Leaves',
+        'icon'       => 'fas fa-calendar-minus',
+        'route'      => 'my.leaves',
+        'for_active' => 'my.leaves',
+        'icon_color' => 'icc-7',
+        'sl'         => 55,
+    ],
+    [
         'title'      => 'My Profile',
         'icon'       => 'fas fa-user',
         'route'      => 'profile.edit',

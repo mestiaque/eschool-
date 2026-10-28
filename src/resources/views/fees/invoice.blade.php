@@ -8,6 +8,7 @@
 @endpush
 
 @section('content')
+@include('school-management::partials.receipt-link')
 
 <div class="card">
     <div class="card-body py-2 border-bottom">
@@ -70,9 +71,8 @@
                     <td>
                         @if($col->status !== 'paid')
                         <button class="btn btn-sm btn-encodex-payment" data-bs-toggle="modal" data-bs-target="#payModal{{ $col->id }}">{{ sm_t('Pay') }}</button>
-                        @else
-                        <span class="text-success small"><i class="fas fa-check-circle"></i></span>
                         @endif
+                        <a href="{{ route('fees.collection.print', $col->id) }}" target="_blank" class="btn btn-sm btn-encodex-print" title="{{ sm_t('Print Invoice') }}"><i class="fas fa-print"></i></a>
                     </td>
                 </tr>
                 @empty

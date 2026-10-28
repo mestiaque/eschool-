@@ -22,9 +22,12 @@ use ME\SchoolManagement\Models\Notice;
 use ME\SchoolManagement\Models\Student;
 use ME\SchoolManagement\Models\StudentAttendance;
 use ME\SchoolManagement\Services\LeavePolicy;
+use ME\SchoolManagement\Http\Controllers\Concerns\GuardsDeletes;
 
 class TeacherController extends Controller
 {
+    use GuardsDeletes;
+
     public function index(Request $request)
     {
         $query = Teacher::query();
@@ -114,8 +117,11 @@ class TeacherController extends Controller
     // Leaves
     public function leaveIndex()
     {
-        $leaves = TeacherLeave::with('teacher')->orderBy('id', 'desc')->paginate(20);
-        $leaveTypes = LeaveType::where('is_active', true)->get();
+        $leaves = TeacherLeave::with('teacher', 'leaveType')
+            ->when(request('status'), fn ($q, $st) => $q->where('status', $st))
+            ->when(request('teacher_id'), fn ($q, $id) => $q->where('teacher_id', $id))
+            ->orderBy('id', 'desc')->paginate(20)->withQueryString();
+        $leaveTypes = LeaveType::for('teacher')->get();
         $teachers = Teacher::where('is_active', true)->orderBy('first_name')->get();
         return view('school-management::teachers.leaves', compact('leaves', 'leaveTypes', 'teachers'));
     }
@@ -167,10 +173,11 @@ class TeacherController extends Controller
             return back()->with('error', 'Cannot approve: ' . $error);
         }
         $was = $leave->status;
-        $leave->update(['status' => $status] + ($note !== null ? ['note' => $note] : []));
+        $leave->update(['status' => $status, 'approved_by' => auth()->id()] + ($note !== null ? ['note' => $note] : []));
         if ($status === 'approved' && $was !== 'approved') LeavePolicy::markAttendance('teacher', $leave);
         if ($was === 'approved' && $status !== 'approved') LeavePolicy::unmarkAttendance('teacher', $leave);
-        return back()->with('success', 'Leave ' . $status);
+        return back()->with('success', $was === 'approved' && $status !== 'approved'
+            ? 'Leave approval withdrawn; excused attendance removed' : 'Leave ' . $status);
     }
 
     // Subject Assignment
@@ -307,14 +314,83 @@ class TeacherController extends Controller
         return back()->with('success', 'Salary processed and posted to expenses');
     }
 
-    // Leave Types
+    // Leave Types (shared by teacher and student leave; each type says who can take it)
+    public function leaveTypeIndex()
+    {
+        $types = LeaveType::orderBy('name')->get();
+        $used = [
+            'teacher' => TeacherLeave::selectRaw('leave_type_id, COUNT(*) n')->groupBy('leave_type_id')->pluck('n', 'leave_type_id'),
+            'student' => \ME\SchoolManagement\Models\StudentLeave::selectRaw('leave_type_id, COUNT(*) n')->groupBy('leave_type_id')->pluck('n', 'leave_type_id'),
+        ];
+        return view('school-management::teachers.leave-types', compact('types', 'used'));
+    }
+
     public function leaveTypeStore(Request $request)
     {
-        LeaveType::create($request->validate([
-            'name' => 'required|string|max:255|unique:leave_types,name',
-            'days' => 'required|integer|min:0',
-        ]) + ['is_active' => true]);
+        LeaveType::create($this->validateLeaveType($request) + ['is_active' => true]);
         return back()->with('success', 'Leave type created');
+    }
+
+    public function leaveTypeUpdate(Request $request, $id)
+    {
+        $type = LeaveType::findOrFail($id);
+        $type->update($this->validateLeaveType($request, $type->id) + ['is_active' => $request->boolean('is_active')]);
+        return back()->with('success', 'Leave type updated');
+    }
+
+    public function leaveTypeDestroy($id)
+    {
+        $type = LeaveType::findOrFail($id);
+        return $this->deleteUnlessUsed($type, [
+            'teacher leaves' => TeacherLeave::where('leave_type_id', $id)->count(),
+            'student leaves' => \ME\SchoolManagement\Models\StudentLeave::where('leave_type_id', $id)->count(),
+        ], $type->name, 'Leave type deleted.');
+    }
+
+    private function validateLeaveType(Request $request, $ignoreId = null): array
+    {
+        return $request->validate([
+            'name'       => 'required|string|max:255|unique:leave_types,name' . ($ignoreId ? ',' . $ignoreId : ''),
+            'days'       => 'required|integer|min:0|max:365',
+            'applies_to' => 'required|in:' . implode(',', array_keys(LeaveType::APPLIES_TO)),
+        ]);
+    }
+
+    // ── My Leaves (teacher self-service) ──────────────────────────────────
+
+    public function myLeaveIndex()
+    {
+        $teacherId = auth()->user()->teacher_id ?? null;
+        if (!$teacherId) abort(403, 'Your login is not linked to a teacher.');
+
+        $leaves = TeacherLeave::with('leaveType')->where('teacher_id', $teacherId)->orderBy('id', 'desc')->paginate(20);
+        $balances = LeavePolicy::balances('teacher', $teacherId);
+        return view('school-management::teachers.my-leaves', compact('leaves', 'balances'));
+    }
+
+    public function myLeaveStore(Request $request)
+    {
+        $teacherId = auth()->user()->teacher_id ?? null;
+        if (!$teacherId) abort(403, 'Your login is not linked to a teacher.');
+
+        $request->validate([
+            'leave_type_id' => 'required|exists:leave_types,id',
+            'start_date'    => 'required|date|after_or_equal:today',
+            'end_date'      => 'required|date|after_or_equal:start_date',
+            'reason'        => 'required|string|max:1000',
+        ]);
+        if ($error = LeavePolicy::check('teacher', (int) $teacherId, (int) $request->leave_type_id, $request->start_date, $request->end_date)) {
+            return back()->withInput()->with('error', $error);
+        }
+        TeacherLeave::create($request->only('leave_type_id', 'start_date', 'end_date', 'reason') + ['teacher_id' => $teacherId, 'status' => 'pending']);
+        return back()->with('success', 'Leave request submitted');
+    }
+
+    public function myLeaveCancel($id)
+    {
+        $leave = TeacherLeave::where('teacher_id', auth()->user()->teacher_id ?? 0)->where('status', 'pending')->findOrFail($id);
+        $leave->delete();
+        return back()->with('success', 'Leave request cancelled');
     }
 
     // ── My Dashboard ──────────────────────────────────────────────────────

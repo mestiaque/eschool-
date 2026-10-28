@@ -212,11 +212,12 @@ class SchoolManagementDemoSeeder extends Seeder
 
         // Leave Types
         $leaveTypes = [
-            ['name' => 'Casual Leave',   'days' => 10],
-            ['name' => 'Sick Leave',     'days' => 14],
-            ['name' => 'Earned Leave',   'days' => 20],
-            ['name' => 'Maternity Leave','days' => 90],
-            ['name' => 'Paternity Leave','days' => 15],
+            ['name' => 'Casual Leave',   'days' => 10, 'applies_to' => 'teacher'],
+            ['name' => 'Sick Leave',     'days' => 14, 'applies_to' => 'both'],
+            ['name' => 'Earned Leave',   'days' => 20, 'applies_to' => 'teacher'],
+            ['name' => 'Maternity Leave','days' => 90, 'applies_to' => 'teacher'],
+            ['name' => 'Paternity Leave','days' => 15, 'applies_to' => 'teacher'],
+            ['name' => 'Family Reason',  'days' => 0,  'applies_to' => 'student'],
         ];
 
         foreach ($leaveTypes as $lt) {
@@ -326,7 +327,7 @@ class SchoolManagementDemoSeeder extends Seeder
         }
 
         // Teacher Leaves
-        $leaveTypeIds = DB::table('leave_types')->pluck('id')->toArray();
+        $leaveTypeIds = DB::table('leave_types')->where('applies_to', '!=', 'student')->pluck('id')->toArray();
         $leaveData = [
             ['teacher_id' => $teacherIds[0], 'start_date' => '2026-01-15', 'end_date' => '2026-01-17', 'reason' => 'Medical treatment',      'status' => 'approved'],
             ['teacher_id' => $teacherIds[1], 'start_date' => '2026-02-05', 'end_date' => '2026-02-06', 'reason' => 'Family emergency',        'status' => 'approved'],

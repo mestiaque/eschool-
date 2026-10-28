@@ -35,22 +35,24 @@
                                     <th>{{ sm_t('Payment Date') }}</th>
                                     <th>{{ sm_t('Method') }}</th>
                                     <th>{{ sm_t('Transaction ID') }}</th>
+                                    <th>{{ sm_t('Receipt') }}</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @forelse($payments as $payment)
                                 <tr>
-                                    <td>{{ $payment->id }}</td>
+                                    <td>MR-{{ str_pad($payment->id, 6, '0', STR_PAD_LEFT) }}</td>
                                     <td>{{ $payment->feeCollection?->invoice_no ?? 'N/A' }}</td>
                                     <td>{{ $payment->feeCollection?->student?->full_name ?? 'N/A' }}</td>
-                                    <td>{{ number_format($payment->amount, 2) }}</td>
+                                    <td>{{ sm_money($payment->amount, 2) }}</td>
                                     <td>{{ sm_date($payment->date) }}</td>
-                                    <td>{{ $payment->payment_method ?? 'N/A' }}</td>
-                                    <td>{{ $payment->transaction_id ?? 'N/A' }}</td>
+                                    <td>{{ $payment->payment_method ? sm_t(ucfirst($payment->payment_method)) : '—' }}</td>
+                                    <td>{{ $payment->transaction_id ?? '—' }}</td>
+                                    <td><a href="{{ route('fees.receipt', $payment->id) }}" target="_blank" class="btn btn-sm btn-encodex-print"><i class="fas fa-receipt"></i></a></td>
                                 </tr>
                                 @empty
                                 <tr>
-                                    <td colspan="7" class="text-center">{{ sm_t('No payments found') }}</td>
+                                    <td colspan="8" class="text-center">{{ sm_t('No payments found') }}</td>
                                 </tr>
                                 @endforelse
                             </tbody>

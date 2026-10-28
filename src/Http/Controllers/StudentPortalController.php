@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
 use ME\SchoolManagement\Models\BookIssue;
 use ME\SchoolManagement\Models\Exam;
-use ME\SchoolManagement\Models\ExamSchedule;
 use ME\SchoolManagement\Models\FeeCollection;
 use ME\SchoolManagement\Models\Notice;
 use ME\SchoolManagement\Models\Result;
@@ -15,7 +14,6 @@ use ME\SchoolManagement\Models\SchoolSetting;
 use ME\SchoolManagement\Models\Student;
 use ME\SchoolManagement\Models\StudentAttendance;
 use ME\SchoolManagement\Models\StudentDiscount;
-use ME\SchoolManagement\Models\StudentMark;
 
 class StudentPortalController extends Controller
 {
@@ -178,20 +176,11 @@ class StudentPortalController extends Controller
             return redirect()->route('portal.results')->with('error', 'Marksheet not yet published.');
         }
 
-        $exam        = Exam::with('academicYear', 'examType')->findOrFail($exam_id);
-        $marks       = StudentMark::where('student_id', $portalStudent->id)
-            ->where('exam_id', $exam_id)
-            ->with('subject', 'grade')
-            ->get();
-        $scheduleMap = ExamSchedule::where('exam_id', $exam_id)
-            ->where('class_id', $portalStudent->class_id)
-            ->get()->keyBy('subject_id');
-        $schoolName  = $this->getSchoolName();
-        $student     = $portalStudent;
+        $exam    = Exam::with('academicYear', 'examType')->findOrFail($exam_id);
+        $student = $portalStudent->load('classe', 'section', 'guardian');
+        $sheet   = \ME\SchoolManagement\Services\ResultSheet::marksheet($student, $exam);
 
-        return view('school-management::portal.marksheet', compact(
-            'student', 'exam', 'marks', 'result', 'scheduleMap', 'schoolName'
-        ));
+        return view('school-management::portal.marksheet', compact('student', 'exam', 'sheet'));
     }
 
     public function library()

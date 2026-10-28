@@ -202,18 +202,49 @@ class FeeController extends Controller
             'payment_date' => $request->payment_date ?? date('Y-m-d')
         ]);
 
-        FeePayment::create([
+        $payment = FeePayment::create([
             'fee_collection_id' => $collection->id,
             'amount' => $request->paid_amount,
             'date' => $request->payment_date ?? date('Y-m-d'),
             'payment_method' => $request->payment_method,
-            'transaction_id' => $request->transaction_id
+            'transaction_id' => $request->transaction_id,
+            'collected_by' => auth()->id(),
         ]);
 
         $log?->save();
         SchoolNotifier::paymentReceipt($collection->fresh(['student.guardian', 'feeType']), (float) $request->paid_amount);
 
-        return back()->with('success', 'Payment received successfully');
+        return back()->with('success', 'Payment received successfully')
+            ->with('receipt_url', route('fees.receipt', $payment->id));
+    }
+
+    /** Money receipt for one payment (student copy + office copy). */
+    public function receipt($id)
+    {
+        $payment = FeePayment::with('feeCollection.student.classe', 'feeCollection.student.section', 'feeCollection.feeType')->findOrFail($id);
+        $collection = $payment->feeCollection;
+        abort_unless($collection, 404);
+        return view('school-management::fees.receipt', $this->receiptData($collection, $payment));
+    }
+
+    /** Invoice with every payment made against it. */
+    public function invoicePrint($id)
+    {
+        $collection = FeeCollection::with('student.classe', 'student.section', 'feeType')->findOrFail($id);
+        return view('school-management::fees.receipt', $this->receiptData($collection, null));
+    }
+
+    private function receiptData(FeeCollection $collection, ?FeePayment $payment): array
+    {
+        $payments = FeePayment::where('fee_collection_id', $collection->id)->orderBy('date')->orderBy('id')->get();
+        $payable = (float) $collection->amount + (float) $collection->fine - (float) $collection->discount;
+        // Paid before this payment (by date, then entry order), so a reprinted old receipt shows the due as it was then.
+        $before = $payment
+            ? $payments->takeUntil(fn ($p) => $p->id === $payment->id)->sum('amount')
+            : null;
+        $collectors = \ME\Models\User::whereIn('id', $payments->pluck('collected_by')->filter())->pluck('name', 'id');
+
+        return compact('collection', 'payment', 'payments', 'payable', 'before', 'collectors');
     }
 
     /** SMS / e-mail each guardian with a student's total unpaid fees (filters match the collection page). */

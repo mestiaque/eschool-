@@ -65,6 +65,7 @@ return [
             ['title' => 'All Teachers',  'icon' => 'fas fa-list',            'route' => 'teachers.index',      'for_active' => 'teachers.index',      'icon_color' => 'icc-25', 'permit' => 'teacher.view'],
             ['title' => 'Attendance',    'icon' => 'fas fa-clipboard-check', 'route' => 'teachers.attendance', 'for_active' => 'teachers.attendance', 'icon_color' => 'icc-26', 'permit' => 'teacher_attendance.view'],
             ['title' => 'Leaves',        'icon' => 'fas fa-calendar-minus',  'route' => 'teachers.leaves',     'for_active' => 'teachers.leaves',     'icon_color' => 'icc-27', 'permit' => 'teacher_leave.view'],
+            ['title' => 'Leave Types',   'icon' => 'fas fa-tags',            'route' => 'teachers.leave-types', 'for_active' => 'teachers.leave-types', 'icon_color' => 'icc-27', 'permit' => 'teacher_leave.view'],
             ['title' => 'Salary',        'icon' => 'fas fa-money-bill',      'route' => 'teachers.salary',     'for_active' => 'teachers.salary',     'icon_color' => 'icc-28', 'permit' => 'teacher_salary.view'],
             ['title' => 'Subjects',      'icon' => 'fas fa-book-open',       'route' => 'teachers.subjects',   'for_active' => 'teachers.subjects',   'icon_color' => 'icc-29', 'permit' => 'teacher_subject.view'],
             ['title' => 'Class Teacher', 'icon' => 'fas fa-users',           'route' => 'teachers.classes',    'for_active' => 'teachers.classes',    'icon_color' => 'icc-30', 'permit' => 'teacher_class.view'],

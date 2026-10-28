@@ -2,12 +2,28 @@
 @section('title', sm_t('Student Leaves'))
 
 @push('buttons')
+@if(auth()->user()->hasPermission('teacher_leave.view'))
+<a href="{{ route('teachers.leave-types') }}" class="btn btn-sm btn-encodex-list"><i class="fas fa-tags"></i> {{ sm_t('Leave Types') }}</a>
+@endif
 <button class="btn btn-sm btn-encodex-create" data-bs-toggle="modal" data-bs-target="#leaveModal"><i class="fas fa-plus"></i> {{ sm_t('Apply Leave') }}</button>
 @endpush
 
 @section('content')
 
 <div class="card">
+    <div class="card-body py-2 border-bottom">
+        <form method="GET" class="glass-search-form row g-2 align-items-end">
+            <div class="col-md-3">
+                <select name="status" class="form-control form-control-sm" onchange="this.form.submit()">
+                    <option value="">{{ sm_t('All Status') }}</option>
+                    @foreach(['pending', 'approved', 'rejected'] as $st)
+                    <option value="{{ $st }}" {{ request('status') === $st ? 'selected' : '' }}>{{ sm_t(ucfirst($st)) }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="col-md-9 small text-muted">{{ sm_t('Days are school days: weekly and declared holidays are not counted.') }}</div>
+        </form>
+    </div>
     <div class="card-body p-0">
         <table class="table table-encodex table-sm table-striped mb-0">
             <thead class="table-light">
@@ -27,7 +43,7 @@
             <tbody>
                 @forelse($leaves as $i => $leave)
                 <tr>
-                    <td>{{ $i+1 }}</td>
+                    <td>{{ $leaves->firstItem() + $i }}</td>
                     <td>{{ $leave->student?->full_name }}</td>
                     <td>{{ $leave->student?->classe?->name }}{{ $leave->student?->section ? ' / ' . $leave->student->section->name : '' }}</td>
                     <td>{{ $leave->leaveType?->name }}</td>
@@ -43,6 +59,8 @@
                         @if($leave->status === 'pending')
                         <form method="POST" action="{{ route('students.leaves.approve', $leave->id) }}" class="d-inline">@csrf<button type="submit" class="btn btn-sm btn-encodex-active">{{ sm_t('Approve') }}</button></form>
                         <form method="POST" action="{{ route('students.leaves.reject', $leave->id) }}" class="d-inline">@csrf<button type="submit" class="btn btn-sm btn-encodex-deactive">{{ sm_t('Reject') }}</button></form>
+                        @elseif($leave->status === 'approved')
+                        <form method="POST" action="{{ route('students.leaves.revoke', $leave->id) }}" class="d-inline" onsubmit="return confirm(@json(sm_t('Withdraw this approval? The excused attendance marks will be removed.'), JSON_HEX_APOS|JSON_HEX_QUOT))">@csrf<button type="submit" class="btn btn-sm btn-encodex-deactive">{{ sm_t('Withdraw') }}</button></form>
                         @endif
                     </td>
                 </tr>
@@ -80,8 +98,8 @@
                         <div class="col"><label class="form-label">{{ sm_t('To') }} *</label><input type="date" name="end_date" class="form-control form-control-sm" required></div>
                     </div>
                     <div class="mb-2">
-                        <label class="form-label">{{ sm_t('Reason') }}</label>
-                        <textarea name="reason" class="form-control form-control-sm" rows="3"></textarea>
+                        <label class="form-label">{{ sm_t('Reason') }} *</label>
+                        <textarea name="reason" class="form-control form-control-sm" rows="3" maxlength="1000" required>{{ old('reason') }}</textarea>
                     </div>
                 </div>
                 <div class="modal-footer"><button type="submit" class="btn btn-sm btn-encodex-save">{{ sm_t('Submit') }}</button></div>

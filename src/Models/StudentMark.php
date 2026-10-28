@@ -35,15 +35,13 @@ class StudentMark extends Model
         return $this->belongsTo(Grade::class);
     }
 
-    /** Letter grade: the configured grade, or the default scale's letter for this grade point. */
+    /** Letter grade: the configured grade, or the scale's letter for this grade point. */
     public function getGradeNameAttribute(): ?string
     {
         if ($this->grade_id && $this->grade) return $this->grade->name;
         if ($this->grade_point === null) return null;
-        $gp = (float) $this->grade_point;
-        foreach ([5 => 'A+', 4 => 'A', '3.5' => 'A-', 3 => 'B', 2 => 'C', 1 => 'D'] as $min => $name) {
-            if ($gp >= (float) $min) return $name;
-        }
-        return 'F';
+        return (float) $this->grade_point > 0
+            ? \ME\SchoolManagement\Services\GradeScale::forGpa((float) $this->grade_point)
+            : \ME\SchoolManagement\Services\GradeScale::fail()['name'];
     }
 }

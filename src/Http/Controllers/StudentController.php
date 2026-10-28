@@ -712,8 +712,10 @@ class StudentController extends Controller
 
     public function leaveIndex()
     {
-        $leaves     = StudentLeave::with(['student', 'leaveType'])->orderBy('id', 'desc')->paginate(20);
-        $leaveTypes = LeaveType::where('is_active', true)->get();
+        $leaves     = StudentLeave::with(['student.classe', 'student.section', 'leaveType'])
+            ->when(request('status'), fn ($q, $st) => $q->where('status', $st))
+            ->orderBy('id', 'desc')->paginate(20)->withQueryString();
+        $leaveTypes = LeaveType::for('student')->get();
         return view('school-management::students.leaves', compact('leaves', 'leaveTypes'));
     }
 
@@ -724,7 +726,7 @@ class StudentController extends Controller
             'leave_type_id' => 'required|exists:leave_types,id',
             'start_date'    => 'required|date',
             'end_date'      => 'required|date|after_or_equal:start_date',
-            'reason'        => 'required|string',
+            'reason'        => 'required|string|max:1000',
         ]);
         if ($error = \ME\SchoolManagement\Services\LeavePolicy::check('student', (int) $request->student_id, (int) $request->leave_type_id, $request->start_date, $request->end_date)) {
             return back()->withInput()->with('error', $error);
@@ -755,6 +757,15 @@ class StudentController extends Controller
     {
         StudentLeave::where('status', 'pending')->findOrFail($id)->update(['status' => 'rejected', 'approved_by' => auth()->id()]);
         return back()->with('success', 'Leave rejected');
+    }
+
+    /** Withdraw an approval (e.g. the student came after all); removes the excused marks it added. */
+    public function leaveRevoke($id)
+    {
+        $leave = StudentLeave::where('status', 'approved')->findOrFail($id);
+        $leave->update(['status' => 'rejected', 'approved_by' => auth()->id()]);
+        \ME\SchoolManagement\Services\LeavePolicy::unmarkAttendance('student', $leave);
+        return back()->with('success', 'Leave approval withdrawn; excused attendance removed');
     }
 
     // ── Early Exit ─────────────────────────────────────────────────────────

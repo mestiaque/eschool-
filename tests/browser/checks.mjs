@@ -64,5 +64,13 @@ export default [
         if (stop.options.length > 1) return true;
       }
       return 'no route with stops (' + opts.length + ' routes)'` },
+  { name: 'Results: Generate and Publish buttons submit their own POST forms', url: '/exams/results?exam_id=1&class_id=1', js: `
+      const btns = [...document.querySelectorAll('button[type=submit]')].filter(b => /generate|publish/.test(b.form?.action || ''));
+      if (btns.length !== 2) return 'buttons in POST forms: ' + btns.length;
+      return btns.every(b => b.form.method === 'post' && b.form.querySelector('[name=_token]')) ? true : btns.map(b => b.form.method)` },
+  { name: 'Leave types: edit button fills the modal', url: '/leave-types', js: `
+      const b = document.querySelector('.btn-encodex-edit'); if (!b) return 'no types'; b.click(); await sleep(600);
+      const f = document.querySelector('#typeForm');
+      return f.action.includes('/leave-types/') && document.querySelector('#typeName').value ? true : f.action` },
   { name: 'Recycle Bin page lists tabs', url: '/trash', js: `return document.querySelectorAll('.nav-tabs .nav-link').length === 3 ? true : 'tabs missing'` },
 ];

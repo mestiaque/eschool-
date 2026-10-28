@@ -14,6 +14,7 @@ use ME\SchoolManagement\Models\TeacherLeave;
  * Leave rules for teachers and students:
  *  - days are school days (weekly holidays and declared holidays don't count);
  *  - a leave type's "days" is a yearly (calendar-year) limit; 0 means no limit;
+ *  - a type is for teachers, students or both;
  *  - one person can't have overlapping pending/approved leaves;
  *  - an approved leave marks those days "excused" in attendance (without
  *    overwriting anyone already marked present/late), and a revoked approval
@@ -44,7 +45,9 @@ class LeavePolicy
         if ($days === 0) return 'There are no school days in this period.';
 
         $type = LeaveType::find($leaveTypeId);
-        if (!$type || (int) $type->days <= 0) return null;
+        if (!$type || !$type->is_active) return 'This leave type is not available.';
+        if (!$type->appliesTo($who)) return "{$type->name} is not a {$who} leave type.";
+        if ((int) $type->days <= 0) return null;
 
         // Count per calendar year, so a leave spanning New Year uses each year's allowance.
         foreach (self::splitByYear($from, $to) as $year => [$yFrom, $yTo]) {
@@ -56,6 +59,27 @@ class LeavePolicy
             }
         }
         return null;
+    }
+
+    /**
+     * Remaining days per leave type in a year: [type, used, left|null] rows
+     * (left is null for a type with no limit).
+     */
+    public static function balances(string $who, int $personId, ?int $year = null): array
+    {
+        $year ??= (int) now()->year;
+        return LeaveType::for($who)->get()->map(fn ($type) => [
+            'type' => $type,
+            'used' => $used = self::usedDays($who, $personId, $type->id, $year),
+            'left' => (int) $type->days > 0 ? max(0, (int) $type->days - $used) : null,
+        ])->all();
+    }
+
+    /** School days a leave covers (weekly holidays and declared holidays excluded). */
+    public static function schoolDays($leave): int
+    {
+        return ($leave->start_date && $leave->end_date)
+            ? count(SchoolCalendar::schoolDaysBetween($leave->start_date, $leave->end_date)) : 0;
     }
 
     /** School days of approved leave of a type taken in a calendar year. */

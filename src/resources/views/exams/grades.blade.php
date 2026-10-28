@@ -8,6 +8,13 @@
 
 @section('content')
 
+@if($grades->isEmpty())
+<div class="alert alert-info small py-2">{{ sm_t('No grades set up, so the standard Bangladesh scale is used (A+ 80–100 … F 0–32).') }}</div>
+@endif
+@foreach($problems as $problem)
+<div class="alert alert-warning small py-2 mb-2"><i class="fas fa-exclamation-triangle me-1"></i> {{ $problem }}</div>
+@endforeach
+
 <div class="card shadow">
     <div class="card-body p-0">
         <table class="table table-bordered table-hover table-sm table-encodex mb-0">

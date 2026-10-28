@@ -11,10 +11,10 @@ class StudentLeave extends Model
     protected $casts = ['start_date' => 'date', 'end_date' => 'date'];
     protected $appends = ['days'];
 
-    public function getDaysAttribute()
+    /** School days, as the leave limits count them. */
+    public function getDaysAttribute(): int
     {
-        if (!$this->start_date || !$this->end_date) return 0;
-        return $this->start_date->diffInDays($this->end_date) + 1;
+        return \ME\SchoolManagement\Services\LeavePolicy::schoolDays($this);
     }
 
     public function student(): BelongsTo

@@ -15,38 +15,54 @@
                 </select>
             </div>
             <div class="col-md-4">
-                <select name="class_id" class="form-control form-control-sm" onchange="this.form.submit()">
+                <select name="class_id" class="form-control form-control-sm" onchange="this.form.section_id.value='';this.form.submit()">
                     <option value="">{{ sm_t('All Classes') }}</option>
                     @foreach($classes as $class)
                     <option value="{{ $class->id }}" {{ request('class_id') == $class->id ? 'selected' : '' }}>{{ $class->name }}</option>
                     @endforeach
                 </select>
             </div>
-            <div class="col-md-4 d-flex gap-2">
-                @if(request('exam_id') && request('class_id'))
-                <form method="POST" action="{{ route('exams.results.generate') }}" class="d-inline">
-                    @csrf
-                    <input type="hidden" name="exam_id"  value="{{ request('exam_id') }}">
-                    <input type="hidden" name="class_id" value="{{ request('class_id') }}">
-                    <button type="submit" class="btn btn-sm btn-encodex-save" onclick="return confirm('Re-generate results? This will overwrite existing results.')">
-                        <i class="fas fa-sync-alt me-1"></i> {{ sm_t('Generate') }}
-                    </button>
-                </form>
-                <form method="POST" action="{{ route('exams.results.publish') }}" class="d-inline">
-                    @csrf
-                    <input type="hidden" name="exam_id"  value="{{ request('exam_id') }}">
-                    <input type="hidden" name="class_id" value="{{ request('class_id') }}">
-                    <button type="submit" class="btn btn-sm btn-encodex-active" onclick="return confirm('Publish all results for this exam and class?')">
-                        <i class="fas fa-bullhorn me-1"></i> {{ sm_t('Publish All') }}
-                    </button>
-                </form>
-                @else
-                <a href="{{ route('exams.marksheet.index') }}" class="btn btn-sm btn-encodex-list">
-                    <i class="fas fa-file-alt me-1"></i> {{ sm_t('Marksheet') }}
-                </a>
-                @endif
+            <div class="col-md-4">
+                <select name="section_id" class="form-control form-control-sm" onchange="this.form.submit()" {{ $sections->isEmpty() ? 'disabled' : '' }}>
+                    <option value="">{{ sm_t('All Sections') }}</option>
+                    @foreach($sections as $sec)
+                    <option value="{{ $sec->id }}" {{ request('section_id') == $sec->id ? 'selected' : '' }}>{{ $sec->name }}</option>
+                    @endforeach
+                </select>
             </div>
         </form>
+
+        {{-- Separate forms: a form nested inside the filter form would be dropped by the browser. --}}
+        <div class="d-flex flex-wrap gap-2 mt-2">
+            @if(request('exam_id') && request('class_id'))
+            @php $sheetQuery = array_filter(request()->only('exam_id', 'class_id', 'section_id')); @endphp
+            <form method="POST" action="{{ route('exams.results.generate') }}" class="d-inline"
+                  onsubmit="return confirm(@json(sm_t('Re-generate results? This will overwrite existing results.'), JSON_HEX_APOS|JSON_HEX_QUOT))">
+                @csrf
+                <input type="hidden" name="exam_id"  value="{{ request('exam_id') }}">
+                <input type="hidden" name="class_id" value="{{ request('class_id') }}">
+                <button type="submit" class="btn btn-sm btn-encodex-save"><i class="fas fa-sync-alt me-1"></i> {{ sm_t('Generate') }}</button>
+            </form>
+            <form method="POST" action="{{ route('exams.results.publish') }}" class="d-inline"
+                  onsubmit="return confirm(@json(sm_t('Publish all results for this exam and class?'), JSON_HEX_APOS|JSON_HEX_QUOT))">
+                @csrf
+                <input type="hidden" name="exam_id"  value="{{ request('exam_id') }}">
+                <input type="hidden" name="class_id" value="{{ request('class_id') }}">
+                <button type="submit" class="btn btn-sm btn-encodex-active"><i class="fas fa-bullhorn me-1"></i> {{ sm_t('Publish All') }}</button>
+            </form>
+            <a href="{{ route('exams.results.print', $sheetQuery) }}" target="_blank" class="btn btn-sm btn-encodex-print">
+                <i class="fas fa-print me-1"></i> {{ sm_t('Result Sheet') }}
+            </a>
+            <a href="{{ route('exams.marksheet.class', $sheetQuery) }}" target="_blank" class="btn btn-sm btn-encodex-print">
+                <i class="fas fa-copy me-1"></i> {{ sm_t('All Marksheets') }}
+            </a>
+            @else
+            <span class="small text-muted align-self-center">{{ sm_t('Select an exam and a class to generate, publish or print results.') }}</span>
+            <a href="{{ route('exams.marksheet.index') }}" class="btn btn-sm btn-encodex-list">
+                <i class="fas fa-file-alt me-1"></i> {{ sm_t('Marksheet') }}
+            </a>
+            @endif
+        </div>
     </div>
     <div class="card-body p-0">
         <table class="table table-bordered table-hover table-sm table-encodex mb-0">
@@ -78,8 +94,8 @@
                         @else —
                         @endif
                     </td>
-                    <td class="text-center">{{ $r->gpa }}</td>
-                    <td class="text-center"><span class="badge bg-success-subtle text-success">{{ $r->grade ?? '—' }}</span></td>
+                    <td class="text-center">{{ number_format((float) $r->gpa, 2) }}</td>
+                    <td class="text-center"><span class="badge bg-{{ $gc = \ME\SchoolManagement\Services\GradeScale::isFail($r->grade) ? 'danger' : 'success' }}-subtle text-{{ $gc }}">{{ $r->grade ?? '—' }}</span>@if($r->note)<div class="small text-muted">{{ $r->note }}</div>@endif</td>
                     <td><span class="badge bg-{{ $bc = $r->is_published ? 'success' : 'warning' }}-subtle text-{{ $bc }}">{{ sm_t($r->is_published ? 'Published' : 'Draft') }}</span></td>
                     <td>
                         @if($r->student_id && $r->exam_id)
@@ -91,11 +107,7 @@
                 </tr>
                 @empty
                 <tr><td colspan="10" class="text-center text-muted py-3">
-                    @if(!request('exam_id'))
-                        Select an exam to view results.
-                    @else
-                        No results found. Click <strong>{{ sm_t('Generate') }}</strong> after entering marks.
-                    @endif
+                    {{ sm_t(request('exam_id') ? 'No results found. Generate results after entering marks.' : 'Select an exam to view results.') }}
                 </td></tr>
                 @endforelse
             </tbody>

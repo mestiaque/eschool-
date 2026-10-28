@@ -162,6 +162,7 @@ Route::middleware(['web', 'auth', LocaleMiddleware::class, 'activityLog', School
         Route::post('/leaves', [StudentController::class, 'leaveStore'])->name('students.leaves.store');
         Route::post('/leaves/{id}/approve', [StudentController::class, 'leaveApprove'])->name('students.leaves.approve');
         Route::post('/leaves/{id}/reject', [StudentController::class, 'leaveReject'])->name('students.leaves.reject');
+        Route::post('/leaves/{id}/revoke', [StudentController::class, 'leaveRevoke'])->name('students.leaves.revoke');
 
         Route::get('/early-exits', [StudentController::class, 'earlyExitIndex'])->name('students.early-exits');
         Route::post('/early-exits', [StudentController::class, 'earlyExitStore'])->name('students.early-exits.store');
@@ -219,7 +220,10 @@ Route::middleware(['web', 'auth', LocaleMiddleware::class, 'activityLog', School
         Route::delete('/{id}', [TeacherController::class, 'destroy'])->name('teachers.destroy');
     });
 
+    Route::get('/leave-types', [TeacherController::class, 'leaveTypeIndex'])->name('teachers.leave-types');
     Route::post('/leave-types', [TeacherController::class, 'leaveTypeStore'])->name('teachers.leave-types.store');
+    Route::put('/leave-types/{id}', [TeacherController::class, 'leaveTypeUpdate'])->name('teachers.leave-types.update');
+    Route::delete('/leave-types/{id}', [TeacherController::class, 'leaveTypeDestroy'])->name('teachers.leave-types.destroy');
 
     // Teacher Portal (for a logged-in teacher to manage their own classes)
     Route::prefix('my')->group(function () {
@@ -245,6 +249,9 @@ Route::middleware(['web', 'auth', LocaleMiddleware::class, 'activityLog', School
         Route::post('/assignments/{id}/submissions', [TeacherController::class, 'myAssignmentSubmissionsStore'])->name('my.assignments.submissions.store');
 
         Route::get('/notices', [TeacherController::class, 'myNotices'])->name('my.notices');
+        Route::get('/leaves', [TeacherController::class, 'myLeaveIndex'])->name('my.leaves');
+        Route::post('/leaves', [TeacherController::class, 'myLeaveStore'])->name('my.leaves.store');
+        Route::delete('/leaves/{id}', [TeacherController::class, 'myLeaveCancel'])->name('my.leaves.cancel');
     });
 
     // Fees
@@ -262,6 +269,8 @@ Route::middleware(['web', 'auth', LocaleMiddleware::class, 'activityLog', School
         Route::get('/collection/create', [FeeController::class, 'createCollection'])->name('fees.collection.create');
         Route::post('/collection', [FeeController::class, 'storeCollection'])->name('fees.collection.store');
         Route::post('/collection/{id}/pay', [FeeController::class, 'payFee'])->name('fees.collection.pay');
+        Route::get('/collection/{id}/print', [FeeController::class, 'invoicePrint'])->name('fees.collection.print');
+        Route::get('/payments/{id}/receipt', [FeeController::class, 'receipt'])->name('fees.receipt');
         Route::post('/collection/reminders', [FeeController::class, 'sendReminders'])->name('fees.reminders');
 
         Route::post('/generate-monthly', [FeeController::class, 'generateMonthlyFee'])->name('fees.generate-monthly');
@@ -303,6 +312,8 @@ Route::middleware(['web', 'auth', LocaleMiddleware::class, 'activityLog', School
         Route::get('/results', [ExamController::class, 'resultIndex'])->name('exams.results');
         Route::post('/results/generate', [ExamController::class, 'generateResult'])->name('exams.results.generate');
         Route::post('/results/publish', [ExamController::class, 'publishResult'])->name('exams.results.publish');
+        Route::get('/results/print', [ExamController::class, 'resultSheetPrint'])->name('exams.results.print');
+        Route::get('/marksheet/class', [ExamController::class, 'marksheetClassPrint'])->name('exams.marksheet.class');
 
         Route::get('/marksheet/{student_id}/{exam_id}', [ExamController::class, 'marksheet'])->name('exams.marksheet.view');
     });

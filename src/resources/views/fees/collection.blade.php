@@ -14,6 +14,7 @@
 @endpush
 
 @section('content')
+@include('school-management::partials.receipt-link')
 
 <div class="card shadow">
     <div class="card-body py-2 border-bottom">
@@ -85,14 +86,15 @@
                         <span class="badge bg-{{ $bc = $colors[$col->status] ?? 'secondary' }}-subtle text-{{ $bc }}">{{ sm_t(ucfirst($col->status)) }}</span>
                     </td>
                     <td class="text-center">
+                        <div class="d-inline-flex gap-1">
                         @if($col->status !== 'paid')
                         <button class="btn btn-sm btn-encodex-payment"
                             onclick="openPayModal({{ $col->id }}, {{ $col->due_amount }})">
                             <i class="fas fa-money-bill-wave"></i> {{ sm_t('Pay') }}
                         </button>
-                        @else
-                        <span class="text-success small"><i class="fas fa-check-circle"></i></span>
                         @endif
+                        <a href="{{ route('fees.collection.print', $col->id) }}" target="_blank" class="btn btn-sm btn-encodex-print" title="{{ sm_t('Print Invoice') }}"><i class="fas fa-print"></i></a>
+                        </div>
                     </td>
                 </tr>
                 @empty

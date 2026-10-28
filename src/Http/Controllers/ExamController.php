@@ -12,10 +12,12 @@ use ME\SchoolManagement\Models\ExamSchedule;
 use ME\SchoolManagement\Models\ExamType;
 use ME\SchoolManagement\Models\Grade;
 use ME\SchoolManagement\Models\Result;
+use ME\SchoolManagement\Models\Section;
 use ME\SchoolManagement\Models\Student;
 use ME\SchoolManagement\Models\StudentMark;
 use ME\SchoolManagement\Models\Subject;
 use ME\SchoolManagement\Services\GradeScale;
+use ME\SchoolManagement\Services\ResultSheet;
 
 class ExamController extends Controller
 {
@@ -158,14 +160,15 @@ class ExamController extends Controller
     public function gradeIndex()
     {
         $grades = Grade::orderBy('mark_from', 'desc')->paginate(20);
-        return view('school-management::exams.grades', compact('grades'));
+        $problems = GradeScale::problems();
+        return view('school-management::exams.grades', compact('grades', 'problems'));
     }
 
     public function gradeStore(Request $request)
     {
         GradeScale::flush();
         Grade::create($this->validateGrade($request) + ['is_active' => true]);
-        return back()->with('success', 'Grade created.');
+        return back()->with('success', 'Grade created. Generate results again to apply the new scale to entered marks.');
     }
 
     public function gradeUpdate(Request $request, $id)
@@ -173,7 +176,7 @@ class ExamController extends Controller
         GradeScale::flush();
         $grade = Grade::findOrFail($id);
         $grade->update($this->validateGrade($request, $grade->id));
-        return back()->with('success', 'Grade updated.');
+        return back()->with('success', 'Grade updated. Generate results again to apply the new scale to entered marks.');
     }
 
     public function gradeDestroy($id)
@@ -293,7 +296,7 @@ class ExamController extends Controller
             return back()->with('error', 'No students to save marks for.');
         }
 
-        [$fullMark, $passMark] = $this->subjectMarks($request->exam_id, $request->class_id, $request->subject_id);
+        [$fullMark, $passMark] = ResultSheet::subjectMarks($request->exam_id, $request->class_id, $request->subject_id);
         $classStudentIds = Student::where('class_id', $request->class_id)
             ->takingSubject(Subject::findOrFail($request->subject_id))->pluck('id')->flip();
 
@@ -316,9 +319,7 @@ class ExamController extends Controller
             $total     = $isAbsent ? 0 : ($written + $mcq + $practical + $ca);
 
             // Grade on the percentage, and a subject below its pass mark is an F.
-            $grade = ($isAbsent || $total < $passMark)
-                ? $this->failGrade()
-                : $this->gradeForPercent($total / $fullMark * 100);
+            $grade = ResultSheet::gradeFor($total, $fullMark, $passMark, $isAbsent);
 
             StudentMark::updateOrCreate(
                 [
@@ -350,12 +351,15 @@ class ExamController extends Controller
         $query = Result::with(['student', 'exam', 'classe']);
         if ($request->exam_id)  $query->where('exam_id',  $request->exam_id);
         if ($request->class_id) $query->where('class_id', $request->class_id);
+        if ($request->section_id) $query->where('section_id', $request->section_id);
 
         $results = $query->orderBy('position')->orderBy('obtained_mark', 'desc')->paginate(30)->withQueryString();
         $exams   = Exam::where('is_active', true)->get();
         $classes = Classe::where('is_active', true)->get();
 
-        return view('school-management::exams.results', compact('results', 'exams', 'classes'));
+        $sections = $request->class_id ? Section::where('class_id', $request->class_id)->orderBy('name')->get() : collect();
+
+        return view('school-management::exams.results', compact('results', 'exams', 'classes', 'sections'));
     }
 
     public function generateResult(Request $request)
@@ -371,12 +375,11 @@ class ExamController extends Controller
             return back()->with('error', 'No marks found for the selected exam and class.');
         }
 
-        // Total possible marks from schedule
-        $totalPossible = ExamSchedule::where('exam_id',  $request->exam_id)
-            ->where('class_id', $request->class_id)
-            ->sum('full_mark');
+        // Grades follow the current scale and pass marks, even if they changed after marks entry.
+        ResultSheet::regrade($request->exam_id, $request->class_id);
 
         $bonusOn = sm_setting('optional_subject_bonus', '1') === '1';
+        $schedules = ExamSchedule::where('exam_id', $request->exam_id)->where('class_id', $request->class_id)->get()->keyBy('subject_id');
 
         foreach ($studentIds as $studentId) {
             $student = Student::withTrashed()->find($studentId);
@@ -387,16 +390,20 @@ class ExamController extends Controller
 
             $summary = $this->summariseResult($student, $studentMarks, $bonusOn);
 
+            // Full marks over the subjects this student sits (group and 4th subject included).
+            $subjects = $student ? ResultSheet::subjectsFor($student, $studentMarks) : collect();
+            $totalPossible = $subjects->sum(fn ($s) => ResultSheet::subjectMarks($request->exam_id, $request->class_id, $s->id, $schedules, $s)[0]);
+            $obtained = $studentMarks->sum(fn ($m) => $m->is_absent ? 0 : (float) $m->total_mark);
+
             Result::updateOrCreate(
                 ['student_id' => $studentId, 'exam_id' => $request->exam_id],
                 [
                     'class_id'      => $request->class_id,
                     'section_id'    => $student?->section_id,
                     'total_mark'    => $totalPossible,
-                    'obtained_mark' => $studentMarks->sum('total_mark'),
+                    'obtained_mark' => $obtained,
                     'gpa'           => $summary['gpa'],
                     'grade'         => $summary['grade'],
-                    'is_published'  => false,
                     'note'          => $summary['note'],
                 ]
             );
@@ -414,6 +421,33 @@ class ExamController extends Controller
         $sorted->groupBy('section_id')->each(fn ($group) => $this->rank($group->values(), 'section_position'));
 
         return back()->with('success', 'Result generated for ' . $studentIds->count() . ' students.');
+    }
+
+    /** Class result (tabulation) sheet. */
+    public function resultSheetPrint(Request $request)
+    {
+        $request->validate(['exam_id' => 'required|exists:exams,id', 'class_id' => 'required|exists:classes,id', 'section_id' => 'nullable|integer']);
+        $exam  = Exam::with('academicYear', 'examType')->findOrFail($request->exam_id);
+        $class = Classe::findOrFail($request->class_id);
+        $section = $request->section_id ? Section::find($request->section_id) : null;
+        $sheet = ResultSheet::tabulation($exam, $class->id, $section?->id);
+
+        return view('school-management::exams.result-sheet', compact('exam', 'class', 'section', 'sheet'));
+    }
+
+    /** Every student's marksheet for an exam and class, one per page. */
+    public function marksheetClassPrint(Request $request)
+    {
+        $request->validate(['exam_id' => 'required|exists:exams,id', 'class_id' => 'required|exists:classes,id', 'section_id' => 'nullable|integer']);
+        $exam = Exam::with('academicYear', 'examType')->findOrFail($request->exam_id);
+        $students = Student::with('classe', 'section')
+            ->whereIn('id', Result::where('exam_id', $exam->id)->where('class_id', $request->class_id)->select('student_id'))
+            ->when($request->section_id, fn ($q) => $q->where('section_id', $request->section_id))
+            ->get()
+            ->sortBy(fn ($s) => [$s->section->name ?? '', (int) $s->roll_number])->values();
+        $sheets = $students->map(fn ($st) => ['student' => $st] + ResultSheet::marksheet($st, $exam));
+
+        return view('school-management::exams.marksheet-class', compact('exam', 'sheets'));
     }
 
     public function publishResult(Request $request)
@@ -440,25 +474,11 @@ class ExamController extends Controller
 
     public function marksheet($student_id, $exam_id)
     {
-        $student  = Student::with('classe', 'section')->findOrFail($student_id);
-        $exam     = Exam::with('academicYear', 'examType')->findOrFail($exam_id);
-        $marks    = StudentMark::where('student_id', $student_id)
-            ->where('exam_id', $exam_id)
-            ->with('subject', 'grade')
-            ->get();
-        $result   = Result::where('student_id', $student_id)->where('exam_id', $exam_id)->first();
+        $student = Student::withTrashed()->with('classe', 'section')->findOrFail($student_id);
+        $exam    = Exam::with('academicYear', 'examType')->findOrFail($exam_id);
+        $sheet   = ResultSheet::marksheet($student, $exam);
 
-        // Schedule map: subject_id => ExamSchedule (for full_mark / pass_mark)
-        $scheduleMap = ExamSchedule::where('exam_id',  $exam_id)
-            ->where('class_id', $student->class_id)
-            ->get()
-            ->keyBy('subject_id');
-
-        $schoolName = \ME\SchoolManagement\Models\SchoolSetting::where('key','school_name')->value('value')
-            ?? config('app.name', 'School');
-
-        return view('school-management::exams.marksheet',
-            compact('student','exam','marks','result','scheduleMap','schoolName'));
+        return view('school-management::exams.marksheet', compact('student', 'exam', 'sheet'));
     }
 
     // ── Grading helpers ────────────────────────────────────────────────────
@@ -490,7 +510,7 @@ class ExamController extends Controller
         if ($missing->isNotEmpty()) $notes[] = 'Marks missing: ' . $missing->pluck('name')->implode(', ');
 
         if ($failedMain || $missing->isNotEmpty() || $main->isEmpty()) {
-            return ['gpa' => 0.0, 'grade' => $this->failGrade()['name'], 'note' => $notes ? implode('; ', $notes) : null];
+            return ['gpa' => 0.0, 'grade' => GradeScale::fail()['name'], 'note' => $notes ? implode('; ', $notes) : null];
         }
 
         $sum = $main->sum(fn ($s) => (float) $marks[$s->id]->grade_point);
@@ -502,7 +522,7 @@ class ExamController extends Controller
         if ($optionalId && $optionalGp !== null && $optionalGp <= 0) $notes[] = '4th subject failed (does not affect pass)';
 
         $gpa = round(min(5, $sum / $main->count()), 2);
-        return ['gpa' => $gpa, 'grade' => $this->gradeForGpa($gpa), 'note' => $notes ? implode('; ', $notes) : null];
+        return ['gpa' => $gpa, 'grade' => GradeScale::forGpa($gpa), 'note' => $notes ? implode('; ', $notes) : null];
     }
 
     /** Competition ranking (1, 2, 2, 4) by GPA then total marks; rows arrive sorted. */
@@ -516,20 +536,6 @@ class ExamController extends Controller
         }
     }
 
-    // Grading goes through the shared scale (Services\GradeScale).
-    private function gradeForPercent(float $percent): array { return GradeScale::forPercent($percent); }
-    private function failGrade(): array { return GradeScale::fail(); }
-    private function gradeForGpa(float $gpa): string { return GradeScale::forGpa($gpa); }
-
-    /** [full mark, pass mark] for a subject in an exam; schedule first, then the subject's own. */
-    private function subjectMarks($examId, $classId, $subjectId): array
-    {
-        $schedule = ExamSchedule::where('exam_id', $examId)->where('class_id', $classId)->where('subject_id', $subjectId)->first();
-        if ($schedule) return [(float) $schedule->full_mark, (float) $schedule->pass_mark];
-        $subject = Subject::find($subjectId);
-        $full = (float) ($subject->full_mark ?? 100) ?: 100;
-        return [$full, (float) ($subject->pass_mark ?? round($full * 0.33, 2))];
-    }
 
     private function validateExam(Request $request): array
     {

@@ -17,7 +17,7 @@ class TranslateFlash
         if (app()->getLocale() !== 'en' && $request->hasSession()) {
             foreach (['success', 'error'] as $key) {
                 $message = $request->session()->get($key);
-                if (is_string($message) && ($translated = sm_t($message)) !== $message) {
+                if (is_string($message) && ($translated = sm_t_message($message)) !== $message) {
                     $request->session()->put($key, $translated); // still flashed: removed after this request
                 }
             }
