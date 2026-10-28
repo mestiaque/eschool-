@@ -35,7 +35,10 @@ class SchoolManagementServiceProvider extends ServiceProvider
 
         // Swap the admin sidebar for a teacher-only one when the logged-in
         // account is linked to a teacher, without touching the host theme.
-        $this->app['router']->pushMiddlewareToGroup('web', \ME\SchoolManagement\Http\Middleware\TeacherSidebar::class);
+        $this->addWebMiddleware(\ME\SchoolManagement\Http\Middleware\TeacherSidebar::class);
+
+        // Never send the registration OTP back to the browser outside local development.
+        $this->addWebMiddleware(\ME\SchoolManagement\Http\Middleware\HideOtpDebug::class);
 
         // After login, land on the school dashboard unless the host chose
         // another home page (METHEME_HOME_ROUTE).
@@ -71,5 +74,19 @@ class SchoolManagementServiceProvider extends ServiceProvider
         if (file_exists(__DIR__ . '/Config/permissions.php')) {
             $this->mergeConfigFrom(__DIR__ . '/Config/permissions.php', 'permissions');
         }
+    }
+
+    /**
+     * Add to the "web" group on the HTTP kernel as well as the router: the
+     * kernel copies its own groups onto the router whenever it is created
+     * (e.g. in tests), which would drop a router-only addition.
+     */
+    private function addWebMiddleware(string $middleware): void
+    {
+        $kernel = $this->app->make(\Illuminate\Contracts\Http\Kernel::class);
+        if (method_exists($kernel, 'appendMiddlewareToGroup')) {
+            $kernel->appendMiddlewareToGroup('web', $middleware);
+        }
+        $this->app['router']->pushMiddlewareToGroup('web', $middleware);
     }
 }
