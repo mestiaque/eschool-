@@ -6,26 +6,22 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    public function up()
+    public function up(): void
     {
-
-
-        // Inventory Categories
         Schema::create('school_inventory_categories', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('type'); // product, equipment, furniture
+            $table->string('type');
             $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
 
-        // Products/Items
         Schema::create('school_products', function (Blueprint $table) {
             $table->id();
-            $table->string('item_code')->unique();
+            $table->string('item_code');
             $table->string('name');
-            $table->foreignId('category_id')->constrained('school_inventory_categories')->onDelete('cascade');
-            $table->string('unit')->nullable(); // piece, kg, liter
+            $table->foreignId('category_id')->constrained('school_inventory_categories')->cascadeOnDelete();
+            $table->string('unit')->nullable();
             $table->decimal('price', 10, 2)->nullable();
             $table->integer('quantity')->default(0);
             $table->integer('minimum_stock')->default(0);
@@ -33,20 +29,19 @@ return new class extends Migration
             $table->string('photo')->nullable();
             $table->boolean('is_active')->default(true);
             $table->timestamps();
+            $table->unique('item_code');
         });
 
-        // Stock Management
         Schema::create('school_stocks', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('product_id')->constrained('school_products')->onDelete('cascade');
+            $table->foreignId('product_id')->constrained('school_products')->cascadeOnDelete();
             $table->integer('quantity');
-            $table->string('type'); // in, out
+            $table->string('type');
             $table->text('note')->nullable();
             $table->date('date');
             $table->timestamps();
         });
 
-        // Suppliers
         Schema::create('school_suppliers', function (Blueprint $table) {
             $table->id();
             $table->string('name');
@@ -55,48 +50,47 @@ return new class extends Migration
             $table->string('phone');
             $table->text('address')->nullable();
             $table->string('contact_person')->nullable();
-            $table->string('balance')->default(0);
+            $table->string('balance')->default('0');
             $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
 
-        // Purchases
         Schema::create('school_purchases', function (Blueprint $table) {
             $table->id();
-            $table->string('invoice_no')->unique();
-            $table->foreignId('supplier_id')->nullable()->constrained('school_suppliers')->onDelete('set null');
+            $table->string('invoice_no');
+            $table->foreignId('supplier_id')->nullable()->constrained('school_suppliers')->nullOnDelete();
             $table->decimal('total_amount', 10, 2);
-            $table->decimal('paid_amount', 10, 2)->default(0);
-            $table->decimal('due_amount', 10, 2)->default(0);
+            $table->decimal('paid_amount', 10, 2)->default(0.00);
+            $table->decimal('due_amount', 10, 2)->default(0.00);
             $table->date('purchase_date');
             $table->date('payment_date')->nullable();
             $table->enum('status', ['pending', 'received', 'cancelled'])->default('pending');
             $table->text('note')->nullable();
             $table->timestamps();
+            $table->unique('invoice_no');
         });
 
-        // Purchase Items
         Schema::create('school_purchase_items', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('purchase_id')->constrained('school_purchases')->onDelete('cascade');
-            $table->foreignId('product_id')->constrained('school_products')->onDelete('cascade');
+            $table->foreignId('purchase_id')->constrained('school_purchases')->cascadeOnDelete();
+            $table->foreignId('product_id')->constrained('school_products')->cascadeOnDelete();
             $table->integer('quantity');
             $table->decimal('unit_price', 10, 2);
             $table->decimal('total_price', 10, 2);
             $table->timestamps();
         });
 
-        // School Settings
         Schema::create('school_settings', function (Blueprint $table) {
             $table->id();
-            $table->string('key')->unique();
+            $table->string('key');
             $table->text('value')->nullable();
-            $table->string('type'); // text, image, number
+            $table->string('type');
             $table->timestamps();
+            $table->unique('key');
         });
     }
 
-    public function down()
+    public function down(): void
     {
         Schema::dropIfExists('school_settings');
         Schema::dropIfExists('school_purchase_items');

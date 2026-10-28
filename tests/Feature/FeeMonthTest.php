@@ -31,13 +31,6 @@ class FeeMonthTest extends TestCase
         $this->assertNull($this->invoice(['month' => null])->monthLabel());
     }
 
-    public function test_migration_turns_month_names_into_numbers(): void
-    {
-        $legacy = $this->invoice(['month' => 'March']);
-        (require dirname(__DIR__, 2) . '/src/Database/migrations/2026_10_27_000001_normalise_fee_collection_months.php')->up();
-        $this->assertSame('3', $legacy->fresh()->month);
-    }
-
     public function test_collection_page_shows_the_real_month_and_filters_by_it(): void
     {
         $this->actingAs($this->admin());

@@ -12,10 +12,10 @@ return new class extends Migration
             $table->id();
             $table->foreignId('route_id')->constrained('transport_routes')->cascadeOnDelete();
             $table->foreignId('vehicle_id')->nullable()->constrained('vehicles')->nullOnDelete();
-            $table->time('departure_time');           // bus ছাড়ার সময়
-            $table->time('arrival_time')->nullable();  // গন্তব্যে পৌঁছানোর সময়
-            $table->string('direction')->default('morning'); // morning, afternoon, evening, night
-            $table->json('days')->nullable();          // ["sat","sun","mon","tue","wed","thu","fri"]
+            $table->time('departure_time');
+            $table->time('arrival_time')->nullable();
+            $table->string('direction')->default('morning');
+            $table->json('days')->nullable();
             $table->string('notes')->nullable();
             $table->boolean('is_active')->default(true);
             $table->timestamps();

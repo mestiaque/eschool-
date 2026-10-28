@@ -6,20 +6,19 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    public function up()
+    public function up(): void
     {
-        // Class Tests Table
         Schema::create('class_tests', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->foreignId('class_id')->constrained()->onDelete('cascade');
-            $table->foreignId('subject_id')->constrained()->onDelete('cascade');
-            $table->foreignId('teacher_id')->nullable()->constrained()->onDelete('set null');
-            $table->foreignId('academic_year_id')->nullable()->constrained()->onDelete('set null');
+            $table->foreignId('class_id')->constrained('classes')->cascadeOnDelete();
+            $table->foreignId('subject_id')->constrained('subjects')->cascadeOnDelete();
+            $table->foreignId('teacher_id')->nullable()->constrained('teachers')->nullOnDelete();
+            $table->foreignId('academic_year_id')->nullable()->constrained('academic_years')->nullOnDelete();
             $table->date('test_date');
-            $table->decimal('total_marks', 8, 2)->default(100);
-            $table->decimal('pass_marks', 8, 2)->default(33);
-            $table->string('duration')->nullable(); // e.g. "30 min", "1 hour"
+            $table->decimal('total_marks', 8, 2)->default(100.00);
+            $table->decimal('pass_marks', 8, 2)->default(33.00);
+            $table->string('duration')->nullable();
             $table->text('description')->nullable();
             $table->string('file')->nullable();
             $table->enum('status', ['scheduled', 'ongoing', 'completed', 'cancelled'])->default('scheduled');
@@ -27,18 +26,17 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        // Assignments Table
         Schema::create('assignments', function (Blueprint $table) {
             $table->id();
             $table->string('title');
             $table->text('description')->nullable();
-            $table->foreignId('class_id')->constrained()->onDelete('cascade');
-            $table->foreignId('subject_id')->constrained()->onDelete('cascade');
-            $table->foreignId('teacher_id')->nullable()->constrained()->onDelete('set null');
-            $table->foreignId('academic_year_id')->nullable()->constrained()->onDelete('set null');
+            $table->foreignId('class_id')->constrained('classes')->cascadeOnDelete();
+            $table->foreignId('subject_id')->constrained('subjects')->cascadeOnDelete();
+            $table->foreignId('teacher_id')->nullable()->constrained('teachers')->nullOnDelete();
+            $table->foreignId('academic_year_id')->nullable()->constrained('academic_years')->nullOnDelete();
             $table->date('assigned_date');
             $table->date('due_date');
-            $table->decimal('total_marks', 8, 2)->default(100);
+            $table->decimal('total_marks', 8, 2)->default(100.00);
             $table->string('file')->nullable();
             $table->enum('status', ['active', 'closed', 'cancelled'])->default('active');
             $table->boolean('is_active')->default(true);
@@ -46,7 +44,7 @@ return new class extends Migration
         });
     }
 
-    public function down()
+    public function down(): void
     {
         Schema::dropIfExists('assignments');
         Schema::dropIfExists('class_tests');

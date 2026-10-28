@@ -6,16 +6,11 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    public function up()
+    public function up(): void
     {
-        // Roles, Permissions and Role-Permissions are managed by the metheme
-        // host theme (roles, role_user, role_permissions tables) and are
-        // intentionally not duplicated here.
-
-        // Activity Logs
         Schema::create('activity_logs', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->nullable()->constrained()->onDelete('set null');
+            $table->foreignId('user_id')->nullable()->constrained('users')->nullOnDelete();
             $table->string('action');
             $table->string('module')->nullable();
             $table->text('description')->nullable();
@@ -25,7 +20,7 @@ return new class extends Migration
         });
     }
 
-    public function down()
+    public function down(): void
     {
         Schema::dropIfExists('activity_logs');
     }
